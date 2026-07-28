@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%lld 个</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld</string><key>other</key><string>%lld</string></dict></dict>
+	<key>%lld 个失败</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld imeshindwa</string><key>other</key><string>%lld zimeshindwa</string></dict></dict>
+	<key>%lld 个说明章节</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld sehemu ya maelezo</string><key>other</key><string>%lld sehemu za maelezo</string></dict></dict>
+	<key>%lld 个未变小但已保留</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld haijapungua lakini imehifadhiwa</string><key>other</key><string>%lld hazijapungua lakini zimehifadhiwa</string></dict></dict>
+	<key>%lld 个未生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld haijaundwa</string><key>other</key><string>%lld hazijaundwa</string></dict></dict>
+	<key>%lld 个文件，可继续拖入</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld faili, unaweza kuendelea kuburuta faili nyingine</string><key>other</key><string>%lld faili, unaweza kuendelea kuburuta faili nyingine</string></dict></dict>
+	<key>%lld 个已生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld imeundwa</string><key>other</key><string>%lld zimeundwa</string></dict></dict>
+	<key>还有 %lld 个引擎可补齐</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>injini %lld bado inahitaji kusakinishwa</string><key>other</key><string>injini %lld bado zinahitaji kusakinishwa</string></dict></dict>
+	<key>同时处理 %lld 个任务</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>Chakata kazi %lld kwa wakati mmoja</string><key>other</key><string>Chakata kazi %lld kwa wakati mmoja</string></dict></dict>
+</dict>
+</plist>

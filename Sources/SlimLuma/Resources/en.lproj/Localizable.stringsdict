@@ -1,0 +1,83 @@
+{
+  "%lld 个" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld item";
+      other = "%lld items";
+    };
+  };
+  "%lld 个失败" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld failure";
+      other = "%lld failures";
+    };
+  };
+  "%lld 个说明章节" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld explanation section";
+      other = "%lld explanation sections";
+    };
+  };
+  "%lld 个未变小但已保留" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld kept without reduction";
+      other = "%lld kept without reduction";
+    };
+  };
+  "%lld 个未生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld not generated";
+      other = "%lld not generated";
+    };
+  };
+  "%lld 个文件，可继续拖入" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld file; you can keep dragging";
+      other = "%lld files; you can keep dragging";
+    };
+  };
+  "%lld 个已生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld generated";
+      other = "%lld generated";
+    };
+  };
+  "还有 %lld 个引擎可补齐" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld engine still available to install";
+      other = "%lld engines still available to install";
+    };
+  };
+  "同时处理 %lld 个任务" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "Process %lld task at a time";
+      other = "Process %lld tasks at a time";
+    };
+  };
+}

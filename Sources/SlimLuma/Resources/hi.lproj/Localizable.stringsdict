@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%lld 个</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld</string><key>other</key><string>%lld</string></dict></dict>
+	<key>%lld 个失败</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld विफलता</string><key>other</key><string>%lld विफलताएँ</string></dict></dict>
+	<key>%lld 个说明章节</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld विवरण अनुभाग</string><key>other</key><string>%lld विवरण अनुभाग</string></dict></dict>
+	<key>%lld 个未变小但已保留</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld परिणाम छोटा नहीं हुआ, फिर भी रखा गया</string><key>other</key><string>%lld परिणाम छोटे नहीं हुए, फिर भी रखे गए</string></dict></dict>
+	<key>%lld 个未生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld फ़ाइल नहीं बनाई गई</string><key>other</key><string>%lld फ़ाइलें नहीं बनाई गईं</string></dict></dict>
+	<key>%lld 个文件，可继续拖入</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld फ़ाइल; आप और फ़ाइलें खींच सकते हैं</string><key>other</key><string>%lld फ़ाइलें; आप और फ़ाइलें खींच सकते हैं</string></dict></dict>
+	<key>%lld 个已生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld फ़ाइल बनाई गई</string><key>other</key><string>%lld फ़ाइलें बनाई गईं</string></dict></dict>
+	<key>还有 %lld 个引擎可补齐</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld इंजन अभी जोड़ना बाकी है</string><key>other</key><string>%lld इंजन अभी जोड़ने बाकी हैं</string></dict></dict>
+	<key>同时处理 %lld 个任务</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld कार्य एक साथ संसाधित करें</string><key>other</key><string>%lld कार्य एक साथ संसाधित करें</string></dict></dict>
+</dict>
+</plist>

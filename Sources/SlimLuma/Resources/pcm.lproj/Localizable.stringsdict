@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%lld 个</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld</string><key>other</key><string>%lld</string></dict></dict>
+	<key>%lld 个失败</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld fail</string><key>other</key><string>%lld fail</string></dict></dict>
+	<key>%lld 个说明章节</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld part wey explain am</string><key>other</key><string>%lld parts wey explain am</string></dict></dict>
+	<key>%lld 个未变小但已保留</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld result no small, but we keep am</string><key>other</key><string>%lld results no small, but we keep dem</string></dict></dict>
+	<key>%lld 个未生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld file no generate</string><key>other</key><string>%lld files no generate</string></dict></dict>
+	<key>%lld 个文件，可继续拖入</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld file; you fit still drag more file come</string><key>other</key><string>%lld files; you fit still drag more files come</string></dict></dict>
+	<key>%lld 个已生成</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld file don generate</string><key>other</key><string>%lld files don generate</string></dict></dict>
+	<key>还有 %lld 个引擎可补齐</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>%lld engine still remain to install</string><key>other</key><string>%lld engines still remain to install</string></dict></dict>
+	<key>同时处理 %lld 个任务</key>
+	<dict><key>NSStringLocalizedFormatKey</key><string>%#@count@</string><key>count</key><dict><key>NSStringFormatSpecTypeKey</key><string>NSStringPluralRuleType</string><key>NSStringFormatValueTypeKey</key><string>lld</string><key>one</key><string>Process %lld task for di same time</string><key>other</key><string>Process %lld tasks for di same time</string></dict></dict>
+</dict>
+</plist>

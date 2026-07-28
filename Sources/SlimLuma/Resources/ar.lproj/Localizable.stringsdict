@@ -1,0 +1,119 @@
+{
+  "%lld 个" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا عناصر";
+      one = "عنصر واحد";
+      two = "عنصران";
+      few = "%lld عناصر";
+      many = "%lld عنصرًا";
+      other = "%lld عنصر";
+    };
+  };
+  "%lld 个失败" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا حالات فشل";
+      one = "حالة فشل واحدة";
+      two = "حالتا فشل";
+      few = "%lld حالات فشل";
+      many = "%lld حالة فشل";
+      other = "%lld حالة فشل";
+    };
+  };
+  "%lld 个说明章节" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا أقسام توضيحية";
+      one = "قسم توضيحي واحد";
+      two = "قسمان توضيحيان";
+      few = "%lld أقسام توضيحية";
+      many = "%lld قسمًا توضيحيًا";
+      other = "%lld قسم توضيحي";
+    };
+  };
+  "%lld 个未变小但已保留" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لم يُحتفظ بأي نتيجة غير مصغّرة";
+      one = "تم الاحتفاظ بنتيجة واحدة لم يصغر حجمها";
+      two = "تم الاحتفاظ بنتيجتين لم يصغر حجمهما";
+      few = "تم الاحتفاظ بـ %lld نتائج لم يصغر حجمها";
+      many = "تم الاحتفاظ بـ %lld نتيجة لم يصغر حجمها";
+      other = "تم الاحتفاظ بـ %lld نتيجة لم يصغر حجمها";
+    };
+  };
+  "%lld 个未生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لم يتم إنشاء أي نتيجة";
+      one = "لم يتم إنشاء نتيجة واحدة";
+      two = "لم يتم إنشاء نتيجتين";
+      few = "لم يتم إنشاء %lld نتائج";
+      many = "لم يتم إنشاء %lld نتيجة";
+      other = "لم يتم إنشاء %lld نتيجة";
+    };
+  };
+  "%lld 个文件，可继续拖入" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا ملفات؛ يمكنك متابعة السحب";
+      one = "ملف واحد؛ يمكنك متابعة السحب";
+      two = "ملفان؛ يمكنك متابعة السحب";
+      few = "%lld ملفات؛ يمكنك متابعة السحب";
+      many = "%lld ملفًا؛ يمكنك متابعة السحب";
+      other = "%lld ملف؛ يمكنك متابعة السحب";
+    };
+  };
+  "%lld 个已生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لم يتم إنشاء أي نتيجة";
+      one = "تم إنشاء نتيجة واحدة";
+      two = "تم إنشاء نتيجتين";
+      few = "تم إنشاء %lld نتائج";
+      many = "تم إنشاء %lld نتيجة";
+      other = "تم إنشاء %lld نتيجة";
+    };
+  };
+  "还有 %lld 个引擎可补齐" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا توجد محركات أخرى لتثبيتها";
+      one = "يتبقى محرك واحد لتثبيته";
+      two = "يتبقى محركان لتثبيتهما";
+      few = "يتبقى %lld محركات لتثبيتها";
+      many = "يتبقى %lld محركًا لتثبيتها";
+      other = "يتبقى %lld محرك لتثبيته";
+    };
+  };
+  "同时处理 %lld 个任务" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      zero = "لا توجد مهام للمعالجة";
+      one = "معالجة مهمة واحدة في الوقت نفسه";
+      two = "معالجة مهمتين في الوقت نفسه";
+      few = "معالجة %lld مهام في الوقت نفسه";
+      many = "معالجة %lld مهمة في الوقت نفسه";
+      other = "معالجة %lld مهمة في الوقت نفسه";
+    };
+  };
+}

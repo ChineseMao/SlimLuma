@@ -1,0 +1,4 @@
+/* Localized values used by Finder and Launch Services. */
+"CFBundleDisplayName" = "SlimLuma";
+"CFBundleName" = "SlimLuma";
+"CFBundleTypeName" = "সমর্থিত মিডিয়া ফাইল";

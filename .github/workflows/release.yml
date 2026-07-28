@@ -1,0 +1,164 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 120
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Verify source and generated assets
+        run: |
+          node scripts/sync-system-localizations.mjs --check
+          node scripts/generate-github-readmes.mjs --check
+          zsh -n scripts/*.sh
+          swift test
+
+      - name: Verify tag matches app version
+        run: |
+          version="$(/usr/libexec/PlistBuddy \
+            -c 'Print :CFBundleShortVersionString' Support/Info.plist)"
+          test "$GITHUB_REF_NAME" = "v$version"
+
+      - name: Import Developer ID certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_P12_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.RELEASE_KEYCHAIN_PASSWORD }}
+        run: |
+          keychain_path="$RUNNER_TEMP/slimluma-release.keychain-db"
+          certificate_path="$RUNNER_TEMP/developer-id.p12"
+          printf '%s' "$CERTIFICATE_BASE64" \
+            | base64 --decode > "$certificate_path"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security import "$certificate_path" \
+            -P "$CERTIFICATE_PASSWORD" \
+            -A \
+            -t cert \
+            -f pkcs12 \
+            -k "$keychain_path"
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -s \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$keychain_path"
+          security list-keychains -d user -s "$keychain_path"
+          identity="$(security find-identity -v -p codesigning \
+            "$keychain_path" \
+            | awk '/Developer ID Application/ {print $2; exit}')"
+          test -n "$identity"
+          echo "SLIMLUMA_CODE_SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
+          echo "RELEASE_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
+          echo "RELEASE_CERTIFICATE_PATH=$certificate_path" >> "$GITHUB_ENV"
+
+      - name: Prepare App Store Connect API key
+        env:
+          API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        run: |
+          api_key_path="$RUNNER_TEMP/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8"
+          printf '%s' "$API_PRIVATE_KEY" > "$api_key_path"
+          chmod 600 "$api_key_path"
+          echo "APPLE_API_PRIVATE_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
+
+      - name: Build and sign Universal app and CLI
+        run: scripts/package-app.sh
+
+      - name: Notarize and staple app
+        env:
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: scripts/notarize-release.sh dist/SlimLuma.app
+
+      - name: Notarize CLI
+        env:
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: scripts/notarize-release.sh dist/slimluma
+
+      - name: Create release archives
+        run: scripts/create-release-artifacts.sh
+
+      - name: Notarize and staple DMG
+        env:
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          scripts/notarize-release.sh \
+            "dist/SlimLuma-$version-macOS-universal.dmg"
+          scripts/create-release-artifacts.sh --checksums-only
+
+      - name: Verify release checksums
+        working-directory: dist
+        run: shasum -a 256 -c SHA256SUMS
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: SlimLuma-${{ github.ref_name }}
+          path: |
+            dist/SlimLuma-*-macOS-universal.zip
+            dist/SlimLuma-*-macOS-universal.dmg
+            dist/slimluma-*-macOS-universal.tar.gz
+            dist/SHA256SUMS
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_notes="docs/releases/$GITHUB_REF_NAME.md"
+          files=(
+            dist/SlimLuma-*-macOS-universal.zip
+            dist/SlimLuma-*-macOS-universal.dmg
+            dist/slimluma-*-macOS-universal.tar.gz
+            dist/SHA256SUMS
+          )
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
+            if [[ -f "$release_notes" ]]; then
+              gh release edit "$GITHUB_REF_NAME" \
+                --notes-file "$release_notes"
+            fi
+          elif [[ -f "$release_notes" ]]; then
+            gh release create "$GITHUB_REF_NAME" \
+              "${files[@]}" \
+              --verify-tag \
+              --notes-file "$release_notes" \
+              --title "SlimLuma ${GITHUB_REF_NAME#v}"
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              "${files[@]}" \
+              --verify-tag \
+              --generate-notes \
+              --title "SlimLuma ${GITHUB_REF_NAME#v}"
+          fi
+
+      - name: Remove temporary release keychain
+        if: always()
+        run: |
+          if [[ -n "${RELEASE_KEYCHAIN_PATH:-}" ]]; then
+            security delete-keychain "$RELEASE_KEYCHAIN_PATH" || true
+          fi
+          if [[ -n "${APPLE_API_PRIVATE_KEY_PATH:-}" ]]; then
+            rm -f "$APPLE_API_PRIVATE_KEY_PATH"
+          fi
+          if [[ -n "${RELEASE_CERTIFICATE_PATH:-}" ]]; then
+            rm -f "$RELEASE_CERTIFICATE_PATH"
+          fi

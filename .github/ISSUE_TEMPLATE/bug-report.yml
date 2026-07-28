@@ -1,0 +1,50 @@
+name: Bug report / 错误报告
+description: Report a reproducible SlimLuma problem / 报告可复现问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not upload private files, passwords, or signing credentials.
+        请勿上传私密文件、密码或签名凭据。
+  - type: input
+    id: version
+    attributes:
+      label: Version / 版本
+      placeholder: "SlimLuma 0.2.0, macOS 15.5"
+    validations:
+      required: true
+  - type: dropdown
+    id: media
+    attributes:
+      label: Media / 媒体
+      options:
+        - Image / 图片
+        - Animated image / 动画图片
+        - Video / 视频
+        - PDF
+        - Engine installation / 引擎安装
+        - UI or localization / 界面或国际化
+        - CLI
+        - Other / 其他
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction / 复现步骤
+      description: Use a synthetic or redacted fixture when possible / 请优先使用合成或脱敏样本
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual / 预期与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics / 诊断信息
+      description: Include engine names and redacted logs / 请包含引擎名称和脱敏日志
