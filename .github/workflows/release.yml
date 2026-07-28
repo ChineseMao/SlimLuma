@@ -25,6 +25,7 @@ jobs:
         run: |
           node scripts/sync-system-localizations.mjs --check
           node scripts/generate-github-readmes.mjs --check
+          node scripts/validate-github-localizations.mjs
           zsh -n scripts/*.sh
           swift test
 

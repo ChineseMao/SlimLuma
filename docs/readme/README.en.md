@@ -2,30 +2,39 @@
 
 # SlimLuma
 
-[简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md) · [**English**](README.en.md) · [हिन्दी](README.hi.md) · [Español (Latinoamérica)](README.es-419.md) · [Español (España)](README.es-ES.md) · [العربية](README.ar.md) · [Français](README.fr.md) · [বাংলা](README.bn.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Bahasa Indonesia](README.id.md) · [اردو](README.ur.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [Kiswahili](README.sw.md) · [پنجابی](README.pa-Arab.md) · [తెలుగు](README.te.md) · [Naijá](README.pcm.md)
+[![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
-> Local media slimming tool
+<p dir="auto"><strong><a href="../../README.md">English</a></strong> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-Supports common images, videos, and PDF, and also allows dragging in entire folders
+> [!IMPORTANT]
+> **[⬇ Download SlimLuma for macOS — Universal DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+
+> Local-first media compressor
+
+Compress common image, video, and PDF formats, or drop in entire folders.
 
 ## Features & How It Works
 
-- **Image** — First correct the orientation, then scale down, re-encode, and process the profile; settings for PNG, WebP, and AVIF will be mapped to the corresponding engine parameters.
-- **Video** — Maintain aspect ratio when scaling the screen, do not enlarge, and align to even dimensions; convert audio to AAC, MP4 subtitles to mov_text, try to copy MKV subtitles, enable faststart for MP4.
-- **PDF** — qpdf will reorganize object streams and recompress compressible data; Ghostscript can further reduce the pixel density, quality, or color complexity of embedded images. Text-based PDF usually benefits less, while scanned documents usually see more noticeable changes.
-- **Target File Size** — SlimLuma will adjust quality step by step; if necessary, reduce size to achieve the clearest and safest result not exceeding the target. The target size requires ImageMagick. H.264 and HEVC can perform two passes of software encoding according to the target size, and reserve space for audio, subtitles, and the container; AV1 and separate audio compression do not yet support target volume.
-- **File Queue** — Images, videos, and PDF can be mixed; the queue allows 1–6 concurrent tasks, freezing the entire batch settings at the start.
-- **Safety** — The professional engine only writes hidden temporary .slimluma files in the target directory and does not touch the originals directly.
-- **Result Gatekeeping** — Reload according to the completeness rules of images, videos, or PDF, and refuse to output if key degradation is found.
-- **Automation** — Directly add to the compression queue from Clipboard, Monitored Folder, and Finder
+- **Image** — Correct orientation first, then resize, re-encode, and handle color profiles. PNG, WebP, and AVIF settings map to their engine-specific controls.
+- **Video** — Preserve aspect ratio, avoid upscaling, and use codec-safe dimensions. Convert audio to AAC, map MP4 subtitles to mov_text, preserve compatible MKV subtitles, and enable MP4 fast start.
+- **PDF** — qpdf reorganizes object streams and recompresses eligible data. Optional Ghostscript processing can reduce embedded-image resolution, quality, or color complexity. Scanned documents usually shrink more than text-first PDFs.
+- **Target File Size** — SlimLuma searches quality levels and, when necessary, dimensions to find the clearest safe image that stays within the target size. Image target size requires ImageMagick. H.264 and HEVC support two-pass target-size encoding with space reserved for audio, subtitles, and the container. AV1 and audio-only target sizing are not currently supported.
+- **File Queue** — Mix images, videos, and PDFs in one queue, run 1–6 jobs concurrently, and freeze the batch settings when processing starts.
+- **Safety** — External engines write to a hidden .slimluma temporary file on the destination volume and never modify the original directly.
+- **Result Gatekeeping** — SlimLuma reopens every result with image-, video-, or PDF-specific integrity checks and rejects output when a critical regression is detected.
+- **Automation** — Add work directly from the Clipboard, watched folders, Finder, and Shortcuts.
 
 ## Install
 
-1. [Download the Universal version for macOS from GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases)
-2. Move SlimLuma.app to the "Applications" folder.
-3. Open "Engine & Settings" and select "One-Click Auto-Complete Recommended Engine".
+1. [Download SlimLuma for macOS — Universal DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)
+2. Move SlimLuma.app to the Applications folder.
+3. Open Engines & Settings and choose Install Recommended Engines.
 
-SlimLuma uses Homebrew to install ImageMagick, FFmpeg, qpdf, and Ghostscript; media files always remain on this Mac.
+SlimLuma can install ImageMagick, FFmpeg, qpdf, and Ghostscript through Homebrew. Your media stays on this Mac.
 
 ## CLI
 
@@ -37,6 +46,8 @@ slimluma engines
 
 ## Local data and privacy
 
-The compression process does not upload media files. The browser or Homebrew only accesses the network when the user actively opens an authorized website, brew.sh, or executes Homebrew for installation.
+Compression never uploads media. Network access occurs only when you explicitly open a licensing or Homebrew website or ask Homebrew to install an engine.
 
-[For architecture, validation boundaries, license, and release notes, please refer to the main repository documentation.](../../README.md)
+[Read the canonical English documentation for architecture, validation boundaries, licensing, and release details.](../../README.md)
+
+[Contributing](../../CONTRIBUTING.md) · [Security](../../SECURITY.md) · [Code of Conduct](../../CODE_OF_CONDUCT.md) · [Support](../../SUPPORT.md)

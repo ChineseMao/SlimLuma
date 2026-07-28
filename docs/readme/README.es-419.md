@@ -2,7 +2,16 @@
 
 # SlimLuma
 
-[简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md) · [English](README.en.md) · [हिन्दी](README.hi.md) · [**Español (Latinoamérica)**](README.es-419.md) · [Español (España)](README.es-ES.md) · [العربية](README.ar.md) · [Français](README.fr.md) · [বাংলা](README.bn.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Bahasa Indonesia](README.id.md) · [اردو](README.ur.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [Kiswahili](README.sw.md) · [پنجابی](README.pa-Arab.md) · [తెలుగు](README.te.md) · [Naijá](README.pcm.md)
+[![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
+
+<p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <strong><a href="README.es-419.md">Español (Latinoamérica)</a></strong> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
+
+> [!IMPORTANT]
+> **[⬇ Descarga la versión Universal de macOS desde GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
 > Herramienta de compactación de medios local
 
@@ -21,7 +30,7 @@ Admite imágenes, videos y PDF comunes, y también se pueden arrastrar carpetas 
 
 ## Instalación
 
-1. [Descarga la versión Universal de macOS desde GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases)
+1. [Descarga la versión Universal de macOS desde GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)
 2. Mueve SlimLuma.app a la carpeta “Aplicaciones”.
 3. Abre “Motor y Configuración” y selecciona “Motor recomendado de autocompletar con un clic”.
 
@@ -40,3 +49,5 @@ slimluma engines
 El proceso de compresión no sube archivos de medios. Solo cuando el usuario abre activamente un sitio web autorizado, brew.sh o ejecuta Homebrew para la instalación, el navegador o Homebrew accederán a la red.
 
 [Para arquitectura, límites de verificación, licencias y notas de lanzamiento, consulte la documentación del repositorio principal.](../../README.md)
+
+[Contributing](../../CONTRIBUTING.md) · [Security](../../SECURITY.md) · [Code of Conduct](../../CODE_OF_CONDUCT.md) · [Support](../../SUPPORT.md)

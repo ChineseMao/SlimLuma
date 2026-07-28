@@ -11,6 +11,7 @@ SlimLuma 欢迎保持“本地优先、不覆盖原件、结果必须验证”�
 swift test
 node scripts/sync-system-localizations.mjs --check
 node scripts/generate-github-readmes.mjs --check
+node scripts/validate-github-localizations.mjs
 ```
 
 When changing compression behavior, add a synthetic or redistributable fixture
@@ -32,6 +33,18 @@ When adding user-visible copy:
 
 新增可见文案时，请同步源语言、20 个 locale、系统本地化和 GitHub README；布局变化
 必须检查 RTL。
+
+GitHub uses English `README.md` as the default international entry point,
+`README.zh-CN.md` as the complete Simplified Chinese mirror, and 20 generated
+visitor pages under `docs/readme/`. Release notes use the same locale manifest
+and live under `docs/releases/v<version>/`. Do not hand-edit generated files;
+update the source localization table, the version's `.i18n.json`, or the
+generator instead.
+
+GitHub 默认使用英文 `README.md`，完整简体中文镜像为 `README.zh-CN.md`，其余访客
+入口位于 `docs/readme/`。版本说明与它们共用 locale 清单，并生成到
+`docs/releases/v<version>/`。请勿直接修改生成文件；应更新源语言表、对应版本的
+`.i18n.json` 或生成器。
 
 ## Pull request / Pull Request
 

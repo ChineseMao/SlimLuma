@@ -7,6 +7,7 @@
 - [ ] `swift test`
 - [ ] `node scripts/sync-system-localizations.mjs --check`
 - [ ] `node scripts/generate-github-readmes.mjs --check`
+- [ ] `node scripts/validate-github-localizations.mjs`
 - [ ] Relevant real image, video or PDF fixture checked
 - [ ] RTL or VoiceOver path checked when UI/localization changed
 

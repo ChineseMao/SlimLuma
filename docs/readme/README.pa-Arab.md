@@ -2,30 +2,39 @@
 
 # SlimLuma
 
-[简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md) · [English](README.en.md) · [हिन्दी](README.hi.md) · [Español (Latinoamérica)](README.es-419.md) · [Español (España)](README.es-ES.md) · [العربية](README.ar.md) · [Français](README.fr.md) · [বাংলা](README.bn.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Bahasa Indonesia](README.id.md) · [اردو](README.ur.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [Kiswahili](README.sw.md) · [**پنجابی**](README.pa-Arab.md) · [తెలుగు](README.te.md) · [Naijá](README.pcm.md)
+[![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
-> مقامی میڈیا دا سائز گھٹاؤن والا ٹول
+<p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <strong><a href="README.pa-Arab.md">پنجابی</a></strong> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-عام تصویراں، ویڈیوز تے PDF نوں سپورٹ کردا اے، تسی پورا فولڈر وی کھچ سکدے او
+> [!IMPORTANT]
+> **[⬇ GitHub Releases توں macOS لئی یونیورسل ورژن ڈاؤن لوڈ کرو۔](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
-## خصوصیات تے اصول
-
-- **تصویر** — سب توں پہلا سمت درست کرو، پھر تناسب مطابق چھوٹا کرو، دوبارہ کوڈ کرو تے profile پروسیس کرو؛ PNG، WebP تے AVIF دی سیٹنگز متعلقہ انجن پیرامیٹرز نال میپ ہون گیاں۔
-- **ویڈیو** — سکرین زوم تناسب برقرار رکھیں، نہ بڑا کریں اور جفت سائز کے مطابق سیدھ کریں؛ آڈیو کو AAC میں منتقل کریں، MP4 سب ٹائٹلز کو mov_text میں تبدیل کریں، MKV سب ٹائٹلز کو جتنا ممکن ہو نقل کریں، MP4 میں faststart فعال کریں۔
-- **PDF** — qpdf آبجیکٹ اسٹریم کو دوبارہ ترتیب دے گا اور کمپریس ہو سکنے والے ڈیٹا کو دوبارہ کمپریس کرے گا؛ Ghostscript اندر شامل تصاویر کی پکسل ڈینسٹی، کوالٹی یا رنگین پیچیدگی کو بھی کم کر سکتا ہے۔ متن والے PDF عام طور پر کم فائدہ دیتے ہیں، اسکین شدہ دستاویزات میں یہ زیادہ نمایاں ہوتا ہے۔
-- **ہدف فائل سائز** — SlimLuma معیار قدم بہ قدم ایڈجسٹ کیتا جائے گا؛ ضرورت پوے تے سائز چھوٹا کیتا جائے گا، تاکہ مقصد توں زیادہ نہ ہوون والے سب توں صاف محفوظ نتیجے حاصل ہو سکّن۔ مقصد دا سائز ImageMagick ہون دی لوڑ ہے۔ H.264 تے HEVC ہدف سائز دے مطابق دو واری سافٹ ویئر انکوڈنگ کر سکدے نیں، تے آڈیو، سب ٹائٹلز تے کنٹینر لئی جگہ رکھدی نیں؛ AV1 تے انفرادی آڈیو کمپریشن ہن ہدف حجم نوں سپورٹ نہیں کردے۔
-- **فائل قطار** — تصاویر، ویڈیوز تے PDF ملا کے شامل کیتے جا سکتے نیں؛ قطار وچ 1–6 ایک وقت نال کم کرن والے کم دی اجازت اے، شروع وچ پوری کھیپ دے سیٹ اپ نوں منجمد کر دتا جاندا اے۔
-- **حفاظت** — پیشہ ورانہ انجن صرف ہدف ڈائریکٹری میں .slimluma مخفی عارضی فائلیں لکھتا ہے، اصل پر براہ راست اثر نہیں ڈالتا۔
-- **نتیجے دی رکھوالی** — تصویر، ویڈیو یا PDF دی مکملی دے قوانین دے مطابق دوبارہ پڑھو، جے ضروری کمی ہوئے تاں پیداوار مسترد کرو۔
-- **خودکاری** — کلِپ بورڈ، مانیٹر فولڈر اتے Finder توں سیدھا کمپریس قطار وچ داخل ہوؤ
-
-## انسٹال کرنا
-
-1. [GitHub Releases توں macOS لئی یونیورسل ورژن ڈاؤن لوڈ کرو۔](https://github.com/ChineseMao/SlimLuma/releases)
-2. SlimLuma.app نوں "ایپلیکیشنز" فولڈر وچ منتقل کرو۔
-3. "انجن تے ترتیبات" کھولو تے "ون کلک مکمل کرنے والا تجویز کردہ انجن" منتخب کرو۔
-
-SlimLuma Homebrew دے ذریعے ImageMagick، FFmpeg، qpdf تے Ghostscript نصب کرے؛ میڈیا فائل ہمیشہ ایہہ Mac تے رہن۔
+<div dir="rtl" align="right">
+<p><strong>مقامی میڈیا دا سائز گھٹاؤن والا ٹول</strong></p>
+<p>عام تصویراں، ویڈیوز تے PDF نوں سپورٹ کردا اے، تسی پورا فولڈر وی کھچ سکدے او</p>
+<h2>خصوصیات تے اصول</h2>
+<ul>
+<li><strong>تصویر</strong> — سب توں پہلا سمت درست کرو، پھر تناسب مطابق چھوٹا کرو، دوبارہ کوڈ کرو تے profile پروسیس کرو؛ PNG، WebP تے AVIF دی سیٹنگز متعلقہ انجن پیرامیٹرز نال میپ ہون گیاں۔</li>
+<li><strong>ویڈیو</strong> — سکرین زوم تناسب برقرار رکھیں، نہ بڑا کریں اور جفت سائز کے مطابق سیدھ کریں؛ آڈیو کو AAC میں منتقل کریں، MP4 سب ٹائٹلز کو mov_text میں تبدیل کریں، MKV سب ٹائٹلز کو جتنا ممکن ہو نقل کریں، MP4 میں faststart فعال کریں۔</li>
+<li><strong>PDF</strong> — qpdf آبجیکٹ اسٹریم کو دوبارہ ترتیب دے گا اور کمپریس ہو سکنے والے ڈیٹا کو دوبارہ کمپریس کرے گا؛ Ghostscript اندر شامل تصاویر کی پکسل ڈینسٹی، کوالٹی یا رنگین پیچیدگی کو بھی کم کر سکتا ہے۔ متن والے PDF عام طور پر کم فائدہ دیتے ہیں، اسکین شدہ دستاویزات میں یہ زیادہ نمایاں ہوتا ہے۔</li>
+<li><strong>ہدف فائل سائز</strong> — SlimLuma معیار قدم بہ قدم ایڈجسٹ کیتا جائے گا؛ ضرورت پوے تے سائز چھوٹا کیتا جائے گا، تاکہ مقصد توں زیادہ نہ ہوون والے سب توں صاف محفوظ نتیجے حاصل ہو سکّن۔ مقصد دا سائز ImageMagick ہون دی لوڑ ہے۔ H.264 تے HEVC ہدف سائز دے مطابق دو واری سافٹ ویئر انکوڈنگ کر سکدے نیں، تے آڈیو، سب ٹائٹلز تے کنٹینر لئی جگہ رکھدی نیں؛ AV1 تے انفرادی آڈیو کمپریشن ہن ہدف حجم نوں سپورٹ نہیں کردے۔</li>
+<li><strong>فائل قطار</strong> — تصاویر، ویڈیوز تے PDF ملا کے شامل کیتے جا سکتے نیں؛ قطار وچ 1–6 ایک وقت نال کم کرن والے کم دی اجازت اے، شروع وچ پوری کھیپ دے سیٹ اپ نوں منجمد کر دتا جاندا اے۔</li>
+<li><strong>حفاظت</strong> — پیشہ ورانہ انجن صرف ہدف ڈائریکٹری میں .slimluma مخفی عارضی فائلیں لکھتا ہے، اصل پر براہ راست اثر نہیں ڈالتا۔</li>
+<li><strong>نتیجے دی رکھوالی</strong> — تصویر، ویڈیو یا PDF دی مکملی دے قوانین دے مطابق دوبارہ پڑھو، جے ضروری کمی ہوئے تاں پیداوار مسترد کرو۔</li>
+<li><strong>خودکاری</strong> — کلِپ بورڈ، مانیٹر فولڈر اتے Finder توں سیدھا کمپریس قطار وچ داخل ہوؤ</li>
+</ul>
+<h2>انسٹال کرنا</h2>
+<ol>
+<li><a href="https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg">GitHub Releases توں macOS لئی یونیورسل ورژن ڈاؤن لوڈ کرو۔</a></li>
+<li>SlimLuma.app نوں &quot;ایپلیکیشنز&quot; فولڈر وچ منتقل کرو۔</li>
+<li>&quot;انجن تے ترتیبات&quot; کھولو تے &quot;ون کلک مکمل کرنے والا تجویز کردہ انجن&quot; منتخب کرو۔</li>
+</ol>
+<p>SlimLuma Homebrew دے ذریعے ImageMagick، FFmpeg، qpdf تے Ghostscript نصب کرے؛ میڈیا فائل ہمیشہ ایہہ Mac تے رہن۔</p>
+</div>
 
 ## CLI
 
@@ -35,8 +44,8 @@ slimluma compress movie.mov --video-codec hevc --target-size-mb 25
 slimluma engines
 ```
 
-## مقامی ڈیٹا اتے پرائیویسی
-
-کمپریشن عمل دوران میڈیا فائلز اپلوڈ نہیں ہندیاں۔ صرف جدوں یوزر فعال طور تے اجازت ویب سائٹ، brew.sh کھولدا اے یا Homebrew انسٹال کردا اے، براؤزر یا Homebrew نیٹ ورک نال جڑدا اے۔
+<div dir="rtl" align="right"><h2>مقامی ڈیٹا اتے پرائیویسی</h2><p>کمپریشن عمل دوران میڈیا فائلز اپلوڈ نہیں ہندیاں۔ صرف جدوں یوزر فعال طور تے اجازت ویب سائٹ، brew.sh کھولدا اے یا Homebrew انسٹال کردا اے، براؤزر یا Homebrew نیٹ ورک نال جڑدا اے۔</p></div>
 
 [ڈھانچے، ویریفیکیشن سرحد، لائسنس اور ریلیز نوٹس کے بارے میں معلومات کے لیے، مرکزی ریپو کی دستاویزات دیکھیں۔](../../README.md)
+
+[Contributing](../../CONTRIBUTING.md) · [Security](../../SECURITY.md) · [Code of Conduct](../../CODE_OF_CONDUCT.md) · [Support](../../SUPPORT.md)

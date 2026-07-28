@@ -23,6 +23,7 @@ Runtime、安全时间戳、Apple 公证、staple、Gatekeeper 验收和发布�
 swift test
 node scripts/sync-system-localizations.mjs --check
 node scripts/generate-github-readmes.mjs --check
+node scripts/validate-github-localizations.mjs
 SLIMLUMA_CODE_SIGN_IDENTITY="<Developer ID SHA-1>" scripts/package-app.sh
 ```
 
@@ -43,7 +44,7 @@ scripts/create-release-artifacts.sh --checksums-only
 Apple `Accepted`，再对原始二进制执行严格 `codesign` 验证；app 和 DMG 仍必须
 staple、stapler validate 和 Gatekeeper 通过。
 
-## 0.2.0 本地发行证据
+## 0.2.0 公开发行证据
 
 2026-07-28 最终候选：
 
@@ -54,21 +55,27 @@ staple、stapler validate 和 Gatekeeper 通过。
 - CLI：Apple Accepted、严格 codesign 通过
 - Universal：`x86_64 arm64`
 - `SHA256SUMS`：三项均通过 `shasum -a 256 -c`
+- GitHub 仓库：<https://github.com/ChineseMao/SlimLuma>，Public
+- GitHub Release：<https://github.com/ChineseMao/SlimLuma/releases/tag/v0.2.0>
+- 匿名访问：仓库和 Release 均返回 HTTP 200
+- 附件抽查：四个附件均可匿名下载；三项发行物哈希一致
+- 下载后 DMG：stapler validate 通过，Gatekeeper 为 `Notarized Developer ID`
 
-本地证据不等于 GitHub Release 已公开；只有明确创建 tag 并完成远端 workflow 与
-下载抽查后才能更新为公开状态。
+`v0.2.0` 已于 2026-07-28 完成公开发布与下载后抽查。本节同时保留本地签名、公证
+证据，避免把源码测试、Apple 验收和 GitHub 公开发行混为同一个状态。
 
 ## 自动发行
 
 1. 更新 `Support/Info.plist` 中版本和 build。
-2. 更新 `CHANGELOG.md` 和 `docs/releases/v<version>.md`；当前 release notes
-   提供 20 个 GitHub 语言入口。
+2. 更新 `CHANGELOG.md` 和 `docs/releases/v<version>.i18n.json`，运行生成器创建
+   `docs/releases/v<version>.md` 及 20 份版本说明。
 3. 确认 `main` 的 CI 全绿。
 4. 创建与版本完全一致的 tag，例如 `v0.2.0`。
 5. Release workflow 导入临时 keychain，构建、签名、公证并发布 ZIP、DMG、CLI
    与 `SHA256SUMS`。
-6. 同一 tag 的发行任务不会并发执行；上传前会再次校验 20 份 GitHub README、
-   本地化资源、测试、脚本语法、Universal 架构和三项 SHA-256。
+6. 同一 tag 的发行任务不会并发执行；上传前会再次校验英文默认 README、完整中文
+   镜像、20 份 GitHub README、20 份版本说明、直接下载链接、本地化资源、相对链接、
+   测试、脚本语法、Universal 架构和三项 SHA-256。
 7. 工作流无论成功或失败都会删除临时 keychain、P12 副本和 API 私钥临时文件。
 
 发布后的 GitHub Release 和可下载附件仍需人工抽查；workflow 成功不替代产品页、

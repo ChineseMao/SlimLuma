@@ -2,30 +2,39 @@
 
 # SlimLuma
 
-[简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md) · [English](README.en.md) · [हिन्दी](README.hi.md) · [Español (Latinoamérica)](README.es-419.md) · [Español (España)](README.es-ES.md) · [**العربية**](README.ar.md) · [Français](README.fr.md) · [বাংলা](README.bn.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Bahasa Indonesia](README.id.md) · [اردو](README.ur.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [Kiswahili](README.sw.md) · [پنجابی](README.pa-Arab.md) · [తెలుగు](README.te.md) · [Naijá](README.pcm.md)
+[![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
-> أداة تقليل حجم الوسائط المحلية
+<p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <strong><a href="README.ar.md">العربية</a></strong> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-يدعم الصور والفيديوهات الشائعة وPDF، ويمكن أيضًا سحب مجلد كامل.
+> [!IMPORTANT]
+> **[⬇ قم بتنزيل النسخة العالمية المناسبة لـ macOS من GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
-## الميزات وآلية العمل
-
-- **صورة** — قم بتصحيح الاتجاه أولاً، ثم قلص الحجم، وأعد الترميز، وعالج الملف الشخصي؛ سيتم تعيين إعدادات PNG وWebP وAVIF إلى معلمات المحرك المقابلة.
-- **فيديو** — تكبير وتصغير الصورة مع الحفاظ على النسبة، وعدم التكبير ومحاذاة الأبعاد الزوجية؛ تحويل الصوت إلى AAC، تحويل ترجمات MP4 إلى mov_text، محاولة نسخ ترجمات MKV، تفعيل faststart في MP4.
-- **PDF** — يمكن أن تعيد qpdf ترتيب تدفقات الكائنات وإعادة ضغط البيانات القابلة للضغط؛ كما يمكن لـ Ghostscript تقليل كثافة البكسل أو الجودة أو تعقيد الألوان للصور المدمجة. عادة ما يكون الفائدة الصغيرة من PDF النصية، بينما تكون واضحة أكثر في المستندات الممسوحة ضوئيًا.
-- **حجم الملف المستهدف** — SlimLuma سيتم تعديل الجودة تدريجيًا؛ إذا لزم الأمر، سيتم تصغير الحجم للحصول على أفضل نتيجة آمنة لا تتجاوز الهدف. حجم الهدف يحتاج إلى ImageMagick يمكن لـ H.264 وHEVC تنفيذ الترميز البرمجي مرتين حسب الحجم المستهدف، وتخصيص مساحة للصوت والترجمات والحاوية؛ AV1 وضغط الصوت المنفصل لا يدعمان الحجم المستهدف حالياً.
-- **قائمة انتظار الملفات** — يمكن خلط الصور والفيديو وPDF؛ يتيح الصف من 1 إلى 6 مهام متزامنة، ويتم تجميد جميع الإعدادات عند البدء.
-- **آمن** — المحرك الاحترافي يكتب فقط ملفات مؤقتة مخفية .slimluma في الدليل الهدف، ولا يتعامل مباشرة مع الأصل.
-- **حارس النتيجة** — أعد القراءة وفقًا لقواعد اكتمال الصور أو الفيديو أو PDF، وإذا تم العثور على تدهور مهم، فرفض الإخراج.
-- **الأتمتة** — الانتقال مباشرة إلى قائمة الضغط من الحافظة ومجلد المراقبة وFinder
-
-## التثبيت
-
-1. [قم بتنزيل النسخة العالمية المناسبة لـ macOS من GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases)
-2. انقل SlimLuma.app إلى مجلد "التطبيقات".
-3. افتح "المحرك والإعدادات" واختر "محرك التوصية بالتكميل التلقائي بنقرة واحدة".
-
-SlimLuma يستخدم Homebrew لتثبيت ImageMagick وFFmpeg وqpdf وGhostscript؛ تظل ملفات الوسائط دائمًا على هذا الـ Mac.
+<div dir="rtl" align="right">
+<p><strong>أداة تقليل حجم الوسائط المحلية</strong></p>
+<p>يدعم الصور والفيديوهات الشائعة وPDF، ويمكن أيضًا سحب مجلد كامل.</p>
+<h2>الميزات وآلية العمل</h2>
+<ul>
+<li><strong>صورة</strong> — قم بتصحيح الاتجاه أولاً، ثم قلص الحجم، وأعد الترميز، وعالج الملف الشخصي؛ سيتم تعيين إعدادات PNG وWebP وAVIF إلى معلمات المحرك المقابلة.</li>
+<li><strong>فيديو</strong> — تكبير وتصغير الصورة مع الحفاظ على النسبة، وعدم التكبير ومحاذاة الأبعاد الزوجية؛ تحويل الصوت إلى AAC، تحويل ترجمات MP4 إلى mov_text، محاولة نسخ ترجمات MKV، تفعيل faststart في MP4.</li>
+<li><strong>PDF</strong> — يمكن أن تعيد qpdf ترتيب تدفقات الكائنات وإعادة ضغط البيانات القابلة للضغط؛ كما يمكن لـ Ghostscript تقليل كثافة البكسل أو الجودة أو تعقيد الألوان للصور المدمجة. عادة ما يكون الفائدة الصغيرة من PDF النصية، بينما تكون واضحة أكثر في المستندات الممسوحة ضوئيًا.</li>
+<li><strong>حجم الملف المستهدف</strong> — SlimLuma سيتم تعديل الجودة تدريجيًا؛ إذا لزم الأمر، سيتم تصغير الحجم للحصول على أفضل نتيجة آمنة لا تتجاوز الهدف. حجم الهدف يحتاج إلى ImageMagick يمكن لـ H.264 وHEVC تنفيذ الترميز البرمجي مرتين حسب الحجم المستهدف، وتخصيص مساحة للصوت والترجمات والحاوية؛ AV1 وضغط الصوت المنفصل لا يدعمان الحجم المستهدف حالياً.</li>
+<li><strong>قائمة انتظار الملفات</strong> — يمكن خلط الصور والفيديو وPDF؛ يتيح الصف من 1 إلى 6 مهام متزامنة، ويتم تجميد جميع الإعدادات عند البدء.</li>
+<li><strong>آمن</strong> — المحرك الاحترافي يكتب فقط ملفات مؤقتة مخفية .slimluma في الدليل الهدف، ولا يتعامل مباشرة مع الأصل.</li>
+<li><strong>حارس النتيجة</strong> — أعد القراءة وفقًا لقواعد اكتمال الصور أو الفيديو أو PDF، وإذا تم العثور على تدهور مهم، فرفض الإخراج.</li>
+<li><strong>الأتمتة</strong> — الانتقال مباشرة إلى قائمة الضغط من الحافظة ومجلد المراقبة وFinder</li>
+</ul>
+<h2>التثبيت</h2>
+<ol>
+<li><a href="https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg">قم بتنزيل النسخة العالمية المناسبة لـ macOS من GitHub Releases.</a></li>
+<li>انقل SlimLuma.app إلى مجلد &quot;التطبيقات&quot;.</li>
+<li>افتح &quot;المحرك والإعدادات&quot; واختر &quot;محرك التوصية بالتكميل التلقائي بنقرة واحدة&quot;.</li>
+</ol>
+<p>SlimLuma يستخدم Homebrew لتثبيت ImageMagick وFFmpeg وqpdf وGhostscript؛ تظل ملفات الوسائط دائمًا على هذا الـ Mac.</p>
+</div>
 
 ## CLI
 
@@ -35,8 +44,8 @@ slimluma compress movie.mov --video-codec hevc --target-size-mb 25
 slimluma engines
 ```
 
-## البيانات المحلية والخصوصية
-
-عملية الضغط لا ترفع ملفات الوسائط. فقط عندما يفتح المستخدم موقع الترخيص بنشاط، brew.sh أو ينفذ Homebrew للتثبيت، عندها يقوم المتصفح أو Homebrew بالوصول إلى الشبكة.
+<div dir="rtl" align="right"><h2>البيانات المحلية والخصوصية</h2><p>عملية الضغط لا ترفع ملفات الوسائط. فقط عندما يفتح المستخدم موقع الترخيص بنشاط، brew.sh أو ينفذ Homebrew للتثبيت، عندها يقوم المتصفح أو Homebrew بالوصول إلى الشبكة.</p></div>
 
 [للاطلاع على البنية، والتحقق من الحدود، وترخيص المستخدم، وملاحظات الإصدار، يرجى مراجعة مستندات المستودع الرئيسي.](../../README.md)
+
+[Contributing](../../CONTRIBUTING.md) · [Security](../../SECURITY.md) · [Code of Conduct](../../CODE_OF_CONDUCT.md) · [Support](../../SUPPORT.md)

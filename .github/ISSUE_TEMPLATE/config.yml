@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security report / 安全报告
-    url: https://github.com/ChineseMao/SlimLuma/security
+    url: https://github.com/ChineseMao/SlimLuma/security/advisories/new
     about: Use private vulnerability reporting when available / 优先使用私密漏洞报告
+  - name: Support / 使用支持
+    url: https://github.com/ChineseMao/SlimLuma/blob/main/SUPPORT.md
+    about: Troubleshooting steps and information to include / 排障步骤和建议提供的信息

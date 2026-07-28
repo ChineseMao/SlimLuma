@@ -2,30 +2,39 @@
 
 # SlimLuma
 
-[简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md) · [English](README.en.md) · [हिन्दी](README.hi.md) · [Español (Latinoamérica)](README.es-419.md) · [Español (España)](README.es-ES.md) · [العربية](README.ar.md) · [Français](README.fr.md) · [বাংলা](README.bn.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Bahasa Indonesia](README.id.md) · [**اردو**](README.ur.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [日本語](README.ja.md) · [Kiswahili](README.sw.md) · [پنجابی](README.pa-Arab.md) · [తెలుగు](README.te.md) · [Naijá](README.pcm.md)
+[![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
-> مقامی میڈیا کمپریشن ٹول
+<p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <strong><a href="README.ur.md">اردو</a></strong> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-عام تصاویر، ویڈیوز اور PDF کی حمایت کرتا ہے، آپ پورے فولڈر کو بھی ڈریگ کر سکتے ہیں
+> [!IMPORTANT]
+> **[⬇ GitHub Releases سے macOS کے لیے Universal ورژن ڈاؤن لوڈ کریں۔](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
-## خصوصیات اور طریقۂ کار
-
-- **تصویر** — پہلے سمت درست کریں، پھر تناسب کے مطابق سکڑائیں، دوبارہ کوڈ کریں اور پروفائل کو پروسیس کریں؛ PNG، WebP اور AVIF کی سیٹنگز متعلقہ انجن کے پیرامیٹرز کے طور پر میپ ہوں گی۔
-- **ویڈیو** — تصویر کا زوم پراپشن برقرار رکھے، بڑھائے بغیر اور جفت سائز کے مطابق سیدھ کرے؛ آڈیو AAC میں تبدیل کریں، MP4 سب ٹائٹلز کو mov_text میں تبدیل کریں، MKV سب ٹائٹلز کو زیادہ سے زیادہ نقل کریں، MP4 میں faststart کو فعال کریں۔
-- **PDF** — qpdf آبجیکٹ اسٹریم کو دوبارہ منظم کرے گا اور کمپریس ہونے والے ڈیٹا کو دوبارہ کمپریس کرے گا؛ Ghostscript ان بیڈڈ تصاویر کی پکسل کثافت، معیار یا رنگین پیچیدگی کو کم بھی کر سکتا ہے۔ ٹیکسٹ قسم کے PDF عموماً فائدہ کم ہوتا ہے، اسکین شدہ دستاویزات میں یہ زیادہ واضح ہوتا ہے۔
-- **ہدف فائل کا سائز** — SlimLuma معیار کو مرحلہ وار ایڈجسٹ کرے گا؛ ضرورت ہونے پر سائز چھوٹا کرے گا، تاکہ سب سے صاف اور محفوظ نتیجہ حاصل کیا جا سکے جو ہدف سے زیادہ نہ ہو۔ ہدف کا سائز ImageMagick ہونا چاہیے۔ H.264 اور HEVC ہدف سائز کے مطابق دو بار سافٹ ویئر انکوڈنگ انجام دے سکتے ہیں، اور آڈیو، سب ٹائٹل اور کنٹینر کے لیے جگہ مختص کر سکتے ہیں؛ AV1 اور الگ آڈیو کمپریشن فی الحال ہدف حجم کی حمایت نہیں کرتے۔
-- **فائل قطار** — تصاویر، ویڈیوز اور PDF کو ملا کر شامل کیا جا سکتا ہے؛ قطار 1–6 ہم وقت ساز کاموں کی اجازت دیتی ہے، شروع میں پوری سیٹ کو منجمد کر دیا جاتا ہے۔
-- **محفوظ** — پروفیشنل انجن صرف ہدف ڈائریکٹری میں .slimluma پوشیدہ عارضی فائلیں لکھتا ہے، اصل فائلوں کو براہ راست نہیں چھوتا۔
-- **نتائج کے گارڈین** — تصویر، ویڈیو یا PDF کی مکملیت کے قواعد کے مطابق دوبارہ پڑھیں، اگر کلیدی زوال پایا جائے تو آؤٹ پٹ دینے سے انکار کریں۔
-- **خودکاری** — کلپ بورڈ، مانیٹر فولڈر اور Finder سے براہِ راست کمپریشن قطار میں جائیں
-
-## انسٹالیشن
-
-1. [GitHub Releases سے macOS کے لیے Universal ورژن ڈاؤن لوڈ کریں۔](https://github.com/ChineseMao/SlimLuma/releases)
-2. SlimLuma.app کو "Applications" فولڈر میں منتقل کریں۔
-3. "انجن اور سیٹنگز" کھولیں اور "ایک کلک میں تجویز کردہ انجن مکمل کریں" منتخب کریں۔
-
-SlimLuma Homebrew کے ذریعے ImageMagick، FFmpeg، qpdf اور Ghostscript انسٹال کرتا ہے؛ میڈیا فائلیں ہمیشہ اسی Mac پر رہتی ہیں۔
+<div dir="rtl" align="right">
+<p><strong>مقامی میڈیا کمپریشن ٹول</strong></p>
+<p>عام تصاویر، ویڈیوز اور PDF کی حمایت کرتا ہے، آپ پورے فولڈر کو بھی ڈریگ کر سکتے ہیں</p>
+<h2>خصوصیات اور طریقۂ کار</h2>
+<ul>
+<li><strong>تصویر</strong> — پہلے سمت درست کریں، پھر تناسب کے مطابق سکڑائیں، دوبارہ کوڈ کریں اور پروفائل کو پروسیس کریں؛ PNG، WebP اور AVIF کی سیٹنگز متعلقہ انجن کے پیرامیٹرز کے طور پر میپ ہوں گی۔</li>
+<li><strong>ویڈیو</strong> — تصویر کا زوم پراپشن برقرار رکھے، بڑھائے بغیر اور جفت سائز کے مطابق سیدھ کرے؛ آڈیو AAC میں تبدیل کریں، MP4 سب ٹائٹلز کو mov_text میں تبدیل کریں، MKV سب ٹائٹلز کو زیادہ سے زیادہ نقل کریں، MP4 میں faststart کو فعال کریں۔</li>
+<li><strong>PDF</strong> — qpdf آبجیکٹ اسٹریم کو دوبارہ منظم کرے گا اور کمپریس ہونے والے ڈیٹا کو دوبارہ کمپریس کرے گا؛ Ghostscript ان بیڈڈ تصاویر کی پکسل کثافت، معیار یا رنگین پیچیدگی کو کم بھی کر سکتا ہے۔ ٹیکسٹ قسم کے PDF عموماً فائدہ کم ہوتا ہے، اسکین شدہ دستاویزات میں یہ زیادہ واضح ہوتا ہے۔</li>
+<li><strong>ہدف فائل کا سائز</strong> — SlimLuma معیار کو مرحلہ وار ایڈجسٹ کرے گا؛ ضرورت ہونے پر سائز چھوٹا کرے گا، تاکہ سب سے صاف اور محفوظ نتیجہ حاصل کیا جا سکے جو ہدف سے زیادہ نہ ہو۔ ہدف کا سائز ImageMagick ہونا چاہیے۔ H.264 اور HEVC ہدف سائز کے مطابق دو بار سافٹ ویئر انکوڈنگ انجام دے سکتے ہیں، اور آڈیو، سب ٹائٹل اور کنٹینر کے لیے جگہ مختص کر سکتے ہیں؛ AV1 اور الگ آڈیو کمپریشن فی الحال ہدف حجم کی حمایت نہیں کرتے۔</li>
+<li><strong>فائل قطار</strong> — تصاویر، ویڈیوز اور PDF کو ملا کر شامل کیا جا سکتا ہے؛ قطار 1–6 ہم وقت ساز کاموں کی اجازت دیتی ہے، شروع میں پوری سیٹ کو منجمد کر دیا جاتا ہے۔</li>
+<li><strong>محفوظ</strong> — پروفیشنل انجن صرف ہدف ڈائریکٹری میں .slimluma پوشیدہ عارضی فائلیں لکھتا ہے، اصل فائلوں کو براہ راست نہیں چھوتا۔</li>
+<li><strong>نتائج کے گارڈین</strong> — تصویر، ویڈیو یا PDF کی مکملیت کے قواعد کے مطابق دوبارہ پڑھیں، اگر کلیدی زوال پایا جائے تو آؤٹ پٹ دینے سے انکار کریں۔</li>
+<li><strong>خودکاری</strong> — کلپ بورڈ، مانیٹر فولڈر اور Finder سے براہِ راست کمپریشن قطار میں جائیں</li>
+</ul>
+<h2>انسٹالیشن</h2>
+<ol>
+<li><a href="https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg">GitHub Releases سے macOS کے لیے Universal ورژن ڈاؤن لوڈ کریں۔</a></li>
+<li>SlimLuma.app کو &quot;Applications&quot; فولڈر میں منتقل کریں۔</li>
+<li>&quot;انجن اور سیٹنگز&quot; کھولیں اور &quot;ایک کلک میں تجویز کردہ انجن مکمل کریں&quot; منتخب کریں۔</li>
+</ol>
+<p>SlimLuma Homebrew کے ذریعے ImageMagick، FFmpeg، qpdf اور Ghostscript انسٹال کرتا ہے؛ میڈیا فائلیں ہمیشہ اسی Mac پر رہتی ہیں۔</p>
+</div>
 
 ## CLI
 
@@ -35,8 +44,8 @@ slimluma compress movie.mov --video-codec hevc --target-size-mb 25
 slimluma engines
 ```
 
-## مقامی ڈیٹا اور پرائیویسی
-
-کمپریشن کے عمل میں میڈیا فائل اپلوڈ نہیں کی جاتی۔ صرف جب صارف خود منظور شدہ ویب سائٹ، brew.sh کھولتا ہے یا Homebrew انسٹال کرتا ہے تو براؤزر یا Homebrew نیٹ ورک تک رسائی حاصل کرتے ہیں۔
+<div dir="rtl" align="right"><h2>مقامی ڈیٹا اور پرائیویسی</h2><p>کمپریشن کے عمل میں میڈیا فائل اپلوڈ نہیں کی جاتی۔ صرف جب صارف خود منظور شدہ ویب سائٹ، brew.sh کھولتا ہے یا Homebrew انسٹال کرتا ہے تو براؤزر یا Homebrew نیٹ ورک تک رسائی حاصل کرتے ہیں۔</p></div>
 
 [آرکیٹیکچر، توثیق کی حد، لائسنس اور ریلیز نوٹس کے بارے میں مرکزی ریپوزٹری کے دستاویزات دیکھیں۔](../../README.md)
+
+[Contributing](../../CONTRIBUTING.md) · [Security](../../SECURITY.md) · [Code of Conduct](../../CODE_OF_CONDUCT.md) · [Support](../../SUPPORT.md)
