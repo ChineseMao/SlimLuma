@@ -1,21 +1,53 @@
-MIT License
+SlimLuma Proprietary Source and Binary License
 
-Copyright (c) 2026 SlimLuma contributors
+Copyright © 2026 SlimLuma copyright holders.
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Official publisher:
+SlimLuma copyright holders (Apple Developer Team PRIVATE_TEAM_ID)
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. Source access
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The SlimLuma source code is made publicly visible for inspection, evaluation,
+and security review. Public visibility does not make SlimLuma open source.
+
+Except for rights that cannot be restricted by applicable law and rights
+required by GitHub's terms to host, display, and permit use of GitHub
+functionality such as viewing and forking within the service, no license or
+permission is granted to use, copy, modify, merge, publish, distribute,
+sublicense, sell, create derivative works from, or incorporate the source code
+or other project materials into another product or service.
+
+2. Official binary use
+
+You may download, install, and use unmodified official SlimLuma binary releases
+on devices you own or control for personal or internal business purposes. You
+may not redistribute, resell, sublicense, rent, lease, or commercially exploit
+the binaries, or reverse engineer them except to the extent such a restriction
+is prohibited by applicable law. A release accompanied by separate terms is
+governed by those terms.
+
+3. Earlier releases
+
+This license does not revoke rights previously granted. SlimLuma 0.2.0, its
+tagged source, and the 0.2.0 CLI archive were released under the MIT License.
+Copies received under that license remain governed by it. Project materials
+first published under this notice and later releases that identify this notice
+are governed by these terms.
+
+4. Third-party materials
+
+Third-party software, libraries, engines, assets, and other materials remain
+governed by their respective licenses. Those licenses are not replaced or
+restricted by this document. See THIRD_PARTY_NOTICES.md.
+
+5. Disclaimer
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, SLIMLUMA IS PROVIDED "AS IS", WITHOUT
+WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR PUBLISHER BE LIABLE
+FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+For permissions beyond these terms, contact the publisher through this
+repository.

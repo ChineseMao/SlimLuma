@@ -11,6 +11,12 @@
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
 <div dir="rtl" align="right">
+<p><strong>SlimLuma copyright holders (PRIVATE_TEAM_ID)</strong></p>
+<p>نُشرت الشفرة المصدرية للإصدار SlimLuma 0.2.0 بموجب رخصة MIT. يستخدم التطوير الحالي الرخصة الموضحة في الفرع main؛ راجع LICENSE.</p>
+<p><a href="https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE">v0.2.0 MIT LICENSE</a> · <a href="https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE">main LICENSE</a></p>
+</div>
+
+<div dir="rtl" align="right">
 <p>يدعم الصور والفيديوهات الشائعة وPDF، ويمكن أيضًا سحب مجلد كامل.</p>
 <ul>
 <li>SlimLuma سيتم تعديل الجودة تدريجيًا؛ إذا لزم الأمر، سيتم تصغير الحجم للحصول على أفضل نتيجة آمنة لا تتجاوز الهدف. حجم الهدف يحتاج إلى ImageMagick</li>

@@ -41,12 +41,14 @@
     <string>6.0</string>
     <key>CFBundleName</key>
     <string>SlimLuma</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by SlimLuma copyright holders</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-	<string>0.2.0</string>
+	<string>0.2.1</string>
     <key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
     <key>LSMinimumSystemVersion</key>

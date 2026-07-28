@@ -10,6 +10,12 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
+> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
+>
+> SlimLuma 0.2.0-এর সোর্স কোড MIT License-এর অধীনে প্রকাশিত হয়েছিল। বর্তমান ডেভেলপমেন্টে main শাখায় দেখানো লাইসেন্স প্রযোজ্য; LICENSE দেখুন।
+>
+> [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [main LICENSE](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
+
 সাধারণ ছবি, ভিডিও এবং PDF সমর্থন করে, পুরো ফোল্ডারও টেনে আনা যেতে পারে।
 
 - SlimLuma মান অনুযায়ী ধাপে ধাপে সমন্বয় করা হবে; প্রয়োজনে আকার ছোট করা হবে, যাতে লক্ষ্য অতিক্রম না করে সবচেয়ে পরিষ্কার এবং নিরাপদ ফলাফল পাওয়া যায়। লক্ষ্য আকারের প্রয়োজন ImageMagick.

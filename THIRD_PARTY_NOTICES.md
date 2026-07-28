@@ -1,5 +1,9 @@
 # Third-party engines
 
+SlimLuma's project code is governed by [LICENSE](LICENSE). The licenses below
+apply only to the identified third-party materials and remain independent of
+SlimLuma's all-rights-reserved terms.
+
 SlimLuma does not currently bundle third-party executables. It discovers
 compatible command-line tools installed by the user and invokes them as
 separate processes with explicit argument arrays.
@@ -23,4 +27,7 @@ The standalone `slimluma` command-line interface links the following package:
 | --- | --- | --- | --- |
 | Swift Argument Parser 1.8.2 | Type-safe CLI parsing and generated help | Apache License 2.0 | https://github.com/apple/swift-argument-parser |
 
-The release archive includes this notice alongside the command-line binary.
+Future release packages include this notice and the full Swift Argument Parser
+Apache License 2.0 text alongside the applicable SlimLuma license. The 0.2.0
+CLI archive retains the MIT project license under which that version was
+released.

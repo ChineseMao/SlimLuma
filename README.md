@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml/badge.svg)](https://github.com/ChineseMao/SlimLuma/actions/workflows/ci.yml)
 [![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](https://github.com/ChineseMao/SlimLuma/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](LICENSE)
+[![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-5b55ea.svg)](LICENSE)
 
 [**English**](README.md) · [简体中文](README.zh-CN.md) ·
 [繁體中文](docs/readme/README.zh-Hant.md) · [हिन्दी](docs/readme/README.hi.md) ·
@@ -22,10 +22,10 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
-SlimLuma is a free, open-source, local-first macOS app for compressing images,
-animated images, videos, and PDF files. It provides a safe, configurable
-workflow while delegating codec work to mature tools such as ImageMagick,
-FFmpeg, qpdf, and optional Ghostscript.
+SlimLuma is a free-to-download, source-visible, local-first macOS app for
+compressing images, animated images, videos, and PDF files. It provides a safe,
+configurable workflow while delegating codec work to mature tools such as
+ImageMagick, FFmpeg, qpdf, and optional Ghostscript.
 
 Media stays on your Mac. Originals are not overwritten.
 
@@ -183,6 +183,7 @@ Additional project documents:
 - [PDF validation](docs/PDF_VALIDATION_2026-07-26.md)
 - [Release readiness](docs/RELEASE_READINESS_2026-07-28.md)
 - [Changelog](CHANGELOG.md)
+- [Publisher and release identity](PUBLISHER.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
@@ -190,5 +191,14 @@ Additional project documents:
 
 ## License
 
-SlimLuma source code is available under the [MIT License](LICENSE). External
-engines remain under their own licenses.
+Current development is publicly visible for review but is proprietary:
+[all rights are reserved](LICENSE). The official publisher is
+SlimLuma copyright holders Public visibility does not grant
+open-source rights beyond GitHub's platform terms. Official, unmodified binaries
+may be used under the limited grant in `LICENSE`.
+
+SlimLuma 0.2.0 was released under the MIT License. That historical grant is not
+revoked; later project materials use the terms published with their revision
+or release. External engines remain under their own licenses. See
+[Publisher and release identity](PUBLISHER.md) and
+[third-party notices](THIRD_PARTY_NOTICES.md).

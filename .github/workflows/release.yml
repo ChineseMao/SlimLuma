@@ -34,6 +34,48 @@ jobs:
           version="$(/usr/libexec/PlistBuddy \
             -c 'Print :CFBundleShortVersionString' Support/Info.plist)"
           test "$GITHUB_REF_NAME" = "v$version"
+          test "$(
+            jq -r '.generatedReleaseNotesVersion' \
+              docs/releases/release-state.json
+          )" = "$version"
+          test -f "docs/releases/$GITHUB_REF_NAME.md"
+          test -d "docs/releases/$GITHUB_REF_NAME"
+
+      - name: Refuse to replace an existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+
+      - name: Verify release credentials are configured
+        env:
+          DEVELOPER_ID_CERTIFICATE_P12_BASE64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_P12_BASE64 }}
+          DEVELOPER_ID_CERTIFICATE_PASSWORD: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+          RELEASE_KEYCHAIN_PASSWORD: ${{ secrets.RELEASE_KEYCHAIN_PASSWORD }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: |
+          missing=()
+          [[ -n "$DEVELOPER_ID_CERTIFICATE_P12_BASE64" ]] \
+            || missing+=("DEVELOPER_ID_CERTIFICATE_P12_BASE64")
+          [[ -n "$DEVELOPER_ID_CERTIFICATE_PASSWORD" ]] \
+            || missing+=("DEVELOPER_ID_CERTIFICATE_PASSWORD")
+          [[ -n "$RELEASE_KEYCHAIN_PASSWORD" ]] \
+            || missing+=("RELEASE_KEYCHAIN_PASSWORD")
+          [[ -n "$APPLE_API_PRIVATE_KEY" ]] \
+            || missing+=("APPLE_API_PRIVATE_KEY")
+          [[ -n "$APPLE_API_KEY_ID" ]] \
+            || missing+=("APPLE_API_KEY_ID")
+          [[ -n "$APPLE_API_ISSUER_ID" ]] \
+            || missing+=("APPLE_API_ISSUER_ID")
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Missing required release secret: %s\n' "${missing[@]}" >&2
+            exit 1
+          fi
 
       - name: Import Developer ID certificate
         env:
@@ -131,13 +173,7 @@ jobs:
             dist/slimluma-*-macOS-universal.tar.gz
             dist/SHA256SUMS
           )
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
-            if [[ -f "$release_notes" ]]; then
-              gh release edit "$GITHUB_REF_NAME" \
-                --notes-file "$release_notes"
-            fi
-          elif [[ -f "$release_notes" ]]; then
+          if [[ -f "$release_notes" ]]; then
             gh release create "$GITHUB_REF_NAME" \
               "${files[@]}" \
               --verify-tag \

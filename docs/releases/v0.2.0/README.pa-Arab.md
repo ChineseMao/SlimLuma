@@ -11,6 +11,12 @@
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
 <div dir="rtl" align="right">
+<p><strong>SlimLuma copyright holders (PRIVATE_TEAM_ID)</strong></p>
+<p>SlimLuma 0.2.0 دا سورس کوڈ MIT License دے تحت جاری کیتا گیا سی۔ موجودہ ڈویلپمنٹ لئی main اُتے وکھایا گیا لائسنس لاگو اے؛ LICENSE ویکھو۔</p>
+<p><a href="https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE">v0.2.0 MIT LICENSE</a> · <a href="https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE">main LICENSE</a></p>
+</div>
+
+<div dir="rtl" align="right">
 <p>عام تصویراں، ویڈیوز تے PDF نوں سپورٹ کردا اے، تسی پورا فولڈر وی کھچ سکدے او</p>
 <ul>
 <li>SlimLuma معیار قدم بہ قدم ایڈجسٹ کیتا جائے گا؛ ضرورت پوے تے سائز چھوٹا کیتا جائے گا، تاکہ مقصد توں زیادہ نہ ہوون والے سب توں صاف محفوظ نتیجے حاصل ہو سکّن۔ مقصد دا سائز ImageMagick ہون دی لوڑ ہے۔</li>

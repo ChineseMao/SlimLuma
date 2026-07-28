@@ -10,6 +10,12 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
+> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
+>
+> SlimLuma 0.2.0 సోర్స్ కోడ్ MIT License కింద విడుదల చేయబడింది. ప్రస్తుత అభివృద్ధికి mainలో చూపిన లైసెన్స్ వర్తిస్తుంది; LICENSE చూడండి.
+>
+> [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [main LICENSE](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
+
 సాధారణ చిత్రాలు, వీడియోలు మరియు PDF ను మద్దతు ఇస్తుంది, అలాగే మొత్తం ఫోల్డర్‌ను డ్రాగ్ చేయవచ్చు
 
 - SlimLuma నాణ్యతను దశలవారీగా సర్ది పెడతాం; అవసరమైతే పరిమాణాన్ని తగ్గించి లక్ష్యాన్ని మించకూడని అత్యుత్తమ సురక్షిత ఫలితాన్ని పొందుతాం. లక్ష్య పరిమాణానికి ImageMagick అవసరం.

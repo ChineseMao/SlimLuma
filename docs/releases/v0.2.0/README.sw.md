@@ -10,6 +10,12 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
 
+> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
+>
+> Msimbo chanzo wa SlimLuma 0.2.0 ulitolewa chini ya Leseni ya MIT. Uendelezaji wa sasa unatumia leseni iliyoonyeshwa kwenye main; tazama LICENSE.
+>
+> [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [main LICENSE](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
+
 Inaunga mkono picha, video na PDF zinazojulikana, pia inaweza buruta folda nzima
 
 - SlimLuma Ubora utarekebishwa hatua kwa hatua; inapohitajika, punguza ukubwa, ili kupata matokeo wazi na salama yasiyozidi lengo. Ukubwa wa lengo unahitaji ImageMagick.

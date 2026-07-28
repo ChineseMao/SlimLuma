@@ -2,6 +2,30 @@
 
 All notable changes are documented here. Dates use UTC.
 
+## Unreleased / 未发布
+
+### Licensing and publishing / 许可与发布主体
+
+- Development has advanced to 0.2.1 (build 3). Product pages continue to
+  download the latest published version, 0.2.0, until a separately reviewed
+  0.2.1 release is created; the release workflow refuses to overwrite an
+  existing GitHub Release. / 开发版本已推进到 0.2.1（build 3）。在 0.2.1
+  独立完成审核和发布前，产品页继续下载最新公开版本 0.2.0；发行工作流会拒绝
+  覆盖任何已经存在的 GitHub Release。
+- Current development is source-visible proprietary software with all rights
+  reserved; the exact long-term Developer ID publisher is
+  SlimLuma copyright holders, Apple team `PRIVATE_TEAM_ID`. /
+  当前开发版本调整为源码公开可审阅、保留所有权利的专有软件；长期 Developer ID
+  发布主体为 `SlimLuma copyright holders`，Apple 团队
+  `PRIVATE_TEAM_ID`。
+- The change is prospective: SlimLuma 0.2.0 remains available under the MIT
+  License previously granted for that release. / 本次调整不追溯撤销历史授权：
+  SlimLuma 0.2.0 仍适用其发布时授予的 MIT License。
+- Future app, ZIP, DMG, and CLI packages carry the applicable project license,
+  third-party notices, and the full Swift Argument Parser license. /
+  后续 App、ZIP、DMG 和 CLI 产物都会携带对应项目许可、第三方声明及完整的
+  Swift Argument Parser 许可证。
+
 ## 0.2.0 — 2026-07-28
 
 ### Added / 新增

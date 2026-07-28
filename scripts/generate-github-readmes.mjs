@@ -10,7 +10,9 @@ import {
 import { join, resolve } from "node:path";
 import {
   generatedReadmePath,
+  githubLicenseNotices,
   githubLocales,
+  githubReleaseLicenseNotices,
 } from "./github-locales.mjs";
 
 const projectRoot = resolve(import.meta.dirname, "..");
@@ -19,6 +21,10 @@ const readmeOutputRoot = join(projectRoot, "docs", "readme");
 const releasesRoot = join(projectRoot, "docs", "releases");
 const checksOnly = process.argv.includes("--check");
 const repositoryURL = "https://github.com/ChineseMao/SlimLuma";
+const publisherName = "SlimLuma copyright holders";
+const publisherTeamID = "PRIVATE_TEAM_ID";
+const currentLicenseURL = `${repositoryURL}/blob/main/LICENSE`;
+const historicalLicenseURL = `${repositoryURL}/blob/v0.2.0/LICENSE`;
 
 const info = JSON.parse(
   execFileSync(
@@ -33,20 +39,33 @@ const info = JSON.parse(
     { encoding: "utf8" },
   ),
 );
-const version = info.CFBundleShortVersionString;
-if (typeof version !== "string" || !/^\d+\.\d+\.\d+$/.test(version)) {
+const developmentVersion = info.CFBundleShortVersionString;
+if (
+  typeof developmentVersion !== "string"
+  || !/^\d+\.\d+\.\d+$/.test(developmentVersion)
+) {
   throw new Error("Support/Info.plist does not contain a semantic app version.");
 }
 
-const tag = `v${version}`;
-const releaseURL = `${repositoryURL}/releases/tag/${tag}`;
-const releaseAssetURL = `${repositoryURL}/releases/download/${tag}`;
-const assetNames = {
-  dmg: `SlimLuma-${version}-macOS-universal.dmg`,
-  zip: `SlimLuma-${version}-macOS-universal.zip`,
-  cli: `slimluma-${version}-macOS-universal.tar.gz`,
-  checksums: "SHA256SUMS",
-};
+const releaseStatePath = join(releasesRoot, "release-state.json");
+const releaseState = JSON.parse(readFileSync(releaseStatePath, "utf8"));
+const latestPublishedVersion = releaseState.latestPublishedVersion;
+const releaseNotesVersion = releaseState.generatedReleaseNotesVersion;
+for (const [name, value] of Object.entries({
+  latestPublishedVersion,
+  generatedReleaseNotesVersion: releaseNotesVersion,
+})) {
+  if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) {
+    throw new Error(`${releaseStatePath} has an invalid ${name}.`);
+  }
+}
+if (developmentVersion === latestPublishedVersion) {
+  throw new Error(
+    "Development and latest published versions must differ after the license transition.",
+  );
+}
+
+const tag = `v${releaseNotesVersion}`;
 const releaseConfigPath = join(releasesRoot, `${tag}.i18n.json`);
 if (!existsSync(releaseConfigPath)) {
   throw new Error(
@@ -156,17 +175,72 @@ function languageSelector(currentLocale, hrefForLocale) {
 function badges() {
   return `[![CI](${repositoryURL}/actions/workflows/ci.yml/badge.svg)](${repositoryURL}/actions/workflows/ci.yml)
 [![macOS 14+](https://img.shields.io/badge/macOS-14%2B-111111)](${repositoryURL}/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-5b55ea.svg)](${repositoryURL}/blob/main/LICENSE)`;
+[![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-5b55ea.svg)](${currentLicenseURL})`;
 }
 
-function directDownloads(primaryLabel) {
+function releaseAssets(version) {
+  const releaseAssetURL =
+    `${repositoryURL}/releases/download/v${version}`;
+  const assetNames = {
+    dmg: `SlimLuma-${version}-macOS-universal.dmg`,
+    zip: `SlimLuma-${version}-macOS-universal.zip`,
+    cli: `slimluma-${version}-macOS-universal.tar.gz`,
+    checksums: "SHA256SUMS",
+  };
+  return {
+    dmg: `${releaseAssetURL}/${assetNames.dmg}`,
+    zip: `${releaseAssetURL}/${assetNames.zip}`,
+    cli: `${releaseAssetURL}/${assetNames.cli}`,
+    checksums: `${releaseAssetURL}/${assetNames.checksums}`,
+  };
+}
+
+function directDownloads(primaryLabel, version = latestPublishedVersion) {
+  const assets = releaseAssets(version);
   return `> [!IMPORTANT]
-> **[⬇ ${primaryLabel}](${releaseAssetURL}/${assetNames.dmg})**
+> **[⬇ ${primaryLabel}](${assets.dmg})**
 >
-> Apple Silicon + Intel · [App ZIP](${releaseAssetURL}/${assetNames.zip}) · [CLI](${releaseAssetURL}/${assetNames.cli}) · [SHA-256](${releaseAssetURL}/${assetNames.checksums})`;
+> Apple Silicon + Intel · [App ZIP](${assets.zip}) · [CLI](${assets.cli}) · [SHA-256](${assets.checksums})`;
+}
+
+function currentLicenseNotice(locale, direction) {
+  const notice = githubLicenseNotices[locale];
+  if (typeof notice !== "string" || notice.length === 0) {
+    throw new Error(`Missing GitHub license notice for ${locale}`);
+  }
+  if (direction === "rtl") {
+    return `<div dir="rtl" align="right">
+<p><strong>${escapeHTML(publisherName)} (${publisherTeamID})</strong></p>
+<p><a href="${currentLicenseURL}">${escapeHTML(notice)}</a></p>
+</div>`;
+  }
+  return `> **${publisherName} (${publisherTeamID})**
+>
+> [${notice}](${currentLicenseURL})`;
+}
+
+function releaseLicenseNotice(locale, direction) {
+  const notice = githubReleaseLicenseNotices[locale];
+  if (typeof notice !== "string" || notice.length === 0) {
+    throw new Error(`Missing GitHub release-license notice for ${locale}`);
+  }
+  const links = `<a href="${historicalLicenseURL}">v0.2.0 MIT LICENSE</a> · <a href="${currentLicenseURL}">main LICENSE</a>`;
+  if (direction === "rtl") {
+    return `<div dir="rtl" align="right">
+<p><strong>${escapeHTML(publisherName)} (${publisherTeamID})</strong></p>
+<p>${escapeHTML(notice)}</p>
+<p>${links}</p>
+</div>`;
+  }
+  return `> **Publisher:** ${publisherName} (${publisherTeamID})
+>
+> ${notice}
+>
+> [v0.2.0 MIT LICENSE](${historicalLicenseURL}) · [main LICENSE](${currentLicenseURL})`;
 }
 
 function rtlReadmeBody(t) {
+  const assets = releaseAssets(latestPublishedVersion);
   const featureRows = [
     [t("图片"), t("先纠正方向，再按比例缩小、重编码和处理 profile；PNG、WebP 与 AVIF 的设置会映射为对应引擎参数。")],
     [t("视频"), t("画面缩放保持比例、不放大并对齐偶数尺寸；音频转 AAC，MP4 字幕转 mov_text，MKV 字幕尽量复制，MP4 开启 faststart。")],
@@ -192,7 +266,7 @@ ${features}
 </ul>
 <h2>${escapeHTML(t("安装"))}</h2>
 <ol>
-<li><a href="${releaseAssetURL}/${assetNames.dmg}">${escapeHTML(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}</a></li>
+<li><a href="${assets.dmg}">${escapeHTML(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}</a></li>
 <li>${escapeHTML(t("将 SlimLuma.app 移到“应用程序”文件夹。"))}</li>
 <li>${escapeHTML(t("打开“引擎与设置”并选择“一键补齐推荐引擎”。"))}</li>
 </ol>
@@ -201,6 +275,7 @@ ${features}
 }
 
 function ltrReadmeBody(t) {
+  const assets = releaseAssets(latestPublishedVersion);
   return `> ${t("本地媒体瘦身工具")}
 
 ${t("支持常见图片、视频和 PDF，也可以拖入整个文件夹")}
@@ -218,7 +293,7 @@ ${t("支持常见图片、视频和 PDF，也可以拖入整个文件夹")}
 
 ## ${t("安装")}
 
-1. [${t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。")}](${releaseAssetURL}/${assetNames.dmg})
+1. [${t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。")}](${assets.dmg})
 2. ${t("将 SlimLuma.app 移到“应用程序”文件夹。")}
 3. ${t("打开“引擎与设置”并选择“一键补齐推荐引擎”。")}
 
@@ -246,6 +321,8 @@ ${badges()}
 ${languageSelector(locale, generatedReadmeHref)}
 
 ${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}
+
+${currentLicenseNotice(locale, direction)}
 
 ${localizedBody}
 
@@ -289,11 +366,13 @@ function localizedReleaseDocument(locale, name, direction) {
     return `<!-- Generated by scripts/generate-github-readmes.mjs. -->
 <!-- locale:${locale} -->
 
-# SlimLuma ${version} — ${name}
+# SlimLuma ${releaseNotesVersion} — ${name}
 
 ${releaseLanguageSelector(locale)}
 
-${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}
+${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"), releaseNotesVersion)}
+
+${releaseLicenseNotice(locale, direction)}
 
 <div dir="rtl" align="right">
 <p>${escapeHTML(t(releaseConfig.taglineKey))}</p>
@@ -308,11 +387,13 @@ ${highlights.map((item) => `<li>${escapeHTML(item)}</li>`).join("\n")}
   return `<!-- Generated by scripts/generate-github-readmes.mjs. -->
 <!-- locale:${locale} -->
 
-# SlimLuma ${version} — ${name}
+# SlimLuma ${releaseNotesVersion} — ${name}
 
 ${releaseLanguageSelector(locale)}
 
-${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}
+${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"), releaseNotesVersion)}
+
+${releaseLicenseNotice(locale, direction)}
 
 ${t(releaseConfig.taglineKey)}
 
@@ -336,9 +417,9 @@ function releaseIndexDocument() {
 
   return `<!-- Generated by scripts/generate-github-readmes.mjs. -->
 
-# SlimLuma ${version}
+# SlimLuma ${releaseNotesVersion}
 
-${directDownloads(`Download SlimLuma ${version} for macOS — Universal DMG`)}
+${directDownloads(`Download SlimLuma ${releaseNotesVersion} for macOS — Universal DMG`, releaseNotesVersion)}
 
 ## Release notes in 20 languages
 
@@ -355,6 +436,18 @@ ${englishHighlights}
 ${tChinese(releaseConfig.taglineKey)}
 
 ${chineseHighlights}
+
+## Publisher and license / 发布主体与许可
+
+Official publisher / 官方发布主体:
+**${publisherName} (${publisherTeamID})**
+
+SlimLuma 0.2.0 source was released under the
+[MIT License](${historicalLicenseURL}); that historical grant is not revoked.
+Current development uses the terms in [main LICENSE](${currentLicenseURL}).
+
+SlimLuma 0.2.0 源码按 [MIT License](${historicalLicenseURL}) 发布，已授予的历史
+权利不被撤销。当前开发版本采用 [main LICENSE](${currentLicenseURL}) 中的条款。
 
 ## Verify / 验证
 

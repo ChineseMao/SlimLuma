@@ -6,6 +6,18 @@ DIST_DIR="$PROJECT_DIR/dist"
 FINAL_APP_DIR="$DIST_DIR/SlimLuma.app"
 FINAL_CLI="$DIST_DIR/slimluma"
 CODE_SIGN_IDENTITY="${SLIMLUMA_CODE_SIGN_IDENTITY:--}"
+EXPECTED_DEVELOPER_ID_AUTHORITY="Developer ID Application: private release identity"
+EXPECTED_TEAM_ID="PRIVATE_TEAM_ID"
+APP_VERSION="$(
+    /usr/libexec/PlistBuddy \
+        -c 'Print :CFBundleShortVersionString' \
+        "$PROJECT_DIR/Support/Info.plist"
+)"
+if [[ "$APP_VERSION" == "0.2.0" ]] \
+    && [[ "$(sed -n '1p' "$PROJECT_DIR/LICENSE")" != "MIT License" ]]; then
+    echo "Refusing to rebuild historical MIT version 0.2.0 with different license terms." >&2
+    exit 2
+fi
 mkdir -p "$DIST_DIR"
 PACKAGE_LOCK_FILE="$DIST_DIR/.SlimLuma-package.lock"
 exec 9>"$PACKAGE_LOCK_FILE"
@@ -97,6 +109,17 @@ mkdir -p "$CONTENTS_DIR/MacOS" "$CONTENTS_DIR/Resources"
 cp "$APP_RELEASE_BINARY" "$CONTENTS_DIR/MacOS/SlimLuma"
 cp "$CLI_RELEASE_BINARY" "$CLI_STAGE"
 cp "Support/Info.plist" "$CONTENTS_DIR/Info.plist"
+cp "LICENSE" "$CONTENTS_DIR/Resources/LICENSE"
+cp "THIRD_PARTY_NOTICES.md" \
+    "$CONTENTS_DIR/Resources/THIRD_PARTY_NOTICES.md"
+mkdir -p "$CONTENTS_DIR/Resources/ThirdPartyLicenses"
+SWIFT_ARGUMENT_PARSER_LICENSE=".build/checkouts/swift-argument-parser/LICENSE.txt"
+if [[ ! -f "$SWIFT_ARGUMENT_PARSER_LICENSE" ]]; then
+    echo "Swift Argument Parser license was not found after package resolution." >&2
+    exit 1
+fi
+cp "$SWIFT_ARGUMENT_PARSER_LICENSE" \
+    "$CONTENTS_DIR/Resources/ThirdPartyLicenses/SwiftArgumentParser-LICENSE.txt"
 for localization_dir in Sources/SlimLuma/Resources/*.lproj; do
     cp -R "$localization_dir" "$CONTENTS_DIR/Resources/"
 done
@@ -180,6 +203,17 @@ else
     export SLIMLUMA_REQUIRE_DEVELOPER_ID=1
 fi
 codesign --verify --strict "$CLI_STAGE"
+if [[ "$CODE_SIGN_IDENTITY" != "-" ]]; then
+    CLI_SIGNATURE_DETAILS="$(codesign -dvvv "$CLI_STAGE" 2>&1)"
+    if [[ "$CLI_SIGNATURE_DETAILS" != *"Authority=$EXPECTED_DEVELOPER_ID_AUTHORITY"* ]]; then
+        echo "Release CLI signing authority does not match the long-term publisher." >&2
+        exit 1
+    fi
+    if [[ "$CLI_SIGNATURE_DETAILS" != *"TeamIdentifier=$EXPECTED_TEAM_ID"* ]]; then
+        echo "Release CLI TeamIdentifier does not match $EXPECTED_TEAM_ID." >&2
+        exit 1
+    fi
+fi
 for required_architecture in arm64 x86_64; do
     if [[ " $(lipo -archs "$CLI_STAGE") " != *" $required_architecture "* ]]; then
         echo "CLI is missing architecture: $required_architecture" >&2

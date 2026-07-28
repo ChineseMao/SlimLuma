@@ -4,6 +4,12 @@
 Runtime、安全时间戳、Apple 公证、staple、Gatekeeper 验收和发布后 SHA-256。
 本地测试通过或 ad-hoc 签名不等于可公开发行。
 
+长期发布主体固定为
+`Developer ID Application: private release identity`，
+Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这两个值；证书轮换
+可以改变指纹与有效期，但不能静默改变法律主体或 Team ID。完整声明见
+[PUBLISHER.md](../PUBLISHER.md)。
+
 ## GitHub Secrets
 
 仓库的 `release.yml` 使用以下 Actions secrets：
@@ -27,8 +33,9 @@ node scripts/validate-github-localizations.mjs
 SLIMLUMA_CODE_SIGN_IDENTITY="<Developer ID SHA-1>" scripts/package-app.sh
 ```
 
-签名构建会启用 Hardened Runtime 和安全时间戳，并拒绝
-`com.apple.security.get-task-allow`。若 Keychain 中已保存公证凭据：
+签名构建会启用 Hardened Runtime 和安全时间戳，精确核对公司 Developer ID 与
+Team ID，并拒绝 `com.apple.security.get-task-allow`。若 Keychain 中已保存
+公证凭据：
 
 ```bash
 export SLIMLUMA_NOTARY_KEYCHAIN_PROFILE="<profile>"
@@ -60,6 +67,8 @@ staple、stapler validate 和 Gatekeeper 通过。
 - 匿名访问：仓库和 Release 均返回 HTTP 200
 - 附件抽查：四个附件均可匿名下载；三项发行物哈希一致
 - 下载后 DMG：stapler validate 通过，Gatekeeper 为 `Notarized Developer ID`
+- Developer ID：
+  `SlimLuma copyright holders (PRIVATE_TEAM_ID)`
 
 `v0.2.0` 已于 2026-07-28 完成公开发布与下载后抽查。本节同时保留本地签名、公证
 证据，避免把源码测试、Apple 验收和 GitHub 公开发行混为同一个状态。
@@ -67,16 +76,31 @@ staple、stapler validate 和 Gatekeeper 通过。
 ## 自动发行
 
 1. 更新 `Support/Info.plist` 中版本和 build。
-2. 更新 `CHANGELOG.md` 和 `docs/releases/v<version>.i18n.json`，运行生成器创建
-   `docs/releases/v<version>.md` 及 20 份版本说明。
+2. 更新 `CHANGELOG.md`、`docs/releases/release-state.json` 中的
+   `generatedReleaseNotesVersion` 和 `docs/releases/v<version>.i18n.json`，
+   运行生成器创建 `docs/releases/v<version>.md` 及 20 份版本说明。
 3. 确认 `main` 的 CI 全绿。
-4. 创建与版本完全一致的 tag，例如 `v0.2.0`。
+4. 创建与版本完全一致、且从未发布过的 tag，例如 `v0.2.1`。
 5. Release workflow 导入临时 keychain，构建、签名、公证并发布 ZIP、DMG、CLI
    与 `SHA256SUMS`。
 6. 同一 tag 的发行任务不会并发执行；上传前会再次校验英文默认 README、完整中文
    镜像、20 份 GitHub README、20 份版本说明、直接下载链接、本地化资源、相对链接、
    测试、脚本语法、Universal 架构和三项 SHA-256。
-7. 工作流无论成功或失败都会删除临时 keychain、P12 副本和 API 私钥临时文件。
+7. App Resources、ZIP、DMG 根目录和 CLI 包必须携带适用的项目许可、第三方声明
+   与 Swift Argument Parser 完整许可证；当前开发版本不得回退为 MIT 或开源口径。
+8. 工作流无论成功或失败都会删除临时 keychain、P12 副本和 API 私钥临时文件。
+9. 工作流会在构建前查询 GitHub；同名 Release 已存在时立即失败，绝不使用
+   `--clobber` 覆盖历史附件或版本说明。
+10. 新版本公开并完成下载后抽查后，把 `latestPublishedVersion` 更新到新版本，同时
+    把 `Support/Info.plist` 推进到下一开发版本，再重新生成产品页。产品页的下载
+    版本因此只会指向已实际公开的安装包，不会提前产生 404。
 
 发布后的 GitHub Release 和可下载附件仍需人工抽查；workflow 成功不替代产品页、
 许可证与升级说明的最终审核。
+
+## 许可版本边界
+
+`v0.2.0` 的源码 tag 与 CLI 包已经按 MIT License 发行，既有授权不会被追溯撤销。
+当前 `main` 和后续版本使用各自提交或 tag 中的 `LICENSE`；创建新 tag 前必须确认
+版本说明、20 份本地化说明和所有发行包都指向同一个许可状态。不得覆盖 `v0.2.0`
+tag 或重打同版本产物来制造追溯性许可变更。

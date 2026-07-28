@@ -10,12 +10,18 @@ import {
 import { dirname, join, relative, resolve, sep } from "node:path";
 import {
   generatedReadmePath,
+  githubLicenseNotices,
   githubLocaleCodes,
   githubLocales,
+  githubReleaseLicenseNotices,
 } from "./github-locales.mjs";
 
 const projectRoot = resolve(import.meta.dirname, "..");
 const failures = [];
+const publisherName = "SlimLuma copyright holders";
+const publisherTeamID = "PRIVATE_TEAM_ID";
+const expectedCopyright =
+  `Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by ${publisherName}`;
 
 function fail(message) {
   failures.push(message);
@@ -43,6 +49,27 @@ const info = JSON.parse(
   ),
 );
 const version = info.CFBundleShortVersionString;
+const releaseState = JSON.parse(
+  read(
+    join(projectRoot, "docs", "releases", "release-state.json"),
+  ),
+);
+const latestPublishedVersion = releaseState.latestPublishedVersion;
+const releaseNotesVersion = releaseState.generatedReleaseNotesVersion;
+for (const [name, value] of Object.entries({
+  latestPublishedVersion,
+  generatedReleaseNotesVersion: releaseNotesVersion,
+})) {
+  if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) {
+    fail(`release-state.json has an invalid ${name}`);
+  }
+}
+if (version === latestPublishedVersion) {
+  fail("Development version must not reuse the latest published version");
+}
+if (info.NSHumanReadableCopyright !== expectedCopyright) {
+  fail("Info.plist does not contain the exact publisher copyright notice");
+}
 const appLocales = [...info.CFBundleLocalizations].sort();
 const documentedLocales = [...githubLocaleCodes].sort();
 if (JSON.stringify(appLocales) !== JSON.stringify(documentedLocales)) {
@@ -51,17 +78,33 @@ if (JSON.stringify(appLocales) !== JSON.stringify(documentedLocales)) {
   );
 }
 
+for (const [name, notices] of [
+  ["product", githubLicenseNotices],
+  ["release", githubReleaseLicenseNotices],
+]) {
+  const noticeLocales = Object.keys(notices).sort();
+  if (JSON.stringify(noticeLocales) !== JSON.stringify(documentedLocales)) {
+    fail(`${name} license notices do not cover exactly the GitHub locales`);
+  }
+}
+
 const rootReadmes = [
   join(projectRoot, "README.md"),
   join(projectRoot, "README.zh-CN.md"),
 ];
 const expectedDMG =
-  `https://github.com/ChineseMao/SlimLuma/releases/download/v${version}/` +
-  `SlimLuma-${version}-macOS-universal.dmg`;
+  `https://github.com/ChineseMao/SlimLuma/releases/download/v${latestPublishedVersion}/` +
+  `SlimLuma-${latestPublishedVersion}-macOS-universal.dmg`;
+const expectedReleaseDMG =
+  `https://github.com/ChineseMao/SlimLuma/releases/download/v${releaseNotesVersion}/` +
+  `SlimLuma-${releaseNotesVersion}-macOS-universal.dmg`;
 for (const rootReadme of rootReadmes) {
   const body = read(rootReadme);
   if (!body.includes(expectedDMG)) {
     fail(`${relative(projectRoot, rootReadme)} lacks the current direct DMG link`);
+  }
+  if (!body.includes(publisherName) || !body.includes("](LICENSE)")) {
+    fail(`${relative(projectRoot, rootReadme)} lacks the current publisher/license notice`);
   }
   for (const { canonicalReadme } of githubLocales) {
     if (!body.includes(`](${canonicalReadme})`)) {
@@ -91,7 +134,7 @@ const releaseDirectory = join(
   projectRoot,
   "docs",
   "releases",
-  `v${version}`,
+  `v${releaseNotesVersion}`,
 );
 const expectedReleaseNotes = new Set(
   githubLocales.map(({ locale }) => `README.${locale}.md`),
@@ -108,7 +151,7 @@ if (
   JSON.stringify([...expectedReleaseNotes].sort())
 ) {
   fail(
-    `docs/releases/v${version} does not contain exactly the configured locales`,
+    `docs/releases/v${releaseNotesVersion} does not contain exactly the configured locales`,
   );
 }
 
@@ -119,14 +162,29 @@ for (const { locale } of githubLocales) {
   if (!generatedReadme.includes(expectedDMG)) {
     fail(`Generated ${locale} README lacks the current direct DMG link`);
   }
+  if (
+    !generatedReadme.includes(githubLicenseNotices[locale])
+    || !generatedReadme.includes(`${publisherName} (${publisherTeamID})`)
+  ) {
+    fail(`Generated ${locale} README lacks its localized rights notice`);
+  }
+  if (generatedReadme.includes("License: MIT")) {
+    fail(`Generated ${locale} README still presents the current project as MIT`);
+  }
   const localizedRelease = read(
     join(releaseDirectory, `README.${locale}.md`),
   );
   if (!localizedRelease.includes(`<!-- locale:${locale} -->`)) {
     fail(`Release note ${locale} lacks its locale marker`);
   }
-  if (!localizedRelease.includes(expectedDMG)) {
+  if (!localizedRelease.includes(expectedReleaseDMG)) {
     fail(`Release note ${locale} lacks the current direct DMG link`);
+  }
+  if (
+    !localizedRelease.includes(githubReleaseLicenseNotices[locale])
+    || !localizedRelease.includes(`${publisherName} (${publisherTeamID})`)
+  ) {
+    fail(`Release note ${locale} lacks its localized license-history notice`);
   }
 }
 
@@ -136,10 +194,67 @@ const communityFiles = [
   "CODE_OF_CONDUCT.md",
   "SUPPORT.md",
   "LICENSE",
+  "PUBLISHER.md",
+  "THIRD_PARTY_NOTICES.md",
 ];
 for (const file of communityFiles) {
   if (!existsSync(join(projectRoot, file))) {
     fail(`Missing community file: ${file}`);
+  }
+}
+
+const releaseIndex = read(
+  join(projectRoot, "docs", "releases", `v${releaseNotesVersion}.md`),
+);
+for (const required of [
+  `${publisherName} (${publisherTeamID})`,
+  "blob/v0.2.0/LICENSE",
+  "blob/main/LICENSE",
+  "historical grant is not revoked",
+]) {
+  if (!releaseIndex.includes(required)) {
+    fail(`Release index lacks required publisher/license boundary: ${required}`);
+  }
+}
+
+const license = read(join(projectRoot, "LICENSE"));
+for (const required of [
+  "SlimLuma Proprietary Source and Binary License",
+  "Copyright © 2026 SlimLuma copyright holders.",
+  publisherName,
+  "All rights reserved.",
+  "SlimLuma 0.2.0",
+  "released under the MIT License",
+  "GitHub's terms",
+  "Third-party materials",
+]) {
+  if (!license.includes(required)) {
+    fail(`LICENSE lacks required boundary: ${required}`);
+  }
+}
+
+const currentProjectSurfaces = [
+  ...rootReadmes,
+  join(projectRoot, "SUPPORT.md"),
+  join(projectRoot, "docs", "COMPETITOR_COMPARISON_2026-07-28.md"),
+  ...githubLocales.map(({ locale }) =>
+    join(projectRoot, generatedReadmePath(locale)),
+  ),
+];
+const retiredClaims = [
+  "License: MIT",
+  "free, open-source",
+  "community-maintained open-source",
+  "免费、开源",
+  "社区维护的开源项目",
+  "| 开源 | MIT |",
+];
+for (const source of currentProjectSurfaces) {
+  const body = read(source);
+  for (const claim of retiredClaims) {
+    if (body.includes(claim)) {
+      fail(`${relative(projectRoot, source)} contains retired project claim: ${claim}`);
+    }
   }
 }
 
@@ -152,8 +267,10 @@ const markdownFiles = [
   join(projectRoot, "SECURITY.md"),
   join(projectRoot, "CODE_OF_CONDUCT.md"),
   join(projectRoot, "SUPPORT.md"),
+  join(projectRoot, "PUBLISHER.md"),
+  join(projectRoot, "THIRD_PARTY_NOTICES.md"),
   join(projectRoot, "CHANGELOG.md"),
-  join(projectRoot, "docs", "releases", `v${version}.md`),
+  join(projectRoot, "docs", "releases", `v${releaseNotesVersion}.md`),
   ...githubLocales.map(({ locale }) =>
     join(releaseDirectory, `README.${locale}.md`),
   ),
@@ -227,5 +344,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Verified GitHub internationalization: ${githubLocales.length} product READMEs, ${githubLocales.length} localized v${version} release notes, direct downloads, community files, and local links.`,
+  `Verified GitHub internationalization: ${githubLocales.length} product READMEs for public v${latestPublishedVersion}, ${githubLocales.length} localized v${releaseNotesVersion} release notes, development v${version}, direct downloads, community files, and local links.`,
 );

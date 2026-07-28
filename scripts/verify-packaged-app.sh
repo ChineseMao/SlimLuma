@@ -18,6 +18,9 @@ EXPECTED_SOURCE_KEY_COUNT="$(
     jq 'length' \
         "$PROJECT_DIR/Sources/SlimLuma/Resources/LocalizationKeys.json"
 )"
+EXPECTED_DEVELOPER_ID_AUTHORITY="Developer ID Application: private release identity"
+EXPECTED_TEAM_ID="PRIVATE_TEAM_ID"
+EXPECTED_COPYRIGHT="Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by SlimLuma copyright holders"
 
 EXPECTED_LOCALES=(
     ar
@@ -47,6 +50,16 @@ EXPECTED_LOCALES=(
 [[ -d "$RESOURCES_DIR/Metadata.appintents" ]]
 [[ -f "$ACTIONS_DATA" ]]
 [[ -f "$RESOURCES_DIR/Metadata.appintents/version.json" ]]
+[[ -f "$RESOURCES_DIR/LICENSE" ]]
+[[ -f "$RESOURCES_DIR/THIRD_PARTY_NOTICES.md" ]]
+[[ -f "$RESOURCES_DIR/ThirdPartyLicenses/SwiftArgumentParser-LICENSE.txt" ]]
+cmp -s "$PROJECT_DIR/LICENSE" "$RESOURCES_DIR/LICENSE"
+cmp -s \
+    "$PROJECT_DIR/THIRD_PARTY_NOTICES.md" \
+    "$RESOURCES_DIR/THIRD_PARTY_NOTICES.md"
+cmp -s \
+    "$PROJECT_DIR/.build/checkouts/swift-argument-parser/LICENSE.txt" \
+    "$RESOURCES_DIR/ThirdPartyLicenses/SwiftArgumentParser-LICENSE.txt"
 if ! otool -L "$BINARY" | grep -q '/SwiftUI.framework/'; then
     echo "Packaged app executable is not linked as a SwiftUI application." >&2
     exit 1
@@ -57,6 +70,14 @@ if [[ -n "$(find "$RESOURCES_DIR" -type l -print -quit)" ]]; then
 fi
 
 plutil -lint "$CONTENTS_DIR/Info.plist" >/dev/null
+if [[ "$(
+    /usr/libexec/PlistBuddy \
+        -c 'Print :NSHumanReadableCopyright' \
+        "$CONTENTS_DIR/Info.plist"
+)" != "$EXPECTED_COPYRIGHT" ]]; then
+    echo "Packaged copyright notice does not match the long-term publisher." >&2
+    exit 1
+fi
 jq -e . "$ACTIONS_DATA" >/dev/null
 jq -e . "$RESOURCES_DIR/Metadata.appintents/version.json" >/dev/null
 jq -e '
@@ -229,8 +250,8 @@ METADATA_TOOLS_VERSION="$(
 codesign --verify --deep --strict "$APP_DIR"
 if [[ "${SLIMLUMA_REQUIRE_DEVELOPER_ID:-0}" == "1" ]]; then
     SIGNATURE_DETAILS="$(codesign -dvvv "$APP_DIR" 2>&1)"
-    if [[ "$SIGNATURE_DETAILS" != *"Authority=Developer ID Application:"* ]]; then
-        echo "Release app is not signed with Developer ID Application." >&2
+    if [[ "$SIGNATURE_DETAILS" != *"Authority=$EXPECTED_DEVELOPER_ID_AUTHORITY"* ]]; then
+        echo "Release app signing authority does not match the long-term publisher." >&2
         exit 1
     fi
     if [[ "$SIGNATURE_DETAILS" != *"flags=0x10000(runtime)"* ]]; then
@@ -241,16 +262,33 @@ if [[ "${SLIMLUMA_REQUIRE_DEVELOPER_ID:-0}" == "1" ]]; then
         echo "Release app signature has no secure timestamp." >&2
         exit 1
     fi
-    if [[ "$SIGNATURE_DETAILS" == *"TeamIdentifier=not set"* ]]; then
-        echo "Release app signature has no TeamIdentifier." >&2
+    if [[ "$SIGNATURE_DETAILS" != *"TeamIdentifier=$EXPECTED_TEAM_ID"* ]]; then
+        echo "Release app TeamIdentifier does not match $EXPECTED_TEAM_ID." >&2
         exit 1
     fi
-    ENTITLEMENTS="$(
-        codesign -d --entitlements :- "$APP_DIR" 2>&1 || true
-    )"
-    if print -r -- "$ENTITLEMENTS" \
-        | grep -A1 'com.apple.security.get-task-allow' \
-        | grep -q '<true/>'; then
+    if ! ENTITLEMENTS="$(
+        codesign -d --entitlements - --xml "$APP_DIR" 2>/dev/null
+    )"; then
+        echo "Release app entitlements could not be read." >&2
+        codesign -d --entitlements - --xml "$APP_DIR" >/dev/null || :
+        exit 1
+    fi
+    if [[ -n "$ENTITLEMENTS" ]] \
+        && ! print -r -- "$ENTITLEMENTS" | plutil -lint - >/dev/null; then
+        echo "Release app entitlements are not a valid property list." >&2
+        exit 1
+    fi
+    if [[ -n "$ENTITLEMENTS" ]] \
+        && GET_TASK_ALLOW="$(
+            print -r -- "$ENTITLEMENTS" \
+                | plutil -extract \
+                    'com\.apple\.security\.get-task-allow' \
+                    raw \
+                    -o - \
+                    - \
+                    2>/dev/null
+        )" \
+        && [[ "$GET_TASK_ALLOW" == "true" ]]; then
         echo "Release app must not contain get-task-allow." >&2
         exit 1
     fi
