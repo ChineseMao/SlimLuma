@@ -16,6 +16,7 @@ final class EngineIntegrationTests: XCTestCase {
         var settings = CompressionSettings.default
         settings.image.format = .jpeg
         settings.image.quality = 68
+        settings.image.preserveColorProfile = false
         settings.output.location = .customDirectory
         settings.output.customDirectoryPath = directory.path
         settings.output.keepLargerFiles = true
@@ -26,6 +27,39 @@ final class EngineIntegrationTests: XCTestCase {
         )
 
         XCTAssertTrue(["ImageMagick", "macOS ImageIO"].contains(result.engineName))
+        XCTAssertEqual(result.outputURL?.pathExtension, "jpg")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: result.outputURL?.path ?? ""))
+        XCTAssertGreaterThan(result.outputBytes ?? 0, 0)
+    }
+
+    func testSystemImageFallbackProducesValidatedJPEGWithoutImageMagick() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let input = directory.appendingPathComponent("system-fallback.jpg")
+        try makeJPEG(at: input)
+
+        var settings = CompressionSettings.default
+        settings.image.format = .jpeg
+        settings.image.quality = 68
+        settings.image.preserveColorProfile = false
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+        settings.output.keepLargerFiles = true
+
+        let systemOnlyRegistry = ToolRegistry(
+            searchDirectories: [
+                URL(fileURLWithPath: "/usr/bin", isDirectory: true),
+                URL(fileURLWithPath: "/bin", isDirectory: true)
+            ]
+        )
+        let result = try await CompressionCoordinator(
+            registry: systemOnlyRegistry
+        ).compress(
+            inputURL: input,
+            settings: settings
+        )
+
+        XCTAssertEqual(result.engineID, .macOSImageIO)
         XCTAssertEqual(result.outputURL?.pathExtension, "jpg")
         XCTAssertTrue(FileManager.default.fileExists(atPath: result.outputURL?.path ?? ""))
         XCTAssertGreaterThan(result.outputBytes ?? 0, 0)
