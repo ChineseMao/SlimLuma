@@ -11,10 +11,14 @@ struct AddMediaToSlimLumaIntent: AppIntent {
     )
     static var openAppWhenRun: Bool { true }
 
-    @available(macOS 26.0, *)
-    static var supportedModes: IntentModes {
-        [.foreground(.immediate)]
-    }
+    // IntentModes ships with the macOS 26 SDK. Keep the intent buildable with
+    // Xcode 16/macOS 15 SDKs while enabling the richer launch mode on Xcode 26.
+    #if compiler(>=6.2)
+        @available(macOS 26.0, *)
+        static var supportedModes: IntentModes {
+            [.foreground(.immediate)]
+        }
+    #endif
 
     @Parameter(
         title: "文件",
