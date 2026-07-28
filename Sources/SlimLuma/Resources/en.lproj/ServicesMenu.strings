@@ -1,0 +1,3 @@
+/* Finder Services menu and description. */
+"添加到 SlimLuma 压缩队列" = "Add to SlimLuma compression queue";
+"SLIMLUMA_SERVICE_DESCRIPTION" = "Add selected images, videos, or PDF to SlimLuma’s media compression queue.";

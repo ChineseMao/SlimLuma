@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report / 安全报告
+    url: https://github.com/ChineseMao/SlimLuma/security
+    about: Use private vulnerability reporting when available / 优先使用私密漏洞报告

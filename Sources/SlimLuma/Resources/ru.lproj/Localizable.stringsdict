@@ -1,0 +1,101 @@
+{
+  "%lld 个" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld элемент";
+      few = "%lld элемента";
+      many = "%lld элементов";
+      other = "%lld элемента";
+    };
+  };
+  "%lld 个失败" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld ошибка";
+      few = "%lld ошибки";
+      many = "%lld ошибок";
+      other = "%lld ошибки";
+    };
+  };
+  "%lld 个说明章节" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld раздел с пояснениями";
+      few = "%lld раздела с пояснениями";
+      many = "%lld разделов с пояснениями";
+      other = "%lld раздела с пояснениями";
+    };
+  };
+  "%lld 个未变小但已保留" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld результат сохранён без уменьшения";
+      few = "%lld результата сохранены без уменьшения";
+      many = "%lld результатов сохранено без уменьшения";
+      other = "%lld результата сохранено без уменьшения";
+    };
+  };
+  "%lld 个未生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld файл не создан";
+      few = "%lld файла не создано";
+      many = "%lld файлов не создано";
+      other = "%lld файла не создано";
+    };
+  };
+  "%lld 个文件，可继续拖入" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld файл; можно продолжать перетаскивать";
+      few = "%lld файла; можно продолжать перетаскивать";
+      many = "%lld файлов; можно продолжать перетаскивать";
+      other = "%lld файла; можно продолжать перетаскивать";
+    };
+  };
+  "%lld 个已生成" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "%lld файл создан";
+      few = "%lld файла создано";
+      many = "%lld файлов создано";
+      other = "%lld файла создано";
+    };
+  };
+  "还有 %lld 个引擎可补齐" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "Остался %lld модуль для установки";
+      few = "Осталось %lld модуля для установки";
+      many = "Осталось %lld модулей для установки";
+      other = "Осталось %lld модуля для установки";
+    };
+  };
+  "同时处理 %lld 个任务" = {
+    NSStringLocalizedFormatKey = "%#@count@";
+    count = {
+      NSStringFormatSpecTypeKey = NSStringPluralRuleType;
+      NSStringFormatValueTypeKey = lld;
+      one = "Одновременно обрабатывается %lld задача";
+      few = "Одновременно обрабатываются %lld задачи";
+      many = "Одновременно обрабатывается %lld задач";
+      other = "Одновременно обрабатывается %lld задачи";
+    };
+  };
+}

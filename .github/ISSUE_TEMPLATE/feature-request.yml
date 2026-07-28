@@ -1,0 +1,23 @@
+name: Feature request / 功能建议
+description: Propose a scoped product improvement / 提议范围明确的产品改进
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need / 用户需求
+      description: Describe the workflow and constraint, not only a control / 请描述工作流和约束，而不只是按钮
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior / 建议行为
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and compatibility / 安全与兼容性
+      description: Explain effects on originals, metadata, tracks, PDF structure, localization, or automation / 说明对原件、元数据、轨道、PDF 结构、国际化或自动化的影响
