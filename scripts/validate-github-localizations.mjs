@@ -18,6 +18,7 @@ import {
 
 const projectRoot = resolve(import.meta.dirname, "..");
 const failures = [];
+const repositoryURL = "https://github.com/ChineseMao/SlimLuma";
 const publisherName = "SlimLuma copyright holders";
 const publisherTeamID = "PRIVATE_TEAM_ID";
 const expectedCopyright =
@@ -186,6 +187,19 @@ for (const { locale } of githubLocales) {
   ) {
     fail(`Release note ${locale} lacks its localized license-history notice`);
   }
+  if (releaseNotesVersion !== "0.2.0") {
+    if (localizedRelease.includes(`${repositoryURL}/blob/main/`)) {
+      fail(`Release note ${locale} contains a mutable main-branch link`);
+    }
+    for (const pinnedPath of [
+      `${repositoryURL}/blob/v${releaseNotesVersion}/LICENSE`,
+      `${repositoryURL}/blob/v${releaseNotesVersion}/docs/releases/v${releaseNotesVersion}/README.${locale}.md`,
+    ]) {
+      if (!localizedRelease.includes(pinnedPath)) {
+        fail(`Release note ${locale} lacks pinned link: ${pinnedPath}`);
+      }
+    }
+  }
 }
 
 const communityFiles = [
@@ -206,15 +220,25 @@ for (const file of communityFiles) {
 const releaseIndex = read(
   join(projectRoot, "docs", "releases", `v${releaseNotesVersion}.md`),
 );
+const expectedReleaseLicenseRef =
+  releaseNotesVersion === "0.2.0"
+    ? "blob/main/LICENSE"
+    : `blob/v${releaseNotesVersion}/LICENSE`;
 for (const required of [
   `${publisherName} (${publisherTeamID})`,
   "blob/v0.2.0/LICENSE",
-  "blob/main/LICENSE",
+  expectedReleaseLicenseRef,
   "historical grant is not revoked",
 ]) {
   if (!releaseIndex.includes(required)) {
     fail(`Release index lacks required publisher/license boundary: ${required}`);
   }
+}
+if (
+  releaseNotesVersion !== "0.2.0"
+  && releaseIndex.includes(`${repositoryURL}/blob/main/`)
+) {
+  fail("Release index contains a mutable main-branch link");
 }
 
 const license = read(join(projectRoot, "LICENSE"));
@@ -335,6 +359,16 @@ for (const workflow of workflows) {
       `${relative(projectRoot, workflow)} does not enforce GitHub localization validation`,
     );
   }
+}
+const releaseWorkflow = read(
+  join(projectRoot, ".github", "workflows", "release.yml"),
+);
+if (
+  !releaseWorkflow.includes(
+    "vars.SLIMLUMA_AUTOMATED_RELEASE == 'true'",
+  )
+) {
+  fail("Release workflow lacks the explicit automated-release variable gate");
 }
 
 if (failures.length > 0) {

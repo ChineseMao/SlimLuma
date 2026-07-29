@@ -66,6 +66,17 @@ if (developmentVersion === latestPublishedVersion) {
 }
 
 const tag = `v${releaseNotesVersion}`;
+const pinnedReleaseLicenseURL = `${repositoryURL}/blob/${tag}/LICENSE`;
+const releaseLicenseURL =
+  releaseNotesVersion === "0.2.0"
+    ? currentLicenseURL
+    : pinnedReleaseLicenseURL;
+const releaseLicenseLabel =
+  releaseNotesVersion === "0.2.0"
+    ? "main LICENSE"
+    : `${tag} LICENSE`;
+const pinnedThirdPartyNoticesURL =
+  `${repositoryURL}/blob/${tag}/THIRD_PARTY_NOTICES.md`;
 const releaseConfigPath = join(releasesRoot, `${tag}.i18n.json`);
 if (!existsSync(releaseConfigPath)) {
   throw new Error(
@@ -73,13 +84,47 @@ if (!existsSync(releaseConfigPath)) {
   );
 }
 const releaseConfig = JSON.parse(readFileSync(releaseConfigPath, "utf8"));
-if (
-  typeof releaseConfig.taglineKey !== "string" ||
-  !Array.isArray(releaseConfig.highlightKeys) ||
-  releaseConfig.highlightKeys.length === 0 ||
-  releaseConfig.highlightKeys.some((key) => typeof key !== "string")
-) {
-  throw new Error(`${releaseConfigPath} has an invalid localization schema.`);
+const usesTranslationKeys =
+  typeof releaseConfig.taglineKey === "string"
+  && Array.isArray(releaseConfig.highlightKeys)
+  && releaseConfig.highlightKeys.length > 0
+  && releaseConfig.highlightKeys.every((key) => typeof key === "string");
+const localizedReleaseCopy = releaseConfig.locales;
+const usesLocalizedCopy =
+  localizedReleaseCopy !== null
+  && typeof localizedReleaseCopy === "object"
+  && !Array.isArray(localizedReleaseCopy);
+if (usesTranslationKeys === usesLocalizedCopy) {
+  throw new Error(
+    `${releaseConfigPath} must define either localization keys or localized copy.`,
+  );
+}
+if (usesLocalizedCopy) {
+  const expectedLocales = githubLocales.map(({ locale }) => locale).sort();
+  const actualLocales = Object.keys(localizedReleaseCopy).sort();
+  if (JSON.stringify(actualLocales) !== JSON.stringify(expectedLocales)) {
+    throw new Error(
+      `${releaseConfigPath} localized copy does not cover exactly the GitHub locales.`,
+    );
+  }
+  for (const locale of expectedLocales) {
+    const copy = localizedReleaseCopy[locale];
+    if (
+      copy === null
+      || typeof copy !== "object"
+      || typeof copy.tagline !== "string"
+      || copy.tagline.length === 0
+      || !Array.isArray(copy.highlights)
+      || copy.highlights.length === 0
+      || copy.highlights.some(
+        (highlight) => typeof highlight !== "string" || highlight.length === 0,
+      )
+    ) {
+      throw new Error(
+        `${releaseConfigPath} has invalid localized copy for ${locale}.`,
+      );
+    }
+  }
 }
 
 const englishOverrides = {
@@ -154,6 +199,18 @@ function translated(table, locale, key) {
   return value;
 }
 
+function releaseCopy(locale, table) {
+  if (usesLocalizedCopy) {
+    return localizedReleaseCopy[locale];
+  }
+  return {
+    tagline: translated(table, locale, releaseConfig.taglineKey),
+    highlights: releaseConfig.highlightKeys.map((key) =>
+      translated(table, locale, key)
+    ),
+  };
+}
+
 function generatedReadmeHref(locale) {
   if (locale === "en") {
     return "../../README.md";
@@ -224,7 +281,7 @@ function releaseLicenseNotice(locale, direction) {
   if (typeof notice !== "string" || notice.length === 0) {
     throw new Error(`Missing GitHub release-license notice for ${locale}`);
   }
-  const links = `<a href="${historicalLicenseURL}">v0.2.0 MIT LICENSE</a> · <a href="${currentLicenseURL}">main LICENSE</a>`;
+  const links = `<a href="${historicalLicenseURL}">v0.2.0 MIT LICENSE</a> · <a href="${releaseLicenseURL}">${releaseLicenseLabel}</a>`;
   if (direction === "rtl") {
     return `<div dir="rtl" align="right">
 <p><strong>${escapeHTML(publisherName)} (${publisherTeamID})</strong></p>
@@ -236,7 +293,7 @@ function releaseLicenseNotice(locale, direction) {
 >
 > ${notice}
 >
-> [v0.2.0 MIT LICENSE](${historicalLicenseURL}) · [main LICENSE](${currentLicenseURL})`;
+> [v0.2.0 MIT LICENSE](${historicalLicenseURL}) · [${releaseLicenseLabel}](${releaseLicenseURL})`;
 }
 
 function rtlReadmeBody(t) {
@@ -343,7 +400,7 @@ ${privacy}
 }
 
 function releaseNotesHref(tagName, locale) {
-  return `${repositoryURL}/blob/main/docs/releases/${tagName}/README.${locale}.md`;
+  return `${repositoryURL}/blob/${tagName}/docs/releases/${tagName}/README.${locale}.md`;
 }
 
 function releaseLanguageSelector(currentLocale = null) {
@@ -356,11 +413,12 @@ function releaseLanguageSelector(currentLocale = null) {
 function localizedReleaseDocument(locale, name, direction) {
   const table = translations(locale);
   const t = (key) => translated(table, locale, key);
-  const highlights = releaseConfig.highlightKeys.map((key) => t(key));
+  const copy = releaseCopy(locale, table);
+  const { tagline, highlights } = copy;
   const productReadme = githubLocales.find(
     (item) => item.locale === locale,
   ).canonicalReadme;
-  const productReadmeURL = `${repositoryURL}/blob/main/${productReadme}`;
+  const productReadmeURL = `${repositoryURL}/blob/${tag}/${productReadme}`;
 
   if (direction === "rtl") {
     return `<!-- Generated by scripts/generate-github-readmes.mjs. -->
@@ -375,7 +433,7 @@ ${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版
 ${releaseLicenseNotice(locale, direction)}
 
 <div dir="rtl" align="right">
-<p>${escapeHTML(t(releaseConfig.taglineKey))}</p>
+<p>${escapeHTML(tagline)}</p>
 <ul>
 ${highlights.map((item) => `<li>${escapeHTML(item)}</li>`).join("\n")}
 </ul>
@@ -395,7 +453,7 @@ ${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版
 
 ${releaseLicenseNotice(locale, direction)}
 
-${t(releaseConfig.taglineKey)}
+${tagline}
 
 ${highlights.map((item) => `- ${item}`).join("\n")}
 
@@ -406,14 +464,22 @@ ${highlights.map((item) => `- ${item}`).join("\n")}
 function releaseIndexDocument() {
   const english = translations("en");
   const chinese = translations("zh-Hans");
-  const tEnglish = (key) => translated(english, "en", key);
-  const tChinese = (key) => translated(chinese, "zh-Hans", key);
-  const englishHighlights = releaseConfig.highlightKeys
-    .map((key) => `- ${tEnglish(key)}`)
+  const englishCopy = releaseCopy("en", english);
+  const chineseCopy = releaseCopy("zh-Hans", chinese);
+  const englishHighlights = englishCopy.highlights
+    .map((highlight) => `- ${highlight}`)
     .join("\n");
-  const chineseHighlights = releaseConfig.highlightKeys
-    .map((key) => `- ${tChinese(key)}`)
+  const chineseHighlights = chineseCopy.highlights
+    .map((highlight) => `- ${highlight}`)
     .join("\n");
+  const englishCurrentTerms =
+    releaseNotesVersion === "0.2.0"
+      ? "Current development uses the terms in"
+      : `SlimLuma ${releaseNotesVersion} uses the terms in`;
+  const chineseCurrentTerms =
+    releaseNotesVersion === "0.2.0"
+      ? "当前开发版本采用"
+      : `SlimLuma ${releaseNotesVersion} 采用`;
 
   return `<!-- Generated by scripts/generate-github-readmes.mjs. -->
 
@@ -427,13 +493,13 @@ ${releaseLanguageSelector()}
 
 ## English
 
-${tEnglish(releaseConfig.taglineKey)}
+${englishCopy.tagline}
 
 ${englishHighlights}
 
 ## 简体中文
 
-${tChinese(releaseConfig.taglineKey)}
+${chineseCopy.tagline}
 
 ${chineseHighlights}
 
@@ -444,10 +510,10 @@ Official publisher / 官方发布主体:
 
 SlimLuma 0.2.0 source was released under the
 [MIT License](${historicalLicenseURL}); that historical grant is not revoked.
-Current development uses the terms in [main LICENSE](${currentLicenseURL}).
+${englishCurrentTerms} [${releaseLicenseLabel}](${releaseLicenseURL}).
 
 SlimLuma 0.2.0 源码按 [MIT License](${historicalLicenseURL}) 发布，已授予的历史
-权利不被撤销。当前开发版本采用 [main LICENSE](${currentLicenseURL}) 中的条款。
+权利不被撤销。${chineseCurrentTerms} [${releaseLicenseLabel}](${releaseLicenseURL}) 中的条款。
 
 ## Verify / 验证
 
@@ -458,7 +524,7 @@ shasum -a 256 -c SHA256SUMS
 \`\`\`
 
 External engines remain separately licensed and are not bundled. See
-[THIRD_PARTY_NOTICES.md](${repositoryURL}/blob/main/THIRD_PARTY_NOTICES.md).
+[THIRD_PARTY_NOTICES.md](${pinnedThirdPartyNoticesURL}).
 `;
 }
 

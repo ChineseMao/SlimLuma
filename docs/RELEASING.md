@@ -21,6 +21,11 @@ Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这�
 - `APPLE_API_KEY_ID`
 - `APPLE_API_ISSUER_ID`
 
+只有仓库变量 `SLIMLUMA_AUTOMATED_RELEASE` 明确设置为 `true` 时，tag 推送才会
+运行自动签名、公证和发布 job。未配置变量时 job 会安全跳过，供下面的本机手工发行
+流程使用；这样不会在 secrets 缺失时产生一个必然失败、又可能与手工 Release 竞态
+的工作流。
+
 私钥、P12 密码和 API key 不进入源码、日志、预设或发布附件。
 
 ## 本地预检
@@ -97,6 +102,49 @@ staple、stapler validate 和 Gatekeeper 通过。
 
 发布后的 GitHub Release 和可下载附件仍需人工抽查；workflow 成功不替代产品页、
 许可证与升级说明的最终审核。
+
+## 本机手工发行
+
+当仓库没有配置上述 Actions secrets 时，使用已授权的本机 Keychain 完成完整发行。
+正式 tag 必须指向已经合并、CI 成功的 `main` 提交；不得从 dirty worktree 或未合并
+分支打 tag。
+
+```bash
+version="0.2.1"
+export SLIMLUMA_CODE_SIGN_IDENTITY="<Developer ID SHA-1>"
+export SLIMLUMA_NOTARY_KEYCHAIN_PROFILE="<notarytool profile>"
+
+scripts/package-app.sh
+scripts/notarize-release.sh dist/SlimLuma.app
+scripts/notarize-release.sh dist/slimluma
+scripts/create-release-artifacts.sh
+scripts/notarize-release.sh \
+  "dist/SlimLuma-$version-macOS-universal.dmg"
+scripts/create-release-artifacts.sh --checksums-only
+(cd dist && shasum -a 256 -c SHA256SUMS)
+```
+
+确认 App、CLI、DMG、ZIP 内的项目许可和第三方声明通过脚本门禁后，创建 annotated
+tag。tag 推送时，`SLIMLUMA_AUTOMATED_RELEASE` 未启用会让自动 job 安全跳过。
+手工创建 Release 时必须使用精确文件名，禁止使用可能匹配旧版本的通配符，也禁止
+`--clobber`：
+
+```bash
+git tag -a "v$version" -m "SlimLuma $version"
+git push origin "v$version"
+gh release create "v$version" \
+  "dist/SlimLuma-$version-macOS-universal.dmg" \
+  "dist/SlimLuma-$version-macOS-universal.zip" \
+  "dist/slimluma-$version-macOS-universal.tar.gz" \
+  dist/SHA256SUMS \
+  --verify-tag \
+  --notes-file "docs/releases/v$version.md" \
+  --title "SlimLuma $version"
+```
+
+最后从匿名下载 URL 重新下载全部附件，执行 SHA-256、DMG/App stapler、Gatekeeper、
+版本、架构、签名主体和 Team ID 复验。只有全部通过后，才推进
+`latestPublishedVersion` 并让产品页指向新版本。
 
 ## 许可版本边界
 

@@ -4,14 +4,18 @@ All notable changes are documented here. Dates use UTC.
 
 ## Unreleased / 未发布
 
+No changes yet. / 暂无变更。
+
+## 0.2.1 — 2026-07-29
+
 ### Licensing and publishing / 许可与发布主体
 
-- Development has advanced to 0.2.1 (build 3). Product pages continue to
-  download the latest published version, 0.2.0, until a separately reviewed
-  0.2.1 release is created; the release workflow refuses to overwrite an
-  existing GitHub Release. / 开发版本已推进到 0.2.1（build 3）。在 0.2.1
-  独立完成审核和发布前，产品页继续下载最新公开版本 0.2.0；发行工作流会拒绝
-  覆盖任何已经存在的 GitHub Release。
+- Version 0.2.1 (build 3) is the first release under the source-visible
+  proprietary terms. Product pages remain pinned to the last verified public
+  release until 0.2.1 passes post-publication checks; release automation
+  refuses to overwrite an existing GitHub Release. / 0.2.1（build 3）是首个
+  采用源码公开可审阅专有条款的版本。产品页会继续指向上一个已验证的公开版本，
+  直到 0.2.1 完成发布后复验；发行自动化拒绝覆盖任何已有 GitHub Release。
 - Current development is source-visible proprietary software with all rights
   reserved; the exact long-term Developer ID publisher is
   SlimLuma copyright holders, Apple team `PRIVATE_TEAM_ID`. /
