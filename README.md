@@ -17,10 +17,12 @@
 [پنجابی](docs/readme/README.pa-Arab.md) · [తెలుగు](docs/readme/README.te.md) ·
 [Naijá](docs/readme/README.pcm.md)
 
-> [!CAUTION]
-> **[Public installers are temporarily unavailable while a privacy-safe
-> replacement is being notarized. Check Releases for the next verified
-> build.](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[Download SlimLuma 0.2.1 for macOS — Universal DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip)
+> · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz)
+> · [SHA-256 checksums](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 SlimLuma is a source-visible, local-first macOS app for
 compressing images, animated images, videos, and PDF files. It provides a safe,
@@ -31,8 +33,7 @@ Media stays on your Mac. Originals are not overwritten.
 
 ## Quick start
 
-1. Wait for a verified installer to appear on
-   [Releases](https://github.com/ChineseMao/SlimLuma/releases).
+1. [Download the verified Universal DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg).
 2. Open the DMG and move `SlimLuma.app` to Applications.
 3. Launch SlimLuma, open **Engines & Settings**, and choose
    **Install Recommended Engines**.

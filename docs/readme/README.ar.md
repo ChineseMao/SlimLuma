@@ -8,8 +8,10 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <strong><a href="README.ar.md">العربية</a></strong> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!CAUTION]
-> **[المثبتات العامة غير متاحة مؤقتًا أثناء توثيق بديل يحمي الخصوصية. راجع Releases للحصول على الإصدار التالي الذي تم التحقق منه.](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[⬇ قم بتنزيل النسخة العالمية المناسبة لـ macOS من GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 <div dir="rtl" align="right">
 <p><a href="https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE">الشفرة المصدرية متاحة للاطلاع بغرض المراجعة فقط. جميع الحقوق محفوظة. راجع LICENSE.</a></p>
@@ -30,7 +32,11 @@
 <li><strong>الأتمتة</strong> — الانتقال مباشرة إلى قائمة الضغط من الحافظة ومجلد المراقبة وFinder</li>
 </ul>
 <h2>التثبيت</h2>
-<p><a href="https://github.com/ChineseMao/SlimLuma/releases">المثبتات العامة غير متاحة مؤقتًا أثناء توثيق بديل يحمي الخصوصية. راجع Releases للحصول على الإصدار التالي الذي تم التحقق منه.</a></p>
+<ol>
+<li><a href="https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg">قم بتنزيل النسخة العالمية المناسبة لـ macOS من GitHub Releases.</a></li>
+<li>انقل SlimLuma.app إلى مجلد &quot;التطبيقات&quot;.</li>
+<li>افتح &quot;المحرك والإعدادات&quot; واختر &quot;محرك التوصية بالتكميل التلقائي بنقرة واحدة&quot;.</li>
+</ol>
 <p>SlimLuma يستخدم Homebrew لتثبيت ImageMagick وFFmpeg وqpdf وGhostscript؛ تظل ملفات الوسائط دائمًا على هذا الـ Mac.</p>
 </div>
 

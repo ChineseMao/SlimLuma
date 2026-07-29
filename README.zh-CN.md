@@ -17,9 +17,12 @@
 [پنجابی](docs/readme/README.pa-Arab.md) · [తెలుగు](docs/readme/README.te.md) ·
 [Naijá](docs/readme/README.pcm.md)
 
-> [!CAUTION]
-> **[公开安装包暂时下架，隐私安全的替代版本正在公证。请在 Releases
-> 查看下一个通过验证的版本。](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[下载 SlimLuma 0.2.1 macOS 通用版 DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip)
+> · [命令行工具](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz)
+> · [SHA-256 校验文件](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 SlimLuma 是一个免费下载、源码公开可审阅、本地运行的 macOS 图片、视频和 PDF
 批量压缩工具。它负责安全可靠的工作流，把编解码交给 ImageMagick、FFmpeg、qpdf

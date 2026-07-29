@@ -8,8 +8,10 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <strong><a href="README.sw.md">Kiswahili</a></strong> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!CAUTION]
-> **[Visakinishi vya umma havipatikani kwa muda wakati toleo mbadala linalolinda faragha linathibitishwa na Apple. Angalia Releases kwa build inayofuata iliyothibitishwa.](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[⬇ Pakua toleo la Universal la macOS kutoka GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 > [Msimbo chanzo unaonekana kwa ukaguzi pekee. Haki zote zimehifadhiwa. Tazama LICENSE.](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
@@ -30,7 +32,9 @@ Inaunga mkono picha, video na PDF zinazojulikana, pia inaweza buruta folda nzima
 
 ## Sakinisha
 
-[Visakinishi vya umma havipatikani kwa muda wakati toleo mbadala linalolinda faragha linathibitishwa na Apple. Angalia Releases kwa build inayofuata iliyothibitishwa.](https://github.com/ChineseMao/SlimLuma/releases)
+1. [Pakua toleo la Universal la macOS kutoka GitHub Releases.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)
+2. Hamisha SlimLuma.app hadi kwenye folda ya "Programu".
+3. Fungua "Engine na Mipangilio" na uchague "Jaribio la Moja-Bofya la Engine Inayopendekezwa".
 
 SlimLuma Tumia Homebrew kusakinisha ImageMagick, FFmpeg, qpdf na Ghostscript; faili za media hubaki kila wakati kwenye Mac hii.
 
