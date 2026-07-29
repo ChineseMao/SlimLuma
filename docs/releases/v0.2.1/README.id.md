@@ -18,6 +18,6 @@ Alat kompresi gambar, video, dan PDF lokal untuk macOS.
 
 - Mulai versi 0.2.1, versi saat ini menggunakan lisensi yang mengizinkan kode sumber dilihat hanya untuk peninjauan dan mempertahankan seluruh hak; hak MIT yang telah diberikan untuk versi 0.2.0 tetap tidak terpengaruh.
 - App dan CLI sama-sama Universal serta menggunakan Hardened Runtime dan stempel waktu aman; rilis hanya diizinkan setelah notarisasi Apple, stapling App dan DMG, Gatekeeper, serta verifikasi SHA-256 semuanya lulus.
-- Halaman produk dan catatan rilis dalam 20 bahasa menyediakan tautan unduhan Universal DMG yang menonjol serta menyertakan pemberitahuan lisensi proyek dan pihak ketiga.
+- Catatan rilis dalam 20 bahasa menyediakan tautan unduhan Universal DMG yang menonjol serta menyertakan pemberitahuan lisensi proyek dan pihak ketiga.
 
 [SlimLuma Bahasa Indonesia](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/docs/readme/README.id.md)

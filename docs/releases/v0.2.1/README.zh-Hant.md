@@ -18,6 +18,6 @@
 
 - 自 0.2.1 起，目前版本採用原始碼公開可供審閱、保留全部權利的授權；0.2.0 已授予的 MIT 權利不受影響。
 - App 與 CLI 均為 Universal，使用 Hardened Runtime 和安全時間戳記；Apple 公證、App 與 DMG staple、Gatekeeper 及 SHA-256 驗證全部通過後才允許發布。
-- 20 種語言的產品頁面和版本說明均提供顯眼的 Universal DMG 下載入口，並包含專案與第三方授權聲明。
+- 20 種語言的版本說明均提供顯眼的 Universal DMG 下載入口，並包含專案與第三方授權聲明。
 
 [SlimLuma 繁體中文](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/docs/readme/README.zh-Hant.md)

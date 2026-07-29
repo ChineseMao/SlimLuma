@@ -18,6 +18,6 @@ Zana ya ndani ya kubana picha, video na PDF kwa macOS.
 
 - Kuanzia toleo la 0.2.1, matoleo ya sasa yanatumia leseni inayoruhusu msimbo chanzo kuonekana kwa ukaguzi pekee huku haki zote zikihifadhiwa; haki za MIT zilizotolewa tayari kwa toleo la 0.2.0 haziathiriwi.
 - App na CLI zote ni Universal na zinatumia Hardened Runtime pamoja na muhuri salama wa muda; uchapishaji unaruhusiwa tu baada ya uthibitishaji wa Apple, stapling ya App na DMG, Gatekeeper na ukaguzi wa SHA-256 kufaulu.
-- Kurasa za bidhaa na maelezo ya toleo katika lugha 20 zina kiungo kinachoonekana wazi cha kupakua Universal DMG na zinajumuisha taarifa za leseni za mradi na wahusika wengine.
+- Maelezo ya toleo katika lugha 20 yana kiungo kinachoonekana wazi cha kupakua Universal DMG na yanajumuisha taarifa za leseni za mradi na wahusika wengine.
 
 [SlimLuma Kiswahili](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/docs/readme/README.sw.md)
