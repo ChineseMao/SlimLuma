@@ -12,7 +12,7 @@ body:
     id: version
     attributes:
       label: Version / 版本
-      placeholder: "SlimLuma 0.2.0, macOS 15.5"
+      placeholder: "SlimLuma 0.2.1, macOS 15.5"
     validations:
       required: true
   - type: dropdown

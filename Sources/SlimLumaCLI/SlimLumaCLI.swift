@@ -10,7 +10,7 @@ struct SlimLumaCLI: AsyncParsableCommand {
         commandName: "slimluma",
         abstract:
             "Local-first image, video and PDF compression powered by SlimLuma.",
-        version: "0.2.0",
+        version: SlimLumaProduct.version,
         subcommands: [Compress.self, Engines.self],
         defaultSubcommand: Compress.self
     )
