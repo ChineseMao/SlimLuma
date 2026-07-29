@@ -18,6 +18,6 @@ Ein lokales Tool zur Komprimierung von Bildern, Videos und PDFs für macOS.
 
 - Ab Version 0.2.1 verwenden aktuelle Versionen eine Lizenz, unter der der Quellcode nur zur Einsicht und Prüfung verfügbar ist und alle Rechte vorbehalten bleiben; die für Version 0.2.0 bereits gewährten MIT-Rechte bleiben unberührt.
 - App und CLI sind Universal und verwenden Hardened Runtime sowie einen sicheren Zeitstempel; eine Veröffentlichung ist erst zulässig, wenn Apple-Notarisierung, Stapling von App und DMG, Gatekeeper und SHA-256-Prüfung vollständig bestanden wurden.
-- Produktseiten und Versionshinweise in 20 Sprachen bieten einen gut sichtbaren Download-Link für das Universal DMG und enthalten Lizenzhinweise zum Projekt und zu Drittanbieterkomponenten.
+- Versionshinweise in 20 Sprachen bieten einen gut sichtbaren Download-Link für das Universal DMG und enthalten Lizenzhinweise zum Projekt und zu Drittanbieterkomponenten.
 
 [SlimLuma Deutsch](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/docs/readme/README.de.md)

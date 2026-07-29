@@ -18,6 +18,6 @@ macOS 向けのローカル画像・動画・PDF 圧縮ツール。
 
 - 0.2.1 以降の現行バージョンには、ソースコードを閲覧・レビュー可能とし、すべての権利を留保するライセンスが適用されます。0.2.0 に対してすでに付与された MIT の権利には影響しません。
 - App と CLI はどちらも Universal で、Hardened Runtime と安全なタイムスタンプを使用します。Apple の公証、App と DMG の staple、Gatekeeper、SHA-256 検証がすべて合格した場合にのみリリースできます。
-- 20 言語の製品ページとリリースノートには、目立つ Universal DMG ダウンロードリンクと、プロジェクトおよび第三者ライセンスに関する通知が用意されています。
+- 20 言語のリリースノートには、目立つ Universal DMG ダウンロードリンクと、プロジェクトおよび第三者ライセンスに関する通知が用意されています。
 
 [SlimLuma 日本語](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/docs/readme/README.ja.md)
