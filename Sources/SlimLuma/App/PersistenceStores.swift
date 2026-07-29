@@ -80,7 +80,16 @@ enum HistoryStore {
     }
 
     static func load() -> [HistoryEntry] {
-        guard let fileURL, let data = try? Data(contentsOf: fileURL) else { return [] }
+        guard let fileURL else { return [] }
+        try? FileManager.default.setAttributes(
+            [.posixPermissions: 0o700],
+            ofItemAtPath: fileURL.deletingLastPathComponent().path
+        )
+        try? FileManager.default.setAttributes(
+            [.posixPermissions: 0o600],
+            ofItemAtPath: fileURL.path
+        )
+        guard let data = try? Data(contentsOf: fileURL) else { return [] }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return (try? decoder.decode([HistoryEntry].self, from: data)) ?? []
@@ -91,13 +100,22 @@ enum HistoryStore {
         do {
             try FileManager.default.createDirectory(
                 at: fileURL.deletingLastPathComponent(),
-                withIntermediateDirectories: true
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
+            try FileManager.default.setAttributes(
+                [.posixPermissions: 0o700],
+                ofItemAtPath: fileURL.deletingLastPathComponent().path
             )
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(Array(history.prefix(500)))
             try data.write(to: fileURL, options: .atomic)
+            try FileManager.default.setAttributes(
+                [.posixPermissions: 0o600],
+                ofItemAtPath: fileURL.path
+            )
         } catch {
             // History is supplementary; a write failure must not fail compression.
         }

@@ -58,16 +58,23 @@ be added later without changing request models or the UI.
 
 - Original inputs are read-only.
 - Engine arguments are passed directly to `Process`; no shell evaluates paths.
-- Output is written to a hidden file on the destination volume.
+- Engine output is written inside an app-owned `0700` temporary workspace.
+  Each active workspace holds a file lock so stale cleanup cannot remove a
+  long-running job.
 - Images, videos and PDFs are reopened with ImageIO, AVFoundation or PDFKit.
 - Animated image frame counts are compared before finalization.
 - Video duration and audio/video/subtitle track counts are compared before
   finalization.
 - PDF page count, outlines, annotations, form/signature fields, encryption,
   extractable text and requested linearization are compared before finalization.
-- The hidden file is moved to its final unique path only after validation.
+- Only an accepted output is copied into a locked `0700` staging directory on
+  the destination volume. SlimLuma synchronizes the marker, directory entry,
+  and payload; rechecks size and inode identity; then performs an exclusive
+  atomic rename to the final unique path.
 - Existing output names are never overwritten.
-- Failed and cancelled jobs remove their hidden output.
+- Failed and cancelled jobs remove their private workspace and owned
+  destination staging directory. Later jobs reclaim only stale directories
+  with SlimLuma's marker magic and an acquirable lock.
 
 ## Automation and desktop integration
 

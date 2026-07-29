@@ -28,7 +28,7 @@ Mendukung gambar, video, dan PDF yang umum, juga bisa menyeret seluruh folder.
 - **PDF** — qpdf akan menyusun ulang aliran objek dan mengompresi ulang data yang dapat dikompresi; Ghostscript juga dapat mengurangi kepadatan piksel, kualitas, atau kompleksitas warna dari gambar yang disematkan. PDF bertipe teks biasanya memberikan manfaat yang kecil, sedangkan scan biasanya lebih terlihat.
 - **Ukuran file target** — SlimLuma Kualitas akan disesuaikan secara bertahap; jika perlu, perkecil ukuran, untuk mendapatkan hasil teraman dan paling jelas yang tidak melebihi target. Ukuran target memerlukan ImageMagick. H.264 dan HEVC dapat melakukan encoding perangkat lunak dua kali sesuai ukuran target, dan menyediakan ruang untuk audio, subtitle, dan kontainer; AV1 dan kompresi audio terpisah belum mendukung volume target.
 - **Antrian file** — Gambar, video, dan PDF dapat dicampur; antrean memungkinkan 1–6 tugas simultan, seluruh pengaturan dibekukan saat mulai.
-- **Aman** — Mesin profesional hanya menulis file sementara .slimluma tersembunyi di direktori tujuan, tidak langsung menyentuh file asli.
+- **Aman** — Menyembunyikan output sementara, pemeriksaan integritas tipe, strategi volume, dan penyimpanan aman yang tidak pernah menimpa asli.
 - **Gerbang hasil** — Baca ulang sesuai dengan aturan kelengkapan gambar, video, atau PDF, jika ditemukan degradasi penting maka tolak output.
 - **Otomatisasi** — Langsung masuk ke antrean kompresi dari clipboard, folder pemantauan, dan Finder
 

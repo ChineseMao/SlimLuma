@@ -54,7 +54,10 @@ if [[ -z "$SUBMISSION_ID" ]]; then
         "${AUTH_ARGS[@]}" > "$RESULT_JSON"
     SUBMISSION_ID="$(jq -er '.id' "$RESULT_JSON")"
 else
-    echo "Resuming notarization submission: $SUBMISSION_ID"
+    echo "Resuming the requested notarization submission."
+fi
+if [[ "${GITHUB_ACTIONS:-false}" == "true" ]]; then
+    echo "::add-mask::$SUBMISSION_ID"
 fi
 
 POLL_INTERVAL_SECONDS="${SLIMLUMA_NOTARY_POLL_INTERVAL_SECONDS:-15}"
@@ -92,7 +95,7 @@ while [[ "$(date +%s)" -lt "$DEADLINE_EPOCH" ]]; do
 done
 if [[ "$NOTARY_STATE" != "Accepted" ]]; then
     echo "Apple notarization did not finish within ${MAX_WAIT_SECONDS}s." >&2
-    echo "Resume with SLIMLUMA_NOTARY_SUBMISSION_ID=$SUBMISSION_ID" >&2
+    echo "Use the private submission ID from notarytool history to resume." >&2
     exit 1
 fi
 
@@ -116,4 +119,4 @@ else
     codesign --verify --strict --verbose=2 "$TARGET"
 fi
 
-echo "Accepted: $SUBMISSION_ID"
+echo "Apple notarization accepted."

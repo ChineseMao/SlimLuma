@@ -28,7 +28,7 @@ Inaunga mkono picha, video na PDF zinazojulikana, pia inaweza buruta folda nzima
 - **PDF** — qpdf itapanga upya mtiririko wa objekti na kukokotoa data inayoweza kukokotezwa; Ghostscript pia inaweza kupunguza msongamano wa pikseli, ubora au ugumu wa rangi wa picha zilizojumuishwa. PDF zinazotokana na maandishi kawaida zinapata faida ndogo, nakala zilizopigwa skana mara nyingi zinaonekana zaidi.
 - **Kiasi cha faili lengwa** — SlimLuma Ubora utarekebishwa hatua kwa hatua; inapohitajika, punguza ukubwa, ili kupata matokeo wazi na salama yasiyozidi lengo. Ukubwa wa lengo unahitaji ImageMagick. H.264 na HEVC zinaweza kufanya usimbaji wa programu mara mbili kulingana na ukubwa wa lengo, na kuweka nafasi kwa sauti, manukuu na kontena; AV1 kwa pamoja na usimbaji wa sauti pekee bado hautoi ukubwa wa lengo.
 - **Foleni ya faili** — Picha, video na PDF zinaweza kuingizwa mchanganyiko; safu inaruhusu kazi 1–6 zilizoteuliwa wakati mmoja, na kuzizima mipangilio yote wakati wa kuanza.
-- **Salama** — Motor ya kitaalamu inaandika tu faili za muda zilizofichwa za .slimluma kwenye saraka lengwa, haiginzi faili za asili moja kwa moja.
+- **Salama** — Ficha matokeo ya muda, ukaguzi wa uakisi wa aina, sera ya saizi na usalama wa kuhifadhi bila kufunika asili.
 - **Mlindaji wa matokeo** — Soma upya kulingana na kanuni za ukamilifu za picha, video au PDF, na ukigundua kupungua muhimu kutoza kutoa matokeo.
 - **Uendeshaji otomatiki** — Ingiza moja kwa moja kwenye safu ya usimbuaji kutoka kwa clipboard, folda za ufuatiliaji na Finder
 

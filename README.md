@@ -73,10 +73,12 @@ shipped with `SHA256SUMS`.
 
 ## Safety model
 
-SlimLuma never sends media to a cloud service. Professional engines write to a
-hidden temporary file on the destination volume. The app then reopens the
-result and applies format-specific integrity checks before moving it to the
-final unique path.
+SlimLuma never sends media to a cloud service. Professional engines write only
+inside a private app-owned temporary workspace. The app reopens the result and
+applies format-specific integrity checks, then copies an accepted result to a
+locked `0700` staging directory on the selected destination volume. After
+syncing and inode checks, it exposes the final unique name with an exclusive
+same-volume atomic rename.
 
 - Image results are decoded again and animated output is checked for frames,
   timing, and loops.
@@ -86,8 +88,9 @@ final unique path.
 - PDF results are checked for page count and relevant outlines, links,
   annotations, forms, signatures, encryption, searchable text, and
   linearization signals.
-- Passwords for encrypted PDFs stay in queue memory and permission-restricted
-  temporary files; they are not stored in history, presets, or logs.
+- Passwords for encrypted PDFs are not persisted to history, presets, or
+  application logs. While a job is running, qpdf receives the password through
+  a permission-restricted temporary file that is removed after use.
 
 These checks reduce known corruption risks but are not a semantic proof of
 every page, link target, form behavior, frame, or pixel.
@@ -158,7 +161,10 @@ open dist/SlimLuma.app
 Without `SLIMLUMA_CODE_SIGN_IDENTITY`, packaging produces a local ad-hoc build.
 Developer ID signing, hardened runtime, notarization, DMG/ZIP/CLI packaging,
 Gatekeeper, and checksum requirements are covered in
-[Releasing](docs/RELEASING.md).
+[Releasing](docs/RELEASING.md). The reason for every certificate, permission,
+signature, notarization, stapling, and verification step—and the failure mode
+when one is missing—is documented in the
+[release trust chain](docs/RELEASE_TRUST_CHAIN.md).
 
 ## Architecture and validation
 
@@ -182,6 +188,7 @@ Additional project documents:
 - [Product audit](docs/PRODUCT_AUDIT_2026-07-26.md)
 - [PDF validation](docs/PDF_VALIDATION_2026-07-26.md)
 - [Release readiness](docs/RELEASE_READINESS_2026-07-28.md)
+- [Release trust chain](docs/RELEASE_TRUST_CHAIN.md)
 - [Changelog](CHANGELOG.md)
 - [Publisher and release identity](PUBLISHER.md)
 - [Contributing](CONTRIBUTING.md)

@@ -15,7 +15,9 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
 
       - name: Resolve Swift packages
         run: swift package resolve
@@ -31,7 +33,11 @@ jobs:
 
       - name: Build Universal release binaries
         run: |
-          swift build -c release --arch arm64 --arch x86_64
+          swift build \
+            -c release \
+            --arch arm64 \
+            --arch x86_64 \
+            -debug-info-format none
           lipo .build/apple/Products/Release/SlimLumaApp \
             -verify_arch arm64 x86_64
           lipo .build/apple/Products/Release/slimluma \
@@ -39,9 +45,17 @@ jobs:
           ! cmp -s \
             .build/apple/Products/Release/SlimLumaApp \
             .build/apple/Products/Release/slimluma
+          strip -S -x \
+            .build/apple/Products/Release/SlimLumaApp \
+            .build/apple/Products/Release/slimluma
+          scripts/verify-release-privacy.sh \
+            .build/apple/Products/Release/SlimLumaApp \
+            .build/apple/Products/Release/slimluma
 
       - name: Validate release scripts
-        run: zsh -n scripts/*.sh
+        run: |
+          zsh -n scripts/*.sh
+          scripts/test-release-privacy.sh
 
       - name: Reject stale localization key manifests
         run: |

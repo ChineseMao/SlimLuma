@@ -85,8 +85,8 @@ struct CompressionQueueItem: Identifiable, Sendable {
     var engineName: String?
     var detailMessage: String?
     var settingsOverride: CompressionSettings?
-    /// Kept only in memory for the lifetime of this queue item. Passwords are
-    /// never written to presets, history or UserDefaults.
+    /// Runtime-only input. Passwords are never persisted to presets, history,
+    /// UserDefaults or logs.
     var pdfPassword: String?
     var progressFraction: Double
     var progressStage: String?
@@ -108,6 +108,45 @@ struct CompressionQueueItem: Identifiable, Sendable {
 
     var savedBytes: Int64 {
         max(0, originalBytes - (outputBytes ?? originalBytes))
+    }
+}
+
+enum PDFPasswordQueueLifecycle {
+    static func candidateIDs(
+        in queue: [CompressionQueueItem],
+        includingFailuresAndCancellations: Bool
+    ) -> [UUID] {
+        queue.compactMap { item in
+            switch item.status {
+            case .waiting:
+                item.id
+            case .failed, .cancelled:
+                includingFailuresAndCancellations ? item.id : nil
+            default:
+                nil
+            }
+        }
+    }
+
+    static func takePassword(
+        for itemID: UUID,
+        from queue: inout [CompressionQueueItem]
+    ) -> String? {
+        guard let index = queue.firstIndex(where: { $0.id == itemID }) else {
+            return nil
+        }
+        let password = queue[index].pdfPassword
+        queue[index].pdfPassword = nil
+        return password
+    }
+
+    static func clearPasswords(
+        for itemIDs: Set<UUID>,
+        in queue: inout [CompressionQueueItem]
+    ) {
+        for index in queue.indices where itemIDs.contains(queue[index].id) {
+            queue[index].pdfPassword = nil
+        }
     }
 }
 

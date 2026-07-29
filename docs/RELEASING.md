@@ -4,6 +4,10 @@
 Runtime、安全时间戳、Apple 公证、staple、Gatekeeper 验收和发布后 SHA-256。
 本地测试通过或 ad-hoc 签名不等于可公开发行。
 
+每一层权限、证书、签名、公证与验证分别解决什么问题，见
+[发布信任链（中文）](RELEASE_TRUST_CHAIN.zh-Hans.md) /
+[Release trust chain (English)](RELEASE_TRUST_CHAIN.md)。
+
 长期发布主体固定为
 `Developer ID Application: private release identity`，
 Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这两个值；证书轮换
@@ -21,8 +25,12 @@ Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这�
 - `APPLE_API_KEY_ID`
 - `APPLE_API_ISSUER_ID`
 
-只有仓库变量 `SLIMLUMA_AUTOMATED_RELEASE` 明确设置为 `true` 时，tag 推送才会
-运行自动签名、公证和发布 job。未配置变量时 job 会安全跳过，供下面的本机手工发行
+只有仓库变量 `SLIMLUMA_AUTOMATED_RELEASE` 明确设置为 `true`，并从受保护的
+`main` 手工触发 Release workflow、输入已签名 tag 时，才会运行自动签名、公证和
+发布 job。工作流先使用 `main` 中固定的公开签名人列表验证 tag，再确认 tag 提交
+已经合并到触发工作流的固定 `main` 提交，并在构建和 publish 前确认远端 live
+`main` 仍是同一提交，最后才会 checkout 和构建 tag。旧 workflow run 重跑或
+`main` 已变化时会直接拒绝。未配置变量时 job 会安全跳过，供下面的本机手工发行
 流程使用；这样不会在 secrets 缺失时产生一个必然失败、又可能与手工 Release 竞态
 的工作流。
 
@@ -60,9 +68,8 @@ staple、stapler validate 和 Gatekeeper 通过。
 
 2026-07-28 最终候选：
 
-- app 公证：`[redacted-notary-submission-id]`
-- CLI 公证：`[redacted-notary-submission-id]`
-- DMG 公证：`[redacted-notary-submission-id]`
+- app、CLI 与 DMG 均由 Apple 公证服务返回 `Accepted`；具体 submission ID
+  属于不必要的运营元数据，不在公开仓库长期保存；
 - app 与 DMG：stapler validate 和 Gatekeeper accepted
 - CLI：Apple Accepted、严格 codesign 通过
 - Universal：`x86_64 arm64`
@@ -85,9 +92,15 @@ staple、stapler validate 和 Gatekeeper 通过。
    `generatedReleaseNotesVersion` 和 `docs/releases/v<version>.i18n.json`，
    运行生成器创建 `docs/releases/v<version>.md` 及 20 份版本说明。
 3. 确认 `main` 的 CI 全绿。
-4. 创建与版本完全一致、且从未发布过的 tag，例如 `v0.2.1`。
-5. Release workflow 导入临时 keychain，构建、签名、公证并发布 ZIP、DMG、CLI
-   与 `SHA256SUMS`。
+4. 从已通过 CI 的 `main` 提交创建与版本完全一致、且从未发布过的 signed tag，
+   例如 `v0.2.1`。
+5. 从 `main` 手工触发 Release workflow 并输入该 tag。工作流以 `main` 的 signer
+   列表验证签名、拒绝未合并到 `main` 的 tag，再导入临时 keychain，构建、签名、
+   公证并发布 ZIP、DMG、CLI 与 `SHA256SUMS`：
+
+   ```bash
+   gh workflow run Release --ref main -f tag=v0.2.1
+   ```
 6. 同一 tag 的发行任务不会并发执行；上传前会再次校验英文默认 README、完整中文
    镜像、20 份 GitHub README、20 份版本说明、直接下载链接、本地化资源、相对链接、
    测试、脚本语法、Universal 架构和三项 SHA-256。
@@ -124,13 +137,14 @@ scripts/create-release-artifacts.sh --checksums-only
 (cd dist && shasum -a 256 -c SHA256SUMS)
 ```
 
-确认 App、CLI、DMG、ZIP 内的项目许可和第三方声明通过脚本门禁后，创建 annotated
-tag。tag 推送时，`SLIMLUMA_AUTOMATED_RELEASE` 未启用会让自动 job 安全跳过。
+确认 App、CLI、DMG、ZIP 内的项目许可和第三方声明通过脚本门禁后，创建 signed
+tag，并在推送前执行 `git verify-tag "v$version"`。推送 tag 本身不会自动发布；
+只有从受保护的 `main` 显式运行 Release workflow 才会进入自动发行链路。
 手工创建 Release 时必须使用精确文件名，禁止使用可能匹配旧版本的通配符，也禁止
 `--clobber`：
 
 ```bash
-git tag -a "v$version" -m "SlimLuma $version"
+git tag -s "v$version" -m "SlimLuma $version"
 git push origin "v$version"
 gh release create "v$version" \
   "dist/SlimLuma-$version-macOS-universal.dmg" \

@@ -143,8 +143,6 @@ const englishOverrides = {
     "H.264 and HEVC support two-pass target-size encoding with space reserved for audio, subtitles, and the container. AV1 and audio-only target sizing are not currently supported.",
   "图片、视频和 PDF 可以混合加入；队列允许 1–6 个并发任务，开始时冻结整批设置。":
     "Mix images, videos, and PDFs in one queue, run 1–6 jobs concurrently, and freeze the batch settings when processing starts.",
-  "专业引擎只写入目标目录中的 .slimluma 隐藏临时文件，不直接碰原件。":
-    "External engines write to a hidden .slimluma temporary file on the destination volume and never modify the original directly.",
   "按图片、视频或 PDF 的完整性规则重新读取，发现关键退化就拒绝输出。":
     "SlimLuma reopens every result with image-, video-, or PDF-specific integrity checks and rejects output when a critical regression is detected.",
   "从剪贴板、监控文件夹和 Finder 直接进入压缩队列":
@@ -304,7 +302,7 @@ function rtlReadmeBody(t) {
     ["PDF", t("qpdf 会重组对象流并重新压缩可压缩数据；Ghostscript 还能降低内嵌图片的像素密度、质量或色彩复杂度。文字型 PDF 通常收益较小，扫描件通常更明显。")],
     [t("目标文件大小"), `${t("SlimLuma 会逐级调整质量；必要时缩小尺寸，以得到不超过目标的最清晰安全结果。目标大小需要 ImageMagick。")} ${t("H.264 与 HEVC 可按目标大小执行两遍软件编码，并为音频、字幕和容器预留空间；AV1 与单独音频压缩暂不支持目标体积。")}`],
     [t("文件队列"), t("图片、视频和 PDF 可以混合加入；队列允许 1–6 个并发任务，开始时冻结整批设置。")],
-    [t("安全"), t("专业引擎只写入目标目录中的 .slimluma 隐藏临时文件，不直接碰原件。")],
+    [t("安全"), t("隐藏临时输出、类型完整性检查、体积策略和永不覆盖原件的安全落盘。")],
     [t("结果守门"), t("按图片、视频或 PDF 的完整性规则重新读取，发现关键退化就拒绝输出。")],
     [t("自动化"), t("从剪贴板、监控文件夹和 Finder 直接进入压缩队列")],
   ];
@@ -344,7 +342,7 @@ ${t("支持常见图片、视频和 PDF，也可以拖入整个文件夹")}
 - **PDF** — ${t("qpdf 会重组对象流并重新压缩可压缩数据；Ghostscript 还能降低内嵌图片的像素密度、质量或色彩复杂度。文字型 PDF 通常收益较小，扫描件通常更明显。")}
 - **${t("目标文件大小")}** — ${t("SlimLuma 会逐级调整质量；必要时缩小尺寸，以得到不超过目标的最清晰安全结果。目标大小需要 ImageMagick。")} ${t("H.264 与 HEVC 可按目标大小执行两遍软件编码，并为音频、字幕和容器预留空间；AV1 与单独音频压缩暂不支持目标体积。")}
 - **${t("文件队列")}** — ${t("图片、视频和 PDF 可以混合加入；队列允许 1–6 个并发任务，开始时冻结整批设置。")}
-- **${t("安全")}** — ${t("专业引擎只写入目标目录中的 .slimluma 隐藏临时文件，不直接碰原件。")}
+- **${t("安全")}** — ${t("隐藏临时输出、类型完整性检查、体积策略和永不覆盖原件的安全落盘。")}
 - **${t("结果守门")}** — ${t("按图片、视频或 PDF 的完整性规则重新读取，发现关键退化就拒绝输出。")}
 - **${t("自动化")}** — ${t("从剪贴板、监控文件夹和 Finder 直接进入压缩队列")}
 

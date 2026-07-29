@@ -28,7 +28,7 @@ Prise en charge des images, vidéos et PDF courants, les dossiers entiers peuven
 - **PDF** — qpdf réorganise le flux d'objets et recomprime les données compressibles ; Ghostscript peut également réduire la densité de pixels, la qualité ou la complexité des couleurs des images intégrées. Les PDF de type texte bénéficient généralement peu, tandis que les numérisations sont généralement plus visibles.
 - **Taille de fichier cible** — SlimLuma ajustera la qualité étape par étape ; réduira la taille si nécessaire pour obtenir le résultat le plus clair et sûr sans dépasser la cible. La taille cible nécessite ImageMagick H.264 et HEVC peuvent effectuer un encodage logiciel en deux passes selon la taille cible et réserver de l'espace pour l'audio, les sous-titres et le conteneur ; AV1 et la compression audio séparée ne prennent pas encore en charge le volume cible.
 - **File d'attente des fichiers** — Les images, vidéos et PDF peuvent être mélangés ; la file d'attente autorise de 1 à 6 tâches simultanées, gelant tous les paramètres au démarrage.
-- **Sécurité** — Le moteur professionnel n'écrit que des fichiers temporaires cachés .slimluma dans le répertoire cible, sans toucher directement aux originaux.
+- **Sécurité** — Cacher les sorties temporaires, les vérifications d'intégrité des types, la stratégie de volume et l'enregistrement sécurisé des fichiers originaux sans jamais les écraser.
 - **Gardien du résultat** — Relire selon les règles d'intégrité des images, vidéos ou PDF, et refuser de sortir si une dégradation clé est détectée.
 - **Automatisation** — Accéder directement à la file de compression depuis le presse-papiers, le dossier de surveillance et Finder
 

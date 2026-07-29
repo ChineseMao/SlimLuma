@@ -895,65 +895,80 @@ final class AppState: ObservableObject {
     private func processQueue(
         includingFailuresAndCancellations: Bool
     ) async {
+        let candidateIDs = PDFPasswordQueueLifecycle.candidateIDs(
+            in: queue,
+            includingFailuresAndCancellations:
+                includingFailuresAndCancellations
+        )
+        let batchCandidateIDs = Set(candidateIDs)
+
         defer {
             let wasCancelled = Task.isCancelled
             isProcessing = false
             isPaused = false
             processingTask = nil
-            for index in queue.indices where queue[index].status == .processing {
-                queue[index].status = .cancelled
+            for index in queue.indices {
+                if batchCandidateIDs.contains(queue[index].id),
+                   queue[index].status == .processing {
+                    queue[index].status = .cancelled
+                }
             }
+            PDFPasswordQueueLifecycle.clearPasswords(
+                for: batchCandidateIDs,
+                in: &queue
+            )
             startAutomaticProcessingIfPossible()
             announceAccessibility(
                 wasCancelled ? "压缩任务已取消" : "本批压缩任务已完成"
             )
         }
 
-        let candidates = queue.filter {
-            switch $0.status {
-            case .waiting:
-                true
-            case .failed, .cancelled:
-                includingFailuresAndCancellations
-            default: false
-            }
-        }
         let settingsSnapshot = settings
         let concurrency = max(1, min(settings.maxConcurrentJobs, 6))
-        var iterator = candidates.makeIterator()
+        var iterator = candidateIDs.makeIterator()
 
         await withTaskGroup(of: JobOutcome.self) { group in
             @MainActor
-            func enqueue(_ item: CompressionQueueItem) {
-                if let index = queue.firstIndex(where: { $0.id == item.id }) {
-                    queue[index].status = .processing
-                    queue[index].outputURL = nil
-                    queue[index].outputBytes = nil
-                    queue[index].engineName = nil
-                    queue[index].detailMessage = nil
-                    queue[index].progressFraction = 0
-                    queue[index].progressStage = "正在准备"
-                    queue[index].estimatedRemainingSeconds = nil
+            func enqueue(_ itemID: UUID) {
+                guard let index = queue.firstIndex(
+                    where: { $0.id == itemID }
+                ) else {
+                    return
                 }
+                let inputURL = queue[index].inputURL
+                let jobSettings =
+                    queue[index].settingsOverride ?? settingsSnapshot
+                queue[index].status = .processing
+                queue[index].outputURL = nil
+                queue[index].outputBytes = nil
+                queue[index].engineName = nil
+                queue[index].detailMessage = nil
+                queue[index].progressFraction = 0
+                queue[index].progressStage = "正在准备"
+                queue[index].estimatedRemainingSeconds = nil
+                let pdfPassword = PDFPasswordQueueLifecycle.takePassword(
+                    for: itemID,
+                    from: &queue
+                )
+
                 group.addTask { [coordinator] in
                     do {
                         let result = try await coordinator.compress(
-                            inputURL: item.inputURL,
-                            settings:
-                                item.settingsOverride ?? settingsSnapshot,
-                            pdfPassword: item.pdfPassword,
+                            inputURL: inputURL,
+                            settings: jobSettings,
+                            pdfPassword: pdfPassword,
                             progressHandler: { [weak self] progress in
                                 Task { @MainActor [weak self] in
                                     self?.updateProgress(
                                         progress,
-                                        for: item.id
+                                        for: itemID
                                     )
                                 }
                             }
                         )
-                        return .success(itemID: item.id, result: result)
+                        return .success(itemID: itemID, result: result)
                     } catch {
-                        return .failure(itemID: item.id, error: error)
+                        return .failure(itemID: itemID, error: error)
                     }
                 }
             }
@@ -976,6 +991,7 @@ final class AppState: ObservableObject {
 
     private func apply(_ outcome: JobOutcome) {
         guard let index = queue.firstIndex(where: { $0.id == outcome.itemID }) else { return }
+        queue[index].pdfPassword = nil
 
         if let result = outcome.result {
             queue[index].status = result.skippedBecauseLarger ? .skipped : .completed

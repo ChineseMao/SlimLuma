@@ -28,7 +28,7 @@ Unterstützt gängige Bilder, Videos und PDF-Dateien; ganze Ordner können ebenf
 - **PDF** — qpdf wird Objektströme restrukturieren und komprimierbare Daten neu komprimieren; Ghostscript kann außerdem die Pixeldichte, Qualität oder Farbkomplexität eingebetteter Bilder reduzieren. Textbasierte PDF profitieren in der Regel weniger, bei Scans ist dies normalerweise deutlicher.
 - **Zieldateigröße** — SlimLuma Die Qualität wird schrittweise angepasst; wenn nötig, wird die Größe reduziert, um das klarste und sicherste Ergebnis innerhalb des Ziels zu erhalten. Die Zielgröße muss ImageMagick betragen. H.264 und HEVC können zweimalige Softwarekodierungen nach Zielgröße ausführen und für Audio, Untertitel und Container Platz reservieren; AV1 und separate Audiokompression unterstützen derzeit kein Zielvolumen.
 - **Dateiquelle** — Bilder, Videos und PDF können gemischt hinzugefügt werden; die Warteschlange erlaubt 1–6 gleichzeitige Aufgaben, beim Start wird die gesamte Charge eingefroren.
-- **Sicher** — Die professionelle Engine schreibt nur .slimluma versteckte temporäre Dateien im Zielverzeichnis und berührt die Originaldateien nicht direkt.
+- **Sicher** — Temporäre Ausgaben, Typintegritätsprüfung, Volumenstrategie und sicheres Speichern ohne jemals Originale zu überschreiben.
 - **Ergebnis-Gatekeeper** — Lese erneut nach den Vollständigkeitsregeln für Bilder, Videos oder PDF; bei kritischer Degradierung wird die Ausgabe verweigert.
 - **Automatisierung** — Direkt aus der Zwischenablage, dem Überwachungsordner und Finder in die Komprimierungswarteschlange
 

@@ -53,6 +53,7 @@ EXPECTED_LOCALES=(
 [[ -f "$RESOURCES_DIR/LICENSE" ]]
 [[ -f "$RESOURCES_DIR/THIRD_PARTY_NOTICES.md" ]]
 [[ -f "$RESOURCES_DIR/ThirdPartyLicenses/SwiftArgumentParser-LICENSE.txt" ]]
+"$PROJECT_DIR/scripts/verify-release-privacy.sh" "$APP_DIR"
 cmp -s "$PROJECT_DIR/LICENSE" "$RESOURCES_DIR/LICENSE"
 cmp -s \
     "$PROJECT_DIR/THIRD_PARTY_NOTICES.md" \

@@ -47,8 +47,9 @@ SlimLuma 是一个免费下载、源码公开可审阅、本地运行的 macOS �
   FFmpeg，工具页会显示“部分失效”，一键修复会执行 `brew reinstall ffmpeg`，
   而不是把缺少完整性检查组件的安装误报为就绪。
 - PDF：无损模式优先 qpdf；均衡、自定义和极致模式优先 Ghostscript 深度降采样。
-- 加密 PDF 可按单文件输入密码；密码只驻留队列内存并通过 `0600` 临时文件交给
-  qpdf，压缩后复制原加密策略、重新解锁验收并清理凭据。
+- 加密 PDF 可按单文件输入密码；密码不会持久化到历史、预设或应用日志。运行任务时
+  通过 `0600` 临时文件交给 qpdf，压缩后复制原加密策略、重新解锁验收并删除临时
+  凭据。
 - 当 qpdf 与 Ghostscript 都可用时，PDF 强力压缩采用 qpdf 结构修复 →
   Ghostscript 压缩 → qpdf 网页线性化，并以页数、书签、链接/批注、表单、签名
   字段等数量及加密、可搜索文本和线性化信号作为结构守门后才保留输出。该检查不等于
@@ -87,8 +88,10 @@ SlimLuma 是一个免费下载、源码公开可审阅、本地运行的 macOS �
   `Command-Return` 开始与 `Command-.` 取消，状态图标不会给 VoiceOver 制造重复朗读。
 - 独立 `slimluma` CLI 使用 Apple Swift Argument Parser，支持目标体积、预设文件、
   PDF 密码文件、JSON 输出、dry-run 与引擎检查。
-- GitHub Actions 提供 CI 和 tag 发布：Universal 构建、Developer ID、Hardened
-  Runtime、Apple 公证、staple、Gatekeeper、DMG/ZIP/CLI 与 SHA-256 均有门禁。
+- GitHub Actions 提供 CI 与受保护的手工发行入口：从 `main` 的固定签名人列表验证
+  signed tag，并拒绝未合并到 `main` 的提交；Universal 构建、Developer ID、
+  Hardened Runtime、Apple 公证、staple、Gatekeeper、DMG/ZIP/CLI 与 SHA-256
+  均有门禁。
 
 ## 环境
 
@@ -154,7 +157,9 @@ open dist/SlimLuma.app
 Finder Services / App Intents 元数据和 Info.plist。未传签名身份时只生成本地
 ad-hoc 包；传入 `SLIMLUMA_CODE_SIGN_IDENTITY` 时会启用 Developer ID、
 Hardened Runtime 与安全时间戳。Apple 公证、DMG / ZIP / CLI、Gatekeeper 和
-SHA-256 的完整流程见 [docs/RELEASING.md](docs/RELEASING.md)。
+SHA-256 的完整流程见 [docs/RELEASING.md](docs/RELEASING.md)。每一项权限、
+证书、签名、公证与验证为什么需要、缺少时会怎样，见
+[发布信任链](docs/RELEASE_TRUST_CHAIN.zh-Hans.md)。
 
 打包不是“先删旧应用再碰运气”：脚本会先同步并复核 20 个系统语言表、运行测试，
 在同一磁盘的暂存目录内完成 Universal 构建、元数据提取、签名和产物验证；只有全部
@@ -176,10 +181,12 @@ SwiftUI
   → unique final file + local history
 ```
 
-文件路径作为独立参数传给 `Process`，不拼接 Shell 命令。引擎先写目标卷上的隐藏
-临时文件，验证成功后才移动到最终位置。外部进程即使在 `Process.run()` 启动阶段
-失败，也会从受管进程表移除并解除管道回调，后续取消或重试不会命中残留任务。完整
-设计见
+文件路径作为独立参数传给 `Process`，不拼接 Shell 命令。引擎只写应用私有临时
+工作区；验证成功后先复制到目标卷中的 `0700` 隐藏私有暂存目录，锁定归属标记、
+同步并核对大小与 inode 后，再用排他原子重命名公开最终名称。输出目录处理期间被
+用户改名时，会按目录文件描述符解析并返回实际新路径。外部进程即使在
+`Process.run()` 启动阶段失败，也会从
+受管进程表移除并解除管道回调，后续取消或重试不会命中残留任务。完整设计见
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
 
 当前已分别完成自动测试、真实 PDF、Universal 打包、Developer ID、运行时 UI、

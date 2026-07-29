@@ -1,4 +1,5 @@
 import CoreGraphics
+import Darwin
 import Foundation
 import ImageIO
 @testable import SlimLumaKit
@@ -58,6 +59,167 @@ final class SlimLumaKitTests: XCTestCase {
         XCTAssertEqual(destination.pathExtension, "webp")
     }
 
+    func testOutputPlannerCreatesPrivateTemporaryWorkspace() throws {
+        let planner = OutputPlanner()
+        let input = URL(fileURLWithPath: "/tmp/private-source.pdf")
+        let lease = try planner.temporaryWorkspace(
+            for: input,
+            kind: .pdf,
+            settings: .default
+        )
+        let temporary = lease.outputURL
+        let workspace = temporary.deletingLastPathComponent()
+        defer { try? lease.remove() }
+
+        let permissions = try FileManager.default.attributesOfItem(
+            atPath: workspace.path
+        )[.posixPermissions] as? NSNumber
+        let lockPermissions = try FileManager.default.attributesOfItem(
+            atPath: workspace.appendingPathComponent(".workspace.lock").path
+        )[.posixPermissions] as? NSNumber
+
+        XCTAssertEqual(permissions?.intValue, 0o700)
+        XCTAssertEqual(lockPermissions?.intValue, 0o600)
+        XCTAssertTrue(workspace.lastPathComponent.hasPrefix("work-"))
+        XCTAssertEqual(temporary.pathExtension, "pdf")
+    }
+
+    func testOutputPlannerRemovesOnlyStaleTemporaryWorkspaces() throws {
+        let planner = OutputPlanner()
+        let input = URL(fileURLWithPath: "/tmp/stale-source.pdf")
+        var staleLease: TemporaryWorkspaceLease? =
+            try planner.temporaryWorkspace(
+                for: input,
+                kind: .pdf,
+                settings: .default
+            )
+        let activeLease = try planner.temporaryWorkspace(
+            for: input,
+            kind: .pdf,
+            settings: .default
+        )
+        let staleWorkspace = try XCTUnwrap(staleLease).outputURL
+            .deletingLastPathComponent()
+        let activeWorkspace = activeLease.outputURL.deletingLastPathComponent()
+        defer {
+            try? FileManager.default.removeItem(at: staleWorkspace)
+            try? activeLease.remove()
+        }
+
+        let now = Date()
+        staleLease = nil
+        try FileManager.default.setAttributes(
+            [.modificationDate: now.addingTimeInterval(-120)],
+            ofItemAtPath: staleWorkspace.path
+        )
+        planner.removeStaleTemporaryWorkspaces(
+            now: now,
+            maximumAge: 60
+        )
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: staleWorkspace.path)
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: activeWorkspace.path)
+        )
+    }
+
+    func testOutputPlannerPreservesOldButLockedTemporaryWorkspace() throws {
+        let planner = OutputPlanner()
+        let input = URL(fileURLWithPath: "/tmp/long-running-source.pdf")
+        let activeLease = try planner.temporaryWorkspace(
+            for: input,
+            kind: .pdf,
+            settings: .default
+        )
+        let activeWorkspace = activeLease.outputURL.deletingLastPathComponent()
+        defer { try? activeLease.remove() }
+
+        let now = Date()
+        try FileManager.default.setAttributes(
+            [.modificationDate: now.addingTimeInterval(-120)],
+            ofItemAtPath: activeWorkspace.path
+        )
+        planner.removeStaleTemporaryWorkspaces(
+            now: now,
+            maximumAge: 60
+        )
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: activeWorkspace.path)
+        )
+    }
+
+    func testOutputPlannerRemovesInactiveWorkspaceOnNextJob() throws {
+        let planner = OutputPlanner()
+        let input = URL(fileURLWithPath: "/tmp/restarted-source.pdf")
+        var abandonedLease: TemporaryWorkspaceLease? =
+            try planner.temporaryWorkspace(
+                for: input,
+                kind: .pdf,
+                settings: .default
+            )
+        let abandonedWorkspace = try XCTUnwrap(abandonedLease).outputURL
+            .deletingLastPathComponent()
+        defer {
+            try? FileManager.default.removeItem(at: abandonedWorkspace)
+        }
+
+        abandonedLease = nil
+        try FileManager.default.setAttributes(
+            [.modificationDate: Date().addingTimeInterval(-1)],
+            ofItemAtPath: abandonedWorkspace.path
+        )
+        let nextLease = try planner.temporaryWorkspace(
+            for: input,
+            kind: .pdf,
+            settings: .default
+        )
+        defer { try? nextLease.remove() }
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: abandonedWorkspace.path)
+        )
+    }
+
+    func testOutputPlannerDoesNotDeleteUnmarkedLookalikeWorkspace() throws {
+        let planner = OutputPlanner()
+        let input = URL(fileURLWithPath: "/tmp/lookalike-source.pdf")
+        let lease = try planner.temporaryWorkspace(
+            for: input,
+            kind: .pdf,
+            settings: .default
+        )
+        let root = lease.outputURL.deletingLastPathComponent()
+            .deletingLastPathComponent()
+        try lease.remove()
+
+        let lookalike = root.appendingPathComponent(
+            "work-\(UUID().uuidString)",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(
+            at: lookalike,
+            withIntermediateDirectories: false
+        )
+        defer { try? FileManager.default.removeItem(at: lookalike) }
+
+        let now = Date()
+        try FileManager.default.setAttributes(
+            [.modificationDate: now.addingTimeInterval(-120)],
+            ofItemAtPath: lookalike.path
+        )
+        planner.removeStaleTemporaryWorkspaces(
+            now: now,
+            maximumAge: 60
+        )
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: lookalike.path)
+        )
+    }
+
     func testOutputPlannerExposesTheSameSanitizedSuffixUsedForLoopPrevention() {
         let planner = OutputPlanner()
 
@@ -113,6 +275,529 @@ final class SlimLumaKitTests: XCTestCase {
                 atPath: directory.appendingPathComponent("source-slim.mp4").path
             )
         )
+    }
+
+    func testOutputFinalizerCopiesToSiblingBeforeAtomicRename() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        let workspace = root.appendingPathComponent(
+            "private-workspace",
+            isDirectory: true
+        )
+        let outputDirectory = root.appendingPathComponent(
+            "selected-output",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(
+            at: workspace,
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: outputDirectory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let input = root.appendingPathComponent("source.pdf")
+        let temporary = workspace.appendingPathComponent("pending.pdf")
+        let expected = Data([0x25, 0x50, 0x44, 0x46])
+        try Data([0x01]).write(to: input)
+        try expected.write(to: temporary)
+
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = outputDirectory.path
+
+        let finalURL = try await OutputFinalizer().finalize(
+            temporaryURL: temporary,
+            inputURL: input,
+            kind: .pdf,
+            settings: settings,
+            planner: OutputPlanner()
+        )
+
+        XCTAssertEqual(finalURL.lastPathComponent, "source-slim.pdf")
+        XCTAssertEqual(try Data(contentsOf: finalURL), expected)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: temporary.path))
+        XCTAssertFalse(
+            try FileManager.default.contentsOfDirectory(
+                atPath: outputDirectory.path
+            ).contains { $0.hasPrefix(".slimluma-finalize-") }
+        )
+    }
+
+    func testOutputFinalizerReturnsMovedOutputDirectoryPath() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        let workspace = root.appendingPathComponent(
+            "private-workspace",
+            isDirectory: true
+        )
+        let originalOutputDirectory = root.appendingPathComponent(
+            "selected-output",
+            isDirectory: true
+        )
+        let movedOutputDirectory = root.appendingPathComponent(
+            "renamed-output",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(
+            at: workspace,
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: originalOutputDirectory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let input = root.appendingPathComponent("source.pdf")
+        let temporary = workspace.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try Data(repeating: 0x41, count: 32 * 1_024 * 1_024).write(
+            to: temporary
+        )
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath =
+            originalOutputDirectory.path
+
+        let finalizeTask = Task {
+            try await OutputFinalizer().finalize(
+                temporaryURL: temporary,
+                inputURL: input,
+                kind: .pdf,
+                settings: settings,
+                planner: OutputPlanner()
+            )
+        }
+
+        var observedStagingDirectory: URL?
+        for _ in 0..<2_000 {
+            let names = try FileManager.default.contentsOfDirectory(
+                atPath: originalOutputDirectory.path
+            )
+            if let name = names.first(where: {
+                $0.hasPrefix(".slimluma-finalize-")
+            }) {
+                let candidate = originalOutputDirectory
+                    .appendingPathComponent(name, isDirectory: true)
+                if FileManager.default.fileExists(
+                    atPath: candidate.appendingPathComponent(
+                        ".staging.lock"
+                    ).path
+                ),
+                FileManager.default.fileExists(
+                    atPath: candidate.appendingPathComponent(
+                        "payload"
+                    ).path
+                ) {
+                    observedStagingDirectory = candidate
+                    break
+                }
+            }
+            try await Task.sleep(nanoseconds: 1_000_000)
+        }
+        let stagingDirectory = try XCTUnwrap(
+            observedStagingDirectory
+        )
+        let stagingPermissions =
+            try FileManager.default.attributesOfItem(
+                atPath: stagingDirectory.path
+            )[.posixPermissions] as? NSNumber
+        let markerPermissions =
+            try FileManager.default.attributesOfItem(
+                atPath: stagingDirectory.appendingPathComponent(
+                    ".staging.lock"
+                ).path
+            )[.posixPermissions] as? NSNumber
+        let payloadPermissions =
+            try FileManager.default.attributesOfItem(
+                atPath: stagingDirectory.appendingPathComponent(
+                    "payload"
+                ).path
+            )[.posixPermissions] as? NSNumber
+        XCTAssertEqual(stagingPermissions?.intValue, 0o700)
+        XCTAssertEqual(markerPermissions?.intValue, 0o600)
+        XCTAssertEqual(payloadPermissions?.intValue, 0o600)
+        try FileManager.default.moveItem(
+            at: originalOutputDirectory,
+            to: movedOutputDirectory
+        )
+
+        let finalURL = try await finalizeTask.value
+
+        XCTAssertEqual(
+            finalURL.deletingLastPathComponent().standardizedFileURL,
+            movedOutputDirectory.standardizedFileURL
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: finalURL.path)
+        )
+    }
+
+    func testOutputFinalizerRemovesOldInactiveStagingFile() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let oldStaging = try createFinalizationStagingFixture(
+            in: directory,
+            modifiedAt: Date().addingTimeInterval(-25 * 60 * 60)
+        )
+        try FileManager.default.setAttributes(
+            [.posixPermissions: 0o400],
+            ofItemAtPath: oldStaging.payload.path
+        )
+
+        let input = directory.appendingPathComponent("source.pdf")
+        let temporary = directory.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try Data([0x25, 0x50, 0x44, 0x46]).write(to: temporary)
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+
+        _ = try await OutputFinalizer().finalize(
+            temporaryURL: temporary,
+            inputURL: input,
+            kind: .pdf,
+            settings: settings,
+            planner: OutputPlanner()
+        )
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: oldStaging.payload.path
+            )
+        )
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: oldStaging.marker.path
+            )
+        )
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: oldStaging.directory.path
+            )
+        )
+    }
+
+    func testOutputFinalizerPreservesUnownedStagingLookalikes() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let unmarked = directory.appendingPathComponent(
+            ".slimluma-finalize-\(UUID().uuidString).stage",
+            isDirectory: true
+        )
+        let invalidlyMarked = directory.appendingPathComponent(
+            ".slimluma-finalize-\(UUID().uuidString).stage",
+            isDirectory: true
+        )
+        let prefixedMarker = directory.appendingPathComponent(
+            ".slimluma-finalize-\(UUID().uuidString).stage",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(
+            at: unmarked,
+            withIntermediateDirectories: false
+        )
+        try FileManager.default.createDirectory(
+            at: invalidlyMarked,
+            withIntermediateDirectories: false
+        )
+        try FileManager.default.createDirectory(
+            at: prefixedMarker,
+            withIntermediateDirectories: false
+        )
+        try Data([0x10]).write(
+            to: unmarked.appendingPathComponent("payload")
+        )
+        try Data([0x20]).write(
+            to: invalidlyMarked.appendingPathComponent("payload")
+        )
+        try Data([0x30]).write(
+            to: prefixedMarker.appendingPathComponent("payload")
+        )
+        let invalidMarker = invalidlyMarked.appendingPathComponent(
+            ".staging.lock"
+        )
+        try Data("not a SlimLuma marker\n".utf8).write(to: invalidMarker)
+        let validPrefixMarker = prefixedMarker.appendingPathComponent(
+            ".staging.lock"
+        )
+        try Data(
+            "SlimLuma finalization staging v1\nuntrusted suffix".utf8
+        ).write(to: validPrefixMarker)
+        let oldDate = Date().addingTimeInterval(-25 * 60 * 60)
+        try FileManager.default.setAttributes(
+            [.modificationDate: oldDate],
+            ofItemAtPath: unmarked.path
+        )
+        try FileManager.default.setAttributes(
+            [.modificationDate: oldDate],
+            ofItemAtPath: invalidlyMarked.path
+        )
+        try FileManager.default.setAttributes(
+            [.modificationDate: oldDate],
+            ofItemAtPath: prefixedMarker.path
+        )
+
+        let input = directory.appendingPathComponent("source.pdf")
+        let temporary = directory.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try Data([0x25, 0x50, 0x44, 0x46]).write(to: temporary)
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+
+        _ = try await OutputFinalizer().finalize(
+            temporaryURL: temporary,
+            inputURL: input,
+            kind: .pdf,
+            settings: settings,
+            planner: OutputPlanner()
+        )
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: unmarked.path)
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: invalidlyMarked.path)
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: invalidMarker.path
+            )
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: prefixedMarker.path)
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: validPrefixMarker.path
+            )
+        )
+    }
+
+    func testOutputFinalizerPreservesOldLockedStagingFile() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let lockedStaging = try createFinalizationStagingFixture(
+            in: directory,
+            modifiedAt: Date().addingTimeInterval(-25 * 60 * 60)
+        )
+        let descriptor = Darwin.open(
+            lockedStaging.marker.path,
+            O_RDONLY | O_CLOEXEC | O_NOFOLLOW
+        )
+        XCTAssertGreaterThanOrEqual(descriptor, 0)
+        guard descriptor >= 0 else { return }
+        XCTAssertEqual(slimLumaFlock(descriptor, LOCK_EX | LOCK_NB), 0)
+        defer {
+            _ = slimLumaFlock(descriptor, LOCK_UN)
+            _ = Darwin.close(descriptor)
+        }
+        let input = directory.appendingPathComponent("source.pdf")
+        let temporary = directory.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try Data([0x25, 0x50, 0x44, 0x46]).write(to: temporary)
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+
+        _ = try await OutputFinalizer().finalize(
+            temporaryURL: temporary,
+            inputURL: input,
+            kind: .pdf,
+            settings: settings,
+            planner: OutputPlanner()
+        )
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: lockedStaging.payload.path
+            )
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: lockedStaging.marker.path
+            )
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: lockedStaging.directory.path
+            )
+        )
+    }
+
+    func testOutputFinalizerPreservesRecentUnlockedStagingFile() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let recentStaging = try createFinalizationStagingFixture(
+            in: directory
+        )
+
+        let input = directory.appendingPathComponent("source.pdf")
+        let temporary = directory.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try Data([0x25, 0x50, 0x44, 0x46]).write(to: temporary)
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+
+        _ = try await OutputFinalizer().finalize(
+            temporaryURL: temporary,
+            inputURL: input,
+            kind: .pdf,
+            settings: settings,
+            planner: OutputPlanner()
+        )
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: recentStaging.payload.path
+            )
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: recentStaging.marker.path
+            )
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(
+                atPath: recentStaging.directory.path
+            )
+        )
+    }
+
+    func testOutputFinalizerRemovesOwnStagingAfterCopyFailure() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "SlimLumaFinalizeTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let input = directory.appendingPathComponent("source.pdf")
+        let missing = directory.appendingPathComponent("missing.pdf")
+        let linkedTemporary = directory.appendingPathComponent("pending.pdf")
+        try Data([0x01]).write(to: input)
+        try FileManager.default.createSymbolicLink(
+            at: linkedTemporary,
+            withDestinationURL: missing
+        )
+        var settings = CompressionSettings.default
+        settings.output.location = .customDirectory
+        settings.output.customDirectoryPath = directory.path
+
+        do {
+            _ = try await OutputFinalizer().finalize(
+                temporaryURL: linkedTemporary,
+                inputURL: input,
+                kind: .pdf,
+                settings: settings,
+                planner: OutputPlanner()
+            )
+            XCTFail("A symbolic-link temporary result must be rejected")
+        } catch let error as CompressionError {
+            guard case .outputInvalid = error else {
+                return XCTFail("Expected outputInvalid, got \(error)")
+            }
+        }
+
+        XCTAssertEqual(
+            try FileManager.default.destinationOfSymbolicLink(
+                atPath: linkedTemporary.path
+            ),
+            missing.path
+        )
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: directory.appendingPathComponent(
+                    "source-slim.pdf"
+                ).path
+            )
+        )
+        XCTAssertFalse(
+            try FileManager.default.contentsOfDirectory(
+                atPath: directory.path
+            ).contains { $0.hasPrefix(".slimluma-finalize-") }
+        )
+    }
+
+    private func createFinalizationStagingFixture(
+        in directory: URL,
+        modifiedAt: Date? = nil
+    ) throws -> (directory: URL, payload: URL, marker: URL) {
+        let stagingDirectory = directory.appendingPathComponent(
+            ".slimluma-finalize-\(UUID().uuidString).stage",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(
+            at: stagingDirectory,
+            withIntermediateDirectories: false,
+            attributes: [.posixPermissions: 0o700]
+        )
+        let payload = stagingDirectory.appendingPathComponent("payload")
+        let marker = stagingDirectory.appendingPathComponent(
+            ".staging.lock"
+        )
+        try Data([0x00]).write(to: payload)
+        try Data(
+            "SlimLuma finalization staging v1\n".utf8
+        ).write(to: marker)
+        if let modifiedAt {
+            try FileManager.default.setAttributes(
+                [.modificationDate: modifiedAt],
+                ofItemAtPath: stagingDirectory.path
+            )
+        }
+        return (stagingDirectory, payload, marker)
     }
 
     func testImageMagickArgumentsKeepPathsAsSingleArguments() {
