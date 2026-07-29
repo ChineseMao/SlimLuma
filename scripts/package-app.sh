@@ -104,6 +104,11 @@ APP_RELEASE_BINARY="$PROJECT_DIR/.build/apple/Products/Release/SlimLumaApp"
 CLI_RELEASE_BINARY="$PROJECT_DIR/.build/apple/Products/Release/slimluma"
 [[ -x "$APP_RELEASE_BINARY" ]]
 [[ -x "$CLI_RELEASE_BINARY" ]]
+CLI_VERSION="$("$CLI_RELEASE_BINARY" --version)"
+if [[ "$CLI_VERSION" != "$APP_VERSION" ]]; then
+    echo "CLI version $CLI_VERSION does not match app version $APP_VERSION." >&2
+    exit 1
+fi
 /usr/bin/strip -S -x "$APP_RELEASE_BINARY" "$CLI_RELEASE_BINARY"
 "$PROJECT_DIR/scripts/verify-release-privacy.sh" \
     "$APP_RELEASE_BINARY" \

@@ -98,6 +98,9 @@ jobs:
             -c 'Print :CFBundleShortVersionString' Support/Info.plist)"
           test "$RELEASE_TAG" = "v$version"
           test "$(
+            .build/apple/Products/Release/slimluma --version
+          )" = "$version"
+          test "$(
             jq -r '.generatedReleaseNotesVersion' \
               docs/releases/release-state.json
           )" = "$version"
