@@ -11,16 +11,14 @@
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 <div dir="rtl" align="right">
-<p><strong>SlimLuma copyright holders (PRIVATE_TEAM_ID)</strong></p>
 <p>SlimLuma 0.2.0 دا سورس کوڈ MIT License دے تحت جاری کیتا گیا سی۔ ایس ریلیز اُتے اوہ LICENSE لاگو اے جیہڑا ایس دے ٹیگ نال پکا جوڑیا گیا اے۔</p>
 <p><a href="https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE">v0.2.0 MIT LICENSE</a> · <a href="https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE">v0.2.1 LICENSE</a></p>
 </div>
 
 <div dir="rtl" align="right">
-<p>کمپنی دی لمبے سمیں والی Developer ID نال باقاعدہ جاری کیتا گیا مقامی تصویر، ویڈیو تے PDF کمپریشن ٹول۔</p>
+<p>macOS لئی مقامی تصویر، ویڈیو تے PDF کمپریشن ٹول۔</p>
 <ul>
 <li>0.2.1 توں موجودہ ورژن ایسا لائسنس ورتدے نیں جیہڑا سورس کوڈ نوں صرف ویکھن تے جائزے لئی دستیاب کردا اے تے سارے حق محفوظ رکھدا اے؛ 0.2.0 لئی پہلاں دتے گئے MIT حقاں اُتے کوئی اثر نئیں پئے گا۔</li>
-<li>باقاعدہ پبلشر SlimLuma copyright holders (PRIVATE_TEAM_ID) اے۔</li>
 <li>App تے CLI دونے Universal نیں تے Hardened Runtime تے محفوظ ٹائم سٹیمپ ورتدے نیں؛ ریلیز دی اجازت صرف Apple notarization، App تے DMG stapling، Gatekeeper تے SHA-256 تصدیق سب پاس ہون توں بعد ملدی اے۔</li>
 <li>20 زباناں وچ پروڈکٹ صفحے تے ریلیز نوٹس نمایاں Universal DMG ڈاؤن لوڈ لنک دے نال پروجیکٹ تے تھرڈ پارٹی لائسنس نوٹس وی فراہم کردے نیں۔</li>
 </ul>

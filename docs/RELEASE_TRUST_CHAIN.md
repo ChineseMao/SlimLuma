@@ -8,7 +8,7 @@ the public GitHub download is the artifact that passed all gates.
 | Layer | Why it is required | Without it | What it provides |
 | --- | --- | --- | --- |
 | Keychain private-key access | `codesign` needs the publisher's private key. Access is limited to signing tools; the key never belongs in source or logs. | A public certificate alone cannot sign, while exporting the key broadly increases impersonation risk. | Publisher proof while the key remains protected by macOS Keychain. |
-| Developer ID Application certificate | Apple binds the public key to the legal publisher and Team ID. SlimLuma checks the expected company and `PRIVATE_TEAM_ID`. | Ad-hoc or unsigned builds have no trusted publisher identity and Gatekeeper may block them. | A user-verifiable publisher identity and an Apple-revocable certificate. |
+| Developer ID Application certificate | Apple binds the public key to the legal signer and team identifier. SlimLuma checks both against a private release policy. | Ad-hoc or unsigned builds have no trusted publisher identity and Gatekeeper may block them. | A user-verifiable signer identity and an Apple-revocable certificate. |
 | Hardened Runtime | Notarization expects runtime protections against common injection and debugging bypasses. | Notarization may reject the app and runtime protection is weaker. | Extends integrity controls into execution. |
 | Secure timestamp | Apple's timestamp proves signing occurred while the certificate was valid. | Long-term validation can fail after certificate expiry. | Previously released builds remain verifiable after normal certificate expiry. |
 | Strict signature and entitlement checks | Verifies nested code and rejects development-only entitlements such as `get-task-allow`. | A command may have signed an earlier state while later packaging broke it. | Detects tampering, missing nested signatures, and debug privileges before upload. |
@@ -25,9 +25,14 @@ the public GitHub download is the artifact that passed all gates.
 | Protected main and release tags | Reviewed main cannot be force-pushed and release tags cannot be updated or deleted. | Validated source or tags can otherwise change between verification and upload. | Keeps CI, signature, notarization, and the public Release bound to the same commit and bytes. |
 | Signed-tag verification from protected main | The workflow loads its fixed signer list from protected `main` and requires the tagged commit to be merged into `main`. | A tag-controlled signer list can replace both code and trust root, while a signed side-branch can bypass review and CI. | Binds signer identity, reviewed source, and the exact released tag into one auditable chain. |
 
-Public trust metadata—publisher name, Team ID, certificate chain, bundle ID,
-version, release-signing public key, checksums, and licenses—must remain
-visible. Secrets—private keys,
-P12 files and passwords, App Store Connect P8 keys, Apple app-specific
-passwords, Keychain passwords, and GitHub tokens—must never enter Git, logs, or
-release attachments.
+The final signature necessarily lets macOS display the legal signer, team
+identifier, certificate chain, bundle ID, and version. Checksums, licenses, and
+the release-signing public key also remain user-verifiable. To reduce
+unnecessary indexing, repository text does not duplicate the legal signer or
+team identifier; exact matching values live only in private release
+configuration.
+
+Private keys, P12 files and passwords, App Store Connect P8 keys, Apple
+app-specific passwords, Keychain passwords, GitHub tokens, submission
+identifiers, and personal paths must never enter Git, logs, or release
+attachments.

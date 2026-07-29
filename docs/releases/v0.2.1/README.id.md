@@ -10,16 +10,13 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
-> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
->
 > Kode sumber SlimLuma 0.2.0 dirilis berdasarkan Lisensi MIT. Rilis ini diatur oleh LICENSE yang disematkan pada tag-nya.
 >
 > [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [v0.2.1 LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE)
 
-Alat kompresi gambar, video, dan PDF lokal yang dirilis secara resmi dengan Developer ID perusahaan jangka panjang.
+Alat kompresi gambar, video, dan PDF lokal untuk macOS.
 
 - Mulai versi 0.2.1, versi saat ini menggunakan lisensi yang mengizinkan kode sumber dilihat hanya untuk peninjauan dan mempertahankan seluruh hak; hak MIT yang telah diberikan untuk versi 0.2.0 tetap tidak terpengaruh.
-- Penerbit resminya adalah SlimLuma copyright holders (PRIVATE_TEAM_ID).
 - App dan CLI sama-sama Universal serta menggunakan Hardened Runtime dan stempel waktu aman; rilis hanya diizinkan setelah notarisasi Apple, stapling App dan DMG, Gatekeeper, serta verifikasi SHA-256 semuanya lulus.
 - Halaman produk dan catatan rilis dalam 20 bahasa menyediakan tautan unduhan Universal DMG yang menonjol serta menyertakan pemberitahuan lisensi proyek dan pihak ketiga.
 

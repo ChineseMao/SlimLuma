@@ -10,16 +10,13 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
-> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
->
 > SlimLuma 0.2.0 的原始碼以 MIT 授權條款發布。本版本適用固定於其版本標籤的 LICENSE。
 >
 > [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [v0.2.1 LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE)
 
-由長期公司 Developer ID 正式發布的本機圖片、影片與 PDF 壓縮工具。
+適用於 macOS 的本機圖片、影片與 PDF 壓縮工具。
 
 - 自 0.2.1 起，目前版本採用原始碼公開可供審閱、保留全部權利的授權；0.2.0 已授予的 MIT 權利不受影響。
-- 正式發布主體為 SlimLuma copyright holders (PRIVATE_TEAM_ID)。
 - App 與 CLI 均為 Universal，使用 Hardened Runtime 和安全時間戳記；Apple 公證、App 與 DMG staple、Gatekeeper 及 SHA-256 驗證全部通過後才允許發布。
 - 20 種語言的產品頁面和版本說明均提供顯眼的 Universal DMG 下載入口，並包含專案與第三方授權聲明。
 

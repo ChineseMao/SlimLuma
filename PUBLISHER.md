@@ -1,33 +1,31 @@
-# Publisher and release identity
+# Release verification and identity privacy
 
-SlimLuma's long-term official macOS publisher is:
+Official macOS builds are Developer ID Application signed, use Hardened
+Runtime and a secure timestamp, and are released only after Apple notarization,
+stapling, Gatekeeper, and checksum verification succeed.
 
-> SlimLuma copyright holders
+The signing certificate embedded in a macOS release necessarily exposes its
+legal signer and Apple team identifier to macOS. Those values are public trust
+metadata, not credentials. To reduce unnecessary indexing and correlation, this
+repository does not duplicate them in documentation, source constants, logs, or
+release notes.
 
-Apple release identity:
+Release automation still pins the exact expected signing identity. The expected
+certificate authority and team identifier are supplied through local
+environment variables or protected GitHub Secrets:
 
-- Developer ID authority:
-  `Developer ID Application: private release identity`
-- Apple Developer Team ID: `PRIVATE_TEAM_ID`
-- Distribution: Developer ID signed, Hardened Runtime enabled, Apple-notarized,
-  stapled macOS releases distributed through GitHub Releases
+- `SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY`
+- `SLIMLUMA_EXPECTED_TEAM_ID`
 
-The legal name above is intentionally preserved exactly, including
-`TechnologyCo.`. Certificate fingerprints and expiration dates may change
-during normal rotation; the legal entity and Team ID are the stable release
-identity.
-
-Developer ID identifies the entity that signs and publishes an official build;
-it does not by itself transfer copyright from an author or contributor. Project
-copyright ownership and any contributor assignments must remain supported by
-the applicable written agreements.
+Their values must never be committed. A missing or mismatched private value
+blocks release packaging.
 
 ## Release requirements
 
 Every official macOS release must verify all of the following:
 
 1. the app and CLI have Universal `arm64` and `x86_64` binaries;
-2. the signing authority and Team ID exactly match the values above;
+2. the signing authority and team identifier match the private release policy;
 3. Hardened Runtime and a secure timestamp are present;
 4. `com.apple.security.get-task-allow` is absent;
 5. Apple notarization is `Accepted`;
@@ -37,8 +35,9 @@ Every official macOS release must verify all of the following:
 9. the app, DMG, ZIP, and CLI package carry the applicable project and
    third-party notices.
 
-Private keys, certificate passwords, Keychain passwords, and App Store Connect
-API keys are never committed to this repository.
+Private keys, certificate files and passwords, Keychain passwords, App Store
+Connect credentials, notarization submission identifiers, personal paths, and
+GitHub tokens are never committed to this repository.
 
 ## License boundary
 

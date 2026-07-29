@@ -8,13 +8,10 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <strong><a href="README.ur.md">اردو</a></strong> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!IMPORTANT]
-> **[⬇ GitHub Releases سے macOS کے لیے Universal ورژن ڈاؤن لوڈ کریں۔](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[رازداری کے لیے محفوظ متبادل کی نوٹرائزیشن کے دوران عوامی انسٹالر عارضی طور پر دستیاب نہیں ہیں۔ اگلی تصدیق شدہ بلڈ کے لیے Releases دیکھیں۔](https://github.com/ChineseMao/SlimLuma/releases)**
 
 <div dir="rtl" align="right">
-<p><strong>SlimLuma copyright holders (PRIVATE_TEAM_ID)</strong></p>
 <p><a href="https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE">ماخذ کوڈ صرف جائزے کے لیے دکھائی دیتا ہے۔ جملہ حقوق محفوظ ہیں۔ LICENSE دیکھیں۔</a></p>
 </div>
 
@@ -33,11 +30,7 @@
 <li><strong>خودکاری</strong> — کلپ بورڈ، مانیٹر فولڈر اور Finder سے براہِ راست کمپریشن قطار میں جائیں</li>
 </ul>
 <h2>انسٹالیشن</h2>
-<ol>
-<li><a href="https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg">GitHub Releases سے macOS کے لیے Universal ورژن ڈاؤن لوڈ کریں۔</a></li>
-<li>SlimLuma.app کو &quot;Applications&quot; فولڈر میں منتقل کریں۔</li>
-<li>&quot;انجن اور سیٹنگز&quot; کھولیں اور &quot;ایک کلک میں تجویز کردہ انجن مکمل کریں&quot; منتخب کریں۔</li>
-</ol>
+<p><a href="https://github.com/ChineseMao/SlimLuma/releases">رازداری کے لیے محفوظ متبادل کی نوٹرائزیشن کے دوران عوامی انسٹالر عارضی طور پر دستیاب نہیں ہیں۔ اگلی تصدیق شدہ بلڈ کے لیے Releases دیکھیں۔</a></p>
 <p>SlimLuma Homebrew کے ذریعے ImageMagick، FFmpeg، qpdf اور Ghostscript انسٹال کرتا ہے؛ میڈیا فائلیں ہمیشہ اسی Mac پر رہتی ہیں۔</p>
 </div>
 

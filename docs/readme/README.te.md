@@ -8,13 +8,9 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <strong><a href="README.te.md">తెలుగు</a></strong> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!IMPORTANT]
-> **[⬇ GitHub Releases నుండి macOS కోసం Universal వెర్షన్ డౌన్లోడ్ చేసుకోండి.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[గోప్యతకు సురక్షితమైన ప్రత్యామ్నాయాన్ని నోటరైజ్ చేస్తున్నప్పుడు పబ్లిక్ ఇన్‌స్టాలర్లు తాత్కాలికంగా అందుబాటులో ఉండవు. తదుపరి ధృవీకరించిన build కోసం Releases చూడండి.](https://github.com/ChineseMao/SlimLuma/releases)**
 
-> **SlimLuma copyright holders (PRIVATE_TEAM_ID)**
->
 > [సోర్స్ కోడ్ సమీక్ష కోసం మాత్రమే కనిపిస్తుంది. సర్వహక్కులు ప్రత్యేకించబడ్డాయి. LICENSE చూడండి.](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
 > స్థానిక మీడియా సైజ్ తగ్గింపు సాధనం
@@ -34,9 +30,7 @@
 
 ## ఇన్‌స్టాల్ చేయండి
 
-1. [GitHub Releases నుండి macOS కోసం Universal వెర్షన్ డౌన్లోడ్ చేసుకోండి.](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)
-2. SlimLuma.app ని “అప్లికేషన్‌ల” ఫోల్డర్‌కి మార్చండి.
-3. “ఇంజిన్ మరియు సెట్ చేయబడినవి”ని తెరిచి “ఒక క్లిక్ సిఫార్సు ఇంజిన్ పూర్తి చేయు”ని ఎంచుకోండి.
+[గోప్యతకు సురక్షితమైన ప్రత్యామ్నాయాన్ని నోటరైజ్ చేస్తున్నప్పుడు పబ్లిక్ ఇన్‌స్టాలర్లు తాత్కాలికంగా అందుబాటులో ఉండవు. తదుపరి ధృవీకరించిన build కోసం Releases చూడండి.](https://github.com/ChineseMao/SlimLuma/releases)
 
 SlimLuma Homebrew ఉపయోగించి ImageMagick, FFmpeg, qpdf మరియు Ghostscriptను ఇన్‌స్టాల్ చేస్తుంది; మీడియా ఫైళ్లను ఎల్లప్పుడూ ఈ Mac లోనే ఉంచుతుంది.
 

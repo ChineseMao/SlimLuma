@@ -10,16 +10,13 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
-> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
->
 > Der Quellcode von SlimLuma 0.2.0 wurde unter der MIT-Lizenz veröffentlicht. Für diese Version gilt die dem zugehörigen Tag fest zugeordnete LICENSE.
 >
 > [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [v0.2.1 LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE)
 
-Ein lokales Tool zur Komprimierung von Bildern, Videos und PDFs, das offiziell mit der langfristigen Developer ID des Unternehmens veröffentlicht wird.
+Ein lokales Tool zur Komprimierung von Bildern, Videos und PDFs für macOS.
 
 - Ab Version 0.2.1 verwenden aktuelle Versionen eine Lizenz, unter der der Quellcode nur zur Einsicht und Prüfung verfügbar ist und alle Rechte vorbehalten bleiben; die für Version 0.2.0 bereits gewährten MIT-Rechte bleiben unberührt.
-- Offizieller Herausgeber ist SlimLuma copyright holders (PRIVATE_TEAM_ID).
 - App und CLI sind Universal und verwenden Hardened Runtime sowie einen sicheren Zeitstempel; eine Veröffentlichung ist erst zulässig, wenn Apple-Notarisierung, Stapling von App und DMG, Gatekeeper und SHA-256-Prüfung vollständig bestanden wurden.
 - Produktseiten und Versionshinweise in 20 Sprachen bieten einen gut sichtbaren Download-Link für das Universal DMG und enthalten Lizenzhinweise zum Projekt und zu Drittanbieterkomponenten.
 

@@ -1,181 +1,161 @@
 {
   "locales": {
     "en": {
-      "tagline": "A local image, video, and PDF compression tool officially released with the company’s long-term Developer ID.",
+      "tagline": "A local image, video, and PDF compression tool for macOS.",
       "highlights": [
         "Starting with 0.2.1, current versions use a source-visible, review-only, all-rights-reserved license; MIT rights already granted for 0.2.0 remain unaffected.",
-        "The official publisher is SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Both the App and CLI are Universal and use Hardened Runtime and a secure timestamp; release is allowed only after Apple notarization, App and DMG stapling, Gatekeeper, and SHA-256 verification have all passed.",
         "Product pages and release notes in 20 languages provide a prominent Universal DMG download link and include project and third-party license notices."
       ]
     },
     "zh-Hans": {
-      "tagline": "由长期公司 Developer ID 正式发布的本地图片、视频和 PDF 压缩工具。",
+      "tagline": "面向 macOS 的本地图片、视频和 PDF 压缩工具。",
       "highlights": [
         "从 0.2.1 起，当前版本采用源码公开可审阅、保留全部权利的许可；0.2.0 已授予的 MIT 权利不受影响。",
-        "正式发布主体为 SlimLuma copyright holders (PRIVATE_TEAM_ID)。",
         "App 与 CLI 均为 Universal，使用 Hardened Runtime 和安全时间戳；Apple 公证、App 与 DMG staple、Gatekeeper 和 SHA-256 验证全部通过后才允许发布。",
         "20 种语言的产品页和版本说明均提供显眼的 Universal DMG 下载入口，并包含项目与第三方许可声明。"
       ]
     },
     "zh-Hant": {
-      "tagline": "由長期公司 Developer ID 正式發布的本機圖片、影片與 PDF 壓縮工具。",
+      "tagline": "適用於 macOS 的本機圖片、影片與 PDF 壓縮工具。",
       "highlights": [
         "自 0.2.1 起，目前版本採用原始碼公開可供審閱、保留全部權利的授權；0.2.0 已授予的 MIT 權利不受影響。",
-        "正式發布主體為 SlimLuma copyright holders (PRIVATE_TEAM_ID)。",
         "App 與 CLI 均為 Universal，使用 Hardened Runtime 和安全時間戳記；Apple 公證、App 與 DMG staple、Gatekeeper 及 SHA-256 驗證全部通過後才允許發布。",
         "20 種語言的產品頁面和版本說明均提供顯眼的 Universal DMG 下載入口，並包含專案與第三方授權聲明。"
       ]
     },
     "hi": {
-      "tagline": "कंपनी की दीर्घकालिक Developer ID से आधिकारिक रूप से जारी किया गया स्थानीय इमेज, वीडियो और PDF कंप्रेशन टूल।",
+      "tagline": "macOS के लिए स्थानीय इमेज, वीडियो और PDF कंप्रेशन टूल।",
       "highlights": [
         "0.2.1 से मौजूदा संस्करण ऐसे लाइसेंस का उपयोग करते हैं जिसमें स्रोत कोड केवल देखने और समीक्षा के लिए उपलब्ध है तथा सभी अधिकार सुरक्षित हैं; 0.2.0 के लिए पहले ही दिए गए MIT अधिकार अप्रभावित रहेंगे।",
-        "आधिकारिक प्रकाशक SlimLuma copyright holders (PRIVATE_TEAM_ID) है।",
         "App और CLI दोनों Universal हैं तथा Hardened Runtime और सुरक्षित टाइमस्टैम्प का उपयोग करते हैं; Apple नोटरीकरण, App और DMG stapling, Gatekeeper तथा SHA-256 सत्यापन सभी सफल होने के बाद ही रिलीज़ की अनुमति है।",
         "20 भाषाओं में उत्पाद पृष्ठ और रिलीज़ नोट्स प्रमुख Universal DMG डाउनलोड लिंक के साथ परियोजना तथा तृतीय-पक्ष लाइसेंस सूचनाएँ प्रदान करते हैं।"
       ]
     },
     "es-419": {
-      "tagline": "Una herramienta local de compresión de imágenes, videos y PDF publicada oficialmente con el Developer ID corporativo de largo plazo.",
+      "tagline": "Una herramienta local de compresión de imágenes, videos y PDF para macOS.",
       "highlights": [
         "A partir de la versión 0.2.1, las versiones actuales usan una licencia que permite ver el código fuente solo para revisión y reserva todos los derechos; los derechos MIT ya otorgados para la versión 0.2.0 no se ven afectados.",
-        "La entidad responsable de la publicación oficial es SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Tanto la App como la CLI son Universal y usan Hardened Runtime y una marca de tiempo segura; solo se permite publicar después de aprobar la notarización de Apple, el stapling de la App y el DMG, Gatekeeper y la verificación SHA-256.",
         "Las páginas del producto y las notas de la versión en 20 idiomas ofrecen un enlace destacado para descargar el Universal DMG e incluyen avisos de licencia del proyecto y de terceros."
       ]
     },
     "es-ES": {
-      "tagline": "Una herramienta local de compresión de imágenes, vídeos y PDF publicada oficialmente con el Developer ID corporativo de largo plazo.",
+      "tagline": "Una herramienta local de compresión de imágenes, vídeos y PDF para macOS.",
       "highlights": [
         "A partir de la versión 0.2.1, las versiones actuales utilizan una licencia que permite consultar el código fuente solo para su revisión y reserva todos los derechos; los derechos MIT ya otorgados para la versión 0.2.0 no se ven afectados.",
-        "La entidad responsable de la publicación oficial es SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Tanto la App como la CLI son Universal y utilizan Hardened Runtime y una marca de tiempo segura; solo se permite publicar tras superar la notarización de Apple, el stapling de la App y el DMG, Gatekeeper y la verificación SHA-256.",
         "Las páginas del producto y las notas de la versión en 20 idiomas ofrecen un enlace destacado para descargar el Universal DMG e incluyen avisos de licencia del proyecto y de terceros."
       ]
     },
     "ar": {
-      "tagline": "أداة محلية لضغط الصور والفيديو وملفات PDF، منشورة رسميًا باستخدام Developer ID المؤسسي طويل الأجل.",
+      "tagline": "أداة محلية لضغط الصور والفيديو وملفات PDF على macOS.",
       "highlights": [
         "بدءًا من الإصدار 0.2.1، تستخدم الإصدارات الحالية ترخيصًا يتيح الاطلاع على الشفرة المصدرية للمراجعة فقط مع الاحتفاظ بجميع الحقوق؛ ولا تتأثر حقوق MIT الممنوحة سابقًا للإصدار 0.2.0.",
-        "جهة النشر الرسمية هي SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "كل من App وCLI بصيغة Universal ويستخدمان Hardened Runtime وطابعًا زمنيًا آمنًا؛ ولا يُسمح بالنشر إلا بعد اجتياز توثيق Apple وتثبيت staple لكل من App وDMG وفحص Gatekeeper والتحقق من SHA-256.",
         "توفر صفحات المنتج وملاحظات الإصدار بعشرين لغة رابطًا بارزًا لتنزيل Universal DMG، وتتضمن إشعارات تراخيص المشروع والمكونات التابعة لجهات خارجية."
       ]
     },
     "fr": {
-      "tagline": "Un outil local de compression d’images, de vidéos et de PDF officiellement publié avec le Developer ID d’entreprise à long terme.",
+      "tagline": "Un outil local de compression d’images, de vidéos et de PDF pour macOS.",
       "highlights": [
         "À partir de la version 0.2.1, les versions actuelles utilisent une licence qui rend le code source consultable uniquement à des fins d’examen et réserve tous les droits ; les droits MIT déjà accordés pour la version 0.2.0 restent inchangés.",
-        "L’entité de publication officielle est SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "L’App et la CLI sont toutes deux Universal et utilisent Hardened Runtime ainsi qu’un horodatage sécurisé ; la publication n’est autorisée qu’après validation de la notarisation Apple, du stapling de l’App et du DMG, de Gatekeeper et de la vérification SHA-256.",
         "Les pages produit et les notes de version en 20 langues proposent un lien bien visible pour télécharger le Universal DMG et incluent les mentions de licence du projet et des composants tiers."
       ]
     },
     "bn": {
-      "tagline": "কোম্পানির দীর্ঘমেয়াদি Developer ID দিয়ে আনুষ্ঠানিকভাবে প্রকাশিত স্থানীয় ছবি, ভিডিও ও PDF কম্প্রেশন টুল।",
+      "tagline": "macOS-এর জন্য স্থানীয় ছবি, ভিডিও ও PDF কম্প্রেশন টুল।",
       "highlights": [
         "0.2.1 থেকে বর্তমান সংস্করণগুলো এমন একটি লাইসেন্স ব্যবহার করে, যাতে সোর্স কোড শুধু দেখা ও পর্যালোচনার জন্য উন্মুক্ত এবং সব অধিকার সংরক্ষিত; 0.2.0-এর জন্য ইতিমধ্যে দেওয়া MIT অধিকার অপরিবর্তিত থাকবে।",
-        "আনুষ্ঠানিক প্রকাশক হলো SlimLuma copyright holders (PRIVATE_TEAM_ID)।",
         "App ও CLI উভয়ই Universal এবং Hardened Runtime ও নিরাপদ টাইমস্ট্যাম্প ব্যবহার করে; Apple notarization, App ও DMG stapling, Gatekeeper এবং SHA-256 যাচাই সব সফল হলেই কেবল প্রকাশের অনুমতি দেওয়া হয়।",
         "২০টি ভাষার পণ্য পৃষ্ঠা ও রিলিজ নোটে সুস্পষ্ট Universal DMG ডাউনলোড লিংক এবং প্রকল্প ও তৃতীয়-পক্ষের লাইসেন্স বিজ্ঞপ্তি রয়েছে।"
       ]
     },
     "pt-BR": {
-      "tagline": "Uma ferramenta local de compressão de imagens, vídeos e PDF lançada oficialmente com o Developer ID corporativo de longo prazo.",
+      "tagline": "Uma ferramenta local de compressão de imagens, vídeos e PDF para macOS.",
       "highlights": [
         "A partir da versão 0.2.1, as versões atuais usam uma licença que permite visualizar o código-fonte apenas para revisão e reserva todos os direitos; os direitos MIT já concedidos para a versão 0.2.0 permanecem inalterados.",
-        "A entidade responsável pelo lançamento oficial é SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Tanto o App quanto a CLI são Universal e usam Hardened Runtime e carimbo de data e hora seguro; o lançamento só é permitido após a aprovação da notarização da Apple, do stapling do App e do DMG, do Gatekeeper e da verificação SHA-256.",
         "As páginas do produto e as notas da versão em 20 idiomas oferecem um link destacado para baixar o Universal DMG e incluem avisos de licença do projeto e de terceiros."
       ]
     },
     "pt-PT": {
-      "tagline": "Uma ferramenta local de compressão de imagens, vídeos e PDF publicada oficialmente com o Developer ID empresarial de longo prazo.",
+      "tagline": "Uma ferramenta local de compressão de imagens, vídeos e PDF para macOS.",
       "highlights": [
         "A partir da versão 0.2.1, as versões atuais utilizam uma licença que permite consultar o código-fonte apenas para revisão e reserva todos os direitos; os direitos MIT já concedidos para a versão 0.2.0 permanecem inalterados.",
-        "A entidade responsável pela publicação oficial é SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Tanto a App como a CLI são Universal e utilizam Hardened Runtime e um carimbo de data/hora seguro; a publicação só é permitida após a aprovação da notarização da Apple, do stapling da App e do DMG, do Gatekeeper e da verificação SHA-256.",
         "As páginas do produto e as notas da versão em 20 idiomas disponibilizam uma ligação destacada para transferir o Universal DMG e incluem avisos de licença do projeto e de terceiros."
       ]
     },
     "id": {
-      "tagline": "Alat kompresi gambar, video, dan PDF lokal yang dirilis secara resmi dengan Developer ID perusahaan jangka panjang.",
+      "tagline": "Alat kompresi gambar, video, dan PDF lokal untuk macOS.",
       "highlights": [
         "Mulai versi 0.2.1, versi saat ini menggunakan lisensi yang mengizinkan kode sumber dilihat hanya untuk peninjauan dan mempertahankan seluruh hak; hak MIT yang telah diberikan untuk versi 0.2.0 tetap tidak terpengaruh.",
-        "Penerbit resminya adalah SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "App dan CLI sama-sama Universal serta menggunakan Hardened Runtime dan stempel waktu aman; rilis hanya diizinkan setelah notarisasi Apple, stapling App dan DMG, Gatekeeper, serta verifikasi SHA-256 semuanya lulus.",
         "Halaman produk dan catatan rilis dalam 20 bahasa menyediakan tautan unduhan Universal DMG yang menonjol serta menyertakan pemberitahuan lisensi proyek dan pihak ketiga."
       ]
     },
     "ur": {
-      "tagline": "کمپنی کی طویل مدتی Developer ID کے ساتھ باضابطہ طور پر جاری کردہ مقامی تصویر، ویڈیو اور PDF کمپریشن ٹول۔",
+      "tagline": "macOS کے لیے مقامی تصویر، ویڈیو اور PDF کمپریشن ٹول۔",
       "highlights": [
         "0.2.1 سے موجودہ ورژن ایسا لائسنس استعمال کرتے ہیں جس میں ماخذ کوڈ صرف دیکھنے اور جائزے کے لیے دستیاب ہے اور تمام حقوق محفوظ ہیں؛ 0.2.0 کے لیے پہلے ہی دیے گئے MIT حقوق متاثر نہیں ہوں گے۔",
-        "باضابطہ ناشر SlimLuma copyright holders (PRIVATE_TEAM_ID) ہے۔",
         "App اور CLI دونوں Universal ہیں اور Hardened Runtime اور محفوظ ٹائم اسٹیمپ استعمال کرتے ہیں؛ ریلیز کی اجازت صرف Apple notarization، App اور DMG stapling، Gatekeeper اور SHA-256 تصدیق سب کامیاب ہونے کے بعد دی جاتی ہے۔",
         "20 زبانوں میں پروڈکٹ صفحات اور ریلیز نوٹس نمایاں Universal DMG ڈاؤن لوڈ لنک کے ساتھ پروجیکٹ اور فریق ثالث کے لائسنس نوٹس فراہم کرتے ہیں۔"
       ]
     },
     "ru": {
-      "tagline": "Локальный инструмент для сжатия изображений, видео и PDF, официально выпускаемый с долгосрочным корпоративным Developer ID.",
+      "tagline": "Локальный инструмент для сжатия изображений, видео и PDF на macOS.",
       "highlights": [
         "Начиная с версии 0.2.1, текущие версии используют лицензию, по которой исходный код доступен только для просмотра и проверки, а все права защищены; уже предоставленные для версии 0.2.0 права по лицензии MIT остаются без изменений.",
-        "Официальным издателем является SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "App и CLI являются Universal, используют Hardened Runtime и защищённую метку времени; выпуск разрешается только после успешной проверки нотариального заверения Apple, stapling для App и DMG, Gatekeeper и SHA-256.",
         "Страницы продукта и примечания к выпуску на 20 языках содержат заметную ссылку для скачивания Universal DMG, а также уведомления о лицензиях проекта и сторонних компонентов."
       ]
     },
     "de": {
-      "tagline": "Ein lokales Tool zur Komprimierung von Bildern, Videos und PDFs, das offiziell mit der langfristigen Developer ID des Unternehmens veröffentlicht wird.",
+      "tagline": "Ein lokales Tool zur Komprimierung von Bildern, Videos und PDFs für macOS.",
       "highlights": [
         "Ab Version 0.2.1 verwenden aktuelle Versionen eine Lizenz, unter der der Quellcode nur zur Einsicht und Prüfung verfügbar ist und alle Rechte vorbehalten bleiben; die für Version 0.2.0 bereits gewährten MIT-Rechte bleiben unberührt.",
-        "Offizieller Herausgeber ist SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "App und CLI sind Universal und verwenden Hardened Runtime sowie einen sicheren Zeitstempel; eine Veröffentlichung ist erst zulässig, wenn Apple-Notarisierung, Stapling von App und DMG, Gatekeeper und SHA-256-Prüfung vollständig bestanden wurden.",
         "Produktseiten und Versionshinweise in 20 Sprachen bieten einen gut sichtbaren Download-Link für das Universal DMG und enthalten Lizenzhinweise zum Projekt und zu Drittanbieterkomponenten."
       ]
     },
     "ja": {
-      "tagline": "企業の長期運用 Developer ID により正式リリースされる、ローカル画像・動画・PDF 圧縮ツール。",
+      "tagline": "macOS 向けのローカル画像・動画・PDF 圧縮ツール。",
       "highlights": [
         "0.2.1 以降の現行バージョンには、ソースコードを閲覧・レビュー可能とし、すべての権利を留保するライセンスが適用されます。0.2.0 に対してすでに付与された MIT の権利には影響しません。",
-        "正式なリリース主体は SlimLuma copyright holders (PRIVATE_TEAM_ID) です。",
         "App と CLI はどちらも Universal で、Hardened Runtime と安全なタイムスタンプを使用します。Apple の公証、App と DMG の staple、Gatekeeper、SHA-256 検証がすべて合格した場合にのみリリースできます。",
         "20 言語の製品ページとリリースノートには、目立つ Universal DMG ダウンロードリンクと、プロジェクトおよび第三者ライセンスに関する通知が用意されています。"
       ]
     },
     "sw": {
-      "tagline": "Zana ya ndani ya kubana picha, video na PDF iliyotolewa rasmi kwa Developer ID ya muda mrefu ya kampuni.",
+      "tagline": "Zana ya ndani ya kubana picha, video na PDF kwa macOS.",
       "highlights": [
         "Kuanzia toleo la 0.2.1, matoleo ya sasa yanatumia leseni inayoruhusu msimbo chanzo kuonekana kwa ukaguzi pekee huku haki zote zikihifadhiwa; haki za MIT zilizotolewa tayari kwa toleo la 0.2.0 haziathiriwi.",
-        "Mchapishaji rasmi ni SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "App na CLI zote ni Universal na zinatumia Hardened Runtime pamoja na muhuri salama wa muda; uchapishaji unaruhusiwa tu baada ya uthibitishaji wa Apple, stapling ya App na DMG, Gatekeeper na ukaguzi wa SHA-256 kufaulu.",
         "Kurasa za bidhaa na maelezo ya toleo katika lugha 20 zina kiungo kinachoonekana wazi cha kupakua Universal DMG na zinajumuisha taarifa za leseni za mradi na wahusika wengine."
       ]
     },
     "pa-Arab": {
-      "tagline": "کمپنی دی لمبے سمیں والی Developer ID نال باقاعدہ جاری کیتا گیا مقامی تصویر، ویڈیو تے PDF کمپریشن ٹول۔",
+      "tagline": "macOS لئی مقامی تصویر، ویڈیو تے PDF کمپریشن ٹول۔",
       "highlights": [
         "0.2.1 توں موجودہ ورژن ایسا لائسنس ورتدے نیں جیہڑا سورس کوڈ نوں صرف ویکھن تے جائزے لئی دستیاب کردا اے تے سارے حق محفوظ رکھدا اے؛ 0.2.0 لئی پہلاں دتے گئے MIT حقاں اُتے کوئی اثر نئیں پئے گا۔",
-        "باقاعدہ پبلشر SlimLuma copyright holders (PRIVATE_TEAM_ID) اے۔",
         "App تے CLI دونے Universal نیں تے Hardened Runtime تے محفوظ ٹائم سٹیمپ ورتدے نیں؛ ریلیز دی اجازت صرف Apple notarization، App تے DMG stapling، Gatekeeper تے SHA-256 تصدیق سب پاس ہون توں بعد ملدی اے۔",
         "20 زباناں وچ پروڈکٹ صفحے تے ریلیز نوٹس نمایاں Universal DMG ڈاؤن لوڈ لنک دے نال پروجیکٹ تے تھرڈ پارٹی لائسنس نوٹس وی فراہم کردے نیں۔"
       ]
     },
     "te": {
-      "tagline": "కంపెనీ దీర్ఘకాలిక Developer IDతో అధికారికంగా విడుదలయ్యే స్థానిక చిత్రం, వీడియో మరియు PDF కంప్రెషన్ సాధనం.",
+      "tagline": "macOS కోసం స్థానిక చిత్రం, వీడియో మరియు PDF కంప్రెషన్ సాధనం.",
       "highlights": [
         "0.2.1 నుంచి ప్రస్తుత సంస్కరణలు సోర్స్ కోడ్‌ను చూడటానికి, సమీక్షించడానికి మాత్రమే అనుమతిస్తూ అన్ని హక్కులను ప్రత్యేకించే లైసెన్స్‌ను ఉపయోగిస్తాయి; 0.2.0 కోసం ఇప్పటికే మంజూరు చేసిన MIT హక్కులకు ఎటువంటి ప్రభావం ఉండదు.",
-        "అధికారిక ప్రచురణకర్త SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "App మరియు CLI రెండూ Universalగా ఉండి Hardened Runtime మరియు సురక్షిత టైమ్‌స్టాంప్‌ను ఉపయోగిస్తాయి; Apple notarization, App మరియు DMG stapling, Gatekeeper, SHA-256 ధృవీకరణ అన్నీ విజయవంతమైన తర్వాత మాత్రమే విడుదలకు అనుమతి ఉంటుంది.",
         "20 భాషల ఉత్పత్తి పేజీలు మరియు విడుదల గమనికల్లో స్పష్టంగా కనిపించే Universal DMG డౌన్‌లోడ్ లింక్‌తో పాటు ప్రాజెక్ట్ మరియు మూడవ పక్ష లైసెన్స్ ప్రకటనలు ఉంటాయి."
       ]
     },
     "pcm": {
-      "tagline": "Local tool to compress image, video and PDF, wey dem officially release with di company long-term Developer ID.",
+      "tagline": "Local tool to compress image, video and PDF for macOS.",
       "highlights": [
         "From 0.2.1, current versions dey use license wey make source code visible only for review and reserve all rights; di MIT rights wey dem don already give for 0.2.0 no change.",
-        "Di official publisher na SlimLuma copyright holders (PRIVATE_TEAM_ID).",
         "Both App and CLI na Universal, and dem dey use Hardened Runtime and secure timestamp; release fit happen only after Apple notarization, App and DMG stapling, Gatekeeper and SHA-256 verification all pass.",
         "Product pages and release notes for 20 languages get clear Universal DMG download link and project plus third-party license notices."
       ]

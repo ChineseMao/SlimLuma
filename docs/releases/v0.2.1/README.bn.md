@@ -10,16 +10,13 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
-> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
->
 > SlimLuma 0.2.0-এর সোর্স কোড MIT License-এর অধীনে প্রকাশিত হয়েছিল। এই রিলিজটি তার ট্যাগে নির্দিষ্ট করা LICENSE দ্বারা নিয়ন্ত্রিত।
 >
 > [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [v0.2.1 LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE)
 
-কোম্পানির দীর্ঘমেয়াদি Developer ID দিয়ে আনুষ্ঠানিকভাবে প্রকাশিত স্থানীয় ছবি, ভিডিও ও PDF কম্প্রেশন টুল।
+macOS-এর জন্য স্থানীয় ছবি, ভিডিও ও PDF কম্প্রেশন টুল।
 
 - 0.2.1 থেকে বর্তমান সংস্করণগুলো এমন একটি লাইসেন্স ব্যবহার করে, যাতে সোর্স কোড শুধু দেখা ও পর্যালোচনার জন্য উন্মুক্ত এবং সব অধিকার সংরক্ষিত; 0.2.0-এর জন্য ইতিমধ্যে দেওয়া MIT অধিকার অপরিবর্তিত থাকবে।
-- আনুষ্ঠানিক প্রকাশক হলো SlimLuma copyright holders (PRIVATE_TEAM_ID)।
 - App ও CLI উভয়ই Universal এবং Hardened Runtime ও নিরাপদ টাইমস্ট্যাম্প ব্যবহার করে; Apple notarization, App ও DMG stapling, Gatekeeper এবং SHA-256 যাচাই সব সফল হলেই কেবল প্রকাশের অনুমতি দেওয়া হয়।
 - ২০টি ভাষার পণ্য পৃষ্ঠা ও রিলিজ নোটে সুস্পষ্ট Universal DMG ডাউনলোড লিংক এবং প্রকল্প ও তৃতীয়-পক্ষের লাইসেন্স বিজ্ঞপ্তি রয়েছে।
 

@@ -3,12 +3,11 @@
 SlimLuma is source-visible proprietary software. Issues, reproducible bug
 reports, security reports, and translation feedback are welcome. Code pull
 requests are accepted only after prior written authorization from
-SlimLuma copyright holders and completion of any contributor
-agreement requested by the publisher.
+the project maintainers and completion of any contributor agreement they
+request.
 
 SlimLuma 是源码公开可审阅的专有软件。欢迎提交 Issue、可复现故障、安全报告和翻译
-反馈。代码 Pull Request 仅在事先获得
-`SlimLuma copyright holders` 书面授权并按要求完成贡献协议后接收。
+反馈。代码 Pull Request 仅在事先获得项目维护者书面授权并按要求完成贡献协议后接收。
 
 Submitting an issue, suggestion, or code does not grant any license to use the
 SlimLuma source code. Do not submit third-party code unless you are authorized

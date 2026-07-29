@@ -17,11 +17,9 @@ No changes yet. / 暂无变更。
   采用源码公开可审阅专有条款的版本。产品页会继续指向上一个已验证的公开版本，
   直到 0.2.1 完成发布后复验；发行自动化拒绝覆盖任何已有 GitHub Release。
 - Current development is source-visible proprietary software with all rights
-  reserved; the exact long-term Developer ID publisher is
-  SlimLuma copyright holders, Apple team `PRIVATE_TEAM_ID`. /
-  当前开发版本调整为源码公开可审阅、保留所有权利的专有软件；长期 Developer ID
-  发布主体为 `SlimLuma copyright holders`，Apple 团队
-  `PRIVATE_TEAM_ID`。
+  reserved. Exact release-identity matching is configured privately rather than
+  repeated in public repository text. / 当前开发版本调整为源码公开可审阅、保留所有
+  权利的专有软件；精确发布身份匹配改为私有配置，不在公开仓库文本中重复保存。
 - The change is prospective: SlimLuma 0.2.0 remains available under the MIT
   License previously granted for that release. / 本次调整不追溯撤销历史授权：
   SlimLuma 0.2.0 仍适用其发布时授予的 MIT License。

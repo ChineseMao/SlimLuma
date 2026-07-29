@@ -10,6 +10,7 @@ import {
 import { join, resolve } from "node:path";
 import {
   generatedReadmePath,
+  githubDownloadNotices,
   githubLicenseNotices,
   githubLocales,
   githubReleaseLicenseNotices,
@@ -21,8 +22,6 @@ const readmeOutputRoot = join(projectRoot, "docs", "readme");
 const releasesRoot = join(projectRoot, "docs", "releases");
 const checksOnly = process.argv.includes("--check");
 const repositoryURL = "https://github.com/ChineseMao/SlimLuma";
-const publisherName = "SlimLuma copyright holders";
-const publisherTeamID = "PRIVATE_TEAM_ID";
 const currentLicenseURL = `${repositoryURL}/blob/main/LICENSE`;
 const historicalLicenseURL = `${repositoryURL}/blob/v0.2.0/LICENSE`;
 
@@ -51,6 +50,8 @@ const releaseStatePath = join(releasesRoot, "release-state.json");
 const releaseState = JSON.parse(readFileSync(releaseStatePath, "utf8"));
 const latestPublishedVersion = releaseState.latestPublishedVersion;
 const releaseNotesVersion = releaseState.generatedReleaseNotesVersion;
+const latestPublishedDownloadsAvailable =
+  releaseState.latestPublishedDownloadsAvailable;
 for (const [name, value] of Object.entries({
   latestPublishedVersion,
   generatedReleaseNotesVersion: releaseNotesVersion,
@@ -62,6 +63,11 @@ for (const [name, value] of Object.entries({
 if (developmentVersion === latestPublishedVersion) {
   throw new Error(
     "Development and latest published versions must differ after the license transition.",
+  );
+}
+if (typeof latestPublishedDownloadsAvailable !== "boolean") {
+  throw new Error(
+    `${releaseStatePath} has an invalid latestPublishedDownloadsAvailable.`,
   );
 }
 
@@ -250,7 +256,22 @@ function releaseAssets(version) {
   };
 }
 
-function directDownloads(primaryLabel, version = latestPublishedVersion) {
+function directDownloads(
+  primaryLabel,
+  version = latestPublishedVersion,
+  locale = "en",
+) {
+  if (
+    version === latestPublishedVersion
+    && !latestPublishedDownloadsAvailable
+  ) {
+    const notice = githubDownloadNotices[locale];
+    if (typeof notice !== "string" || notice.length === 0) {
+      throw new Error(`Missing GitHub download notice for ${locale}`);
+    }
+    return `> [!CAUTION]
+> **[${notice}](${repositoryURL}/releases)**`;
+  }
   const assets = releaseAssets(version);
   return `> [!IMPORTANT]
 > **[⬇ ${primaryLabel}](${assets.dmg})**
@@ -265,13 +286,10 @@ function currentLicenseNotice(locale, direction) {
   }
   if (direction === "rtl") {
     return `<div dir="rtl" align="right">
-<p><strong>${escapeHTML(publisherName)} (${publisherTeamID})</strong></p>
 <p><a href="${currentLicenseURL}">${escapeHTML(notice)}</a></p>
 </div>`;
   }
-  return `> **${publisherName} (${publisherTeamID})**
->
-> [${notice}](${currentLicenseURL})`;
+  return `> [${notice}](${currentLicenseURL})`;
 }
 
 function releaseLicenseNotice(locale, direction) {
@@ -282,20 +300,25 @@ function releaseLicenseNotice(locale, direction) {
   const links = `<a href="${historicalLicenseURL}">v0.2.0 MIT LICENSE</a> · <a href="${releaseLicenseURL}">${releaseLicenseLabel}</a>`;
   if (direction === "rtl") {
     return `<div dir="rtl" align="right">
-<p><strong>${escapeHTML(publisherName)} (${publisherTeamID})</strong></p>
 <p>${escapeHTML(notice)}</p>
 <p>${links}</p>
 </div>`;
   }
-  return `> **Publisher:** ${publisherName} (${publisherTeamID})
->
-> ${notice}
+  return `> ${notice}
 >
 > [v0.2.0 MIT LICENSE](${historicalLicenseURL}) · [${releaseLicenseLabel}](${releaseLicenseURL})`;
 }
 
-function rtlReadmeBody(t) {
+function rtlReadmeBody(t, locale) {
   const assets = releaseAssets(latestPublishedVersion);
+  const install =
+    latestPublishedDownloadsAvailable
+      ? `<ol>
+<li><a href="${assets.dmg}">${escapeHTML(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}</a></li>
+<li>${escapeHTML(t("将 SlimLuma.app 移到“应用程序”文件夹。"))}</li>
+<li>${escapeHTML(t("打开“引擎与设置”并选择“一键补齐推荐引擎”。"))}</li>
+</ol>`
+      : `<p><a href="${repositoryURL}/releases">${escapeHTML(githubDownloadNotices[locale])}</a></p>`;
   const featureRows = [
     [t("图片"), t("先纠正方向，再按比例缩小、重编码和处理 profile；PNG、WebP 与 AVIF 的设置会映射为对应引擎参数。")],
     [t("视频"), t("画面缩放保持比例、不放大并对齐偶数尺寸；音频转 AAC，MP4 字幕转 mov_text，MKV 字幕尽量复制，MP4 开启 faststart。")],
@@ -320,17 +343,19 @@ function rtlReadmeBody(t) {
 ${features}
 </ul>
 <h2>${escapeHTML(t("安装"))}</h2>
-<ol>
-<li><a href="${assets.dmg}">${escapeHTML(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}</a></li>
-<li>${escapeHTML(t("将 SlimLuma.app 移到“应用程序”文件夹。"))}</li>
-<li>${escapeHTML(t("打开“引擎与设置”并选择“一键补齐推荐引擎”。"))}</li>
-</ol>
+${install}
 <p>${escapeHTML(t("SlimLuma 使用 Homebrew 安装 ImageMagick、FFmpeg、qpdf 与 Ghostscript；媒体文件始终留在这台 Mac。"))}</p>
 </div>`;
 }
 
-function ltrReadmeBody(t) {
+function ltrReadmeBody(t, locale) {
   const assets = releaseAssets(latestPublishedVersion);
+  const install =
+    latestPublishedDownloadsAvailable
+      ? `1. [${t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。")}](${assets.dmg})
+2. ${t("将 SlimLuma.app 移到“应用程序”文件夹。")}
+3. ${t("打开“引擎与设置”并选择“一键补齐推荐引擎”。")}`
+      : `[${githubDownloadNotices[locale]}](${repositoryURL}/releases)`;
   return `> ${t("本地媒体瘦身工具")}
 
 ${t("支持常见图片、视频和 PDF，也可以拖入整个文件夹")}
@@ -348,9 +373,7 @@ ${t("支持常见图片、视频和 PDF，也可以拖入整个文件夹")}
 
 ## ${t("安装")}
 
-1. [${t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。")}](${assets.dmg})
-2. ${t("将 SlimLuma.app 移到“应用程序”文件夹。")}
-3. ${t("打开“引擎与设置”并选择“一键补齐推荐引擎”。")}
+${install}
 
 ${t("SlimLuma 使用 Homebrew 安装 ImageMagick、FFmpeg、qpdf 与 Ghostscript；媒体文件始终留在这台 Mac。")}`;
 }
@@ -359,7 +382,9 @@ function readmeDocument(locale, direction) {
   const table = translations(locale);
   const t = (key) => translated(table, locale, key);
   const localizedBody =
-    direction === "rtl" ? rtlReadmeBody(t) : ltrReadmeBody(t);
+    direction === "rtl"
+      ? rtlReadmeBody(t, locale)
+      : ltrReadmeBody(t, locale);
   const privacy =
     direction === "rtl"
       ? `<div dir="rtl" align="right"><h2>${escapeHTML(t("本地数据与隐私"))}</h2><p>${escapeHTML(t("压缩过程不上传媒体文件。只有用户主动打开许可网站、brew.sh 或执行 Homebrew 安装时，浏览器或 Homebrew 才会访问网络。"))}</p></div>`
@@ -375,7 +400,7 @@ ${badges()}
 
 ${languageSelector(locale, generatedReadmeHref)}
 
-${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"))}
+${directDownloads(t("从 GitHub Releases 下载适用于 macOS 的 Universal 版本。"), latestPublishedVersion, locale)}
 
 ${currentLicenseNotice(locale, direction)}
 
@@ -501,10 +526,7 @@ ${chineseCopy.tagline}
 
 ${chineseHighlights}
 
-## Publisher and license / 发布主体与许可
-
-Official publisher / 官方发布主体:
-**${publisherName} (${publisherTeamID})**
+## License / 许可
 
 SlimLuma 0.2.0 source was released under the
 [MIT License](${historicalLicenseURL}); that historical grant is not revoked.

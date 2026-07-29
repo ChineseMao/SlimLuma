@@ -18,9 +18,8 @@ EXPECTED_SOURCE_KEY_COUNT="$(
     jq 'length' \
         "$PROJECT_DIR/Sources/SlimLuma/Resources/LocalizationKeys.json"
 )"
-EXPECTED_DEVELOPER_ID_AUTHORITY="Developer ID Application: private release identity"
-EXPECTED_TEAM_ID="PRIVATE_TEAM_ID"
-EXPECTED_COPYRIGHT="Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by SlimLuma copyright holders"
+EXPECTED_COPYRIGHT="Copyright © 2026 SlimLuma copyright holders. All rights reserved."
+source "$PROJECT_DIR/scripts/release-identity.sh"
 
 EXPECTED_LOCALES=(
     ar
@@ -250,23 +249,8 @@ METADATA_TOOLS_VERSION="$(
 )" == "$METADATA_TOOLS_VERSION" ]]
 codesign --verify --deep --strict "$APP_DIR"
 if [[ "${SLIMLUMA_REQUIRE_DEVELOPER_ID:-0}" == "1" ]]; then
-    SIGNATURE_DETAILS="$(codesign -dvvv "$APP_DIR" 2>&1)"
-    if [[ "$SIGNATURE_DETAILS" != *"Authority=$EXPECTED_DEVELOPER_ID_AUTHORITY"* ]]; then
-        echo "Release app signing authority does not match the long-term publisher." >&2
-        exit 1
-    fi
-    if [[ "$SIGNATURE_DETAILS" != *"flags=0x10000(runtime)"* ]]; then
-        echo "Release app does not enable Hardened Runtime." >&2
-        exit 1
-    fi
-    if [[ "$SIGNATURE_DETAILS" != *"Timestamp="* ]]; then
-        echo "Release app signature has no secure timestamp." >&2
-        exit 1
-    fi
-    if [[ "$SIGNATURE_DETAILS" != *"TeamIdentifier=$EXPECTED_TEAM_ID"* ]]; then
-        echo "Release app TeamIdentifier does not match $EXPECTED_TEAM_ID." >&2
-        exit 1
-    fi
+    slimluma_require_private_identity_config
+    slimluma_verify_developer_id_signature "$APP_DIR" true
     if ! ENTITLEMENTS="$(
         codesign -d --entitlements - --xml "$APP_DIR" 2>/dev/null
     )"; then

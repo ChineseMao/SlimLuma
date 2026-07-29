@@ -17,12 +17,12 @@
 [پنجابی](docs/readme/README.pa-Arab.md) · [తెలుగు](docs/readme/README.te.md) ·
 [Naijá](docs/readme/README.pcm.md)
 
-> [!IMPORTANT]
-> **[⬇ Download SlimLuma 0.2.0 for macOS — Universal DMG](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[Public installers are temporarily unavailable while a privacy-safe
+> replacement is being notarized. Check Releases for the next verified
+> build.](https://github.com/ChineseMao/SlimLuma/releases)**
 
-SlimLuma is a free-to-download, source-visible, local-first macOS app for
+SlimLuma is a source-visible, local-first macOS app for
 compressing images, animated images, videos, and PDF files. It provides a safe,
 configurable workflow while delegating codec work to mature tools such as
 ImageMagick, FFmpeg, qpdf, and optional Ghostscript.
@@ -31,9 +31,11 @@ Media stays on your Mac. Originals are not overwritten.
 
 ## Quick start
 
-1. Open the downloaded DMG and move `SlimLuma.app` to Applications.
-2. Launch SlimLuma.
-3. Open **Engines & Settings** and choose **Install Recommended Engines**.
+1. Wait for a verified installer to appear on
+   [Releases](https://github.com/ChineseMao/SlimLuma/releases).
+2. Open the DMG and move `SlimLuma.app` to Applications.
+3. Launch SlimLuma, open **Engines & Settings**, and choose
+   **Install Recommended Engines**.
 
 The Universal release supports both Apple Silicon and Intel Macs. Published
 DMGs are Developer ID signed, Apple-notarized, stapled, Gatekeeper-checked, and
@@ -190,7 +192,7 @@ Additional project documents:
 - [Release readiness](docs/RELEASE_READINESS_2026-07-28.md)
 - [Release trust chain](docs/RELEASE_TRUST_CHAIN.md)
 - [Changelog](CHANGELOG.md)
-- [Publisher and release identity](PUBLISHER.md)
+- [Release verification and identity privacy](PUBLISHER.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
@@ -199,13 +201,12 @@ Additional project documents:
 ## License
 
 Current development is publicly visible for review but is proprietary:
-[all rights are reserved](LICENSE). The official publisher is
-SlimLuma copyright holders Public visibility does not grant
-open-source rights beyond GitHub's platform terms. Official, unmodified binaries
-may be used under the limited grant in `LICENSE`.
+[all rights are reserved](LICENSE). Public visibility does not grant open-source
+rights beyond GitHub's platform terms. Official, unmodified binaries may be
+used under the limited grant in `LICENSE`.
 
 SlimLuma 0.2.0 was released under the MIT License. That historical grant is not
 revoked; later project materials use the terms published with their revision
 or release. External engines remain under their own licenses. See
-[Publisher and release identity](PUBLISHER.md) and
+[release verification and identity privacy](PUBLISHER.md) and
 [third-party notices](THIRD_PARTY_NOTICES.md).

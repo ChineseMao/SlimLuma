@@ -1,12 +1,10 @@
 # Support / 使用支持
 
-SlimLuma is source-visible proprietary software published and maintained by
-SlimLuma copyright holders Support is provided through GitHub
-and may be written in any of the 20 languages listed in the
+SlimLuma is source-visible proprietary software. Support is provided through
+GitHub and may be written in any of the 20 languages listed in the
 [README](README.md).
 
-SlimLuma 是由 `SlimLuma copyright holders` 发布和维护的
-源码公开可审阅专有软件。请通过 GitHub 获取支持，并可使用
+SlimLuma 是源码公开可审阅的专有软件。请通过 GitHub 获取支持，并可使用
 [README](README.zh-CN.md) 中列出的任意一种受支持语言。
 
 ## Before opening an issue / 提交 Issue 前

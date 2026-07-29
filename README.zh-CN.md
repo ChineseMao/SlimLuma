@@ -17,10 +17,9 @@
 [پنجابی](docs/readme/README.pa-Arab.md) · [తెలుగు](docs/readme/README.te.md) ·
 [Naijá](docs/readme/README.pcm.md)
 
-> [!IMPORTANT]
-> **[⬇ 下载 SlimLuma 0.2.0 macOS 通用安装包（DMG）](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [命令行工具](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256 校验](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[公开安装包暂时下架，隐私安全的替代版本正在公证。请在 Releases
+> 查看下一个通过验证的版本。](https://github.com/ChineseMao/SlimLuma/releases)**
 
 SlimLuma 是一个免费下载、源码公开可审阅、本地运行的 macOS 图片、视频和 PDF
 批量压缩工具。它负责安全可靠的工作流，把编解码交给 ImageMagick、FFmpeg、qpdf
@@ -203,12 +202,11 @@ RTL、键盘关闭路径和可访问性树验证；这些仍是不同验证层�
 
 ## 许可
 
-当前开发源码公开仅供审阅，属于[保留所有权利的专有软件](LICENSE)。官方发布主体为
-`SlimLuma copyright holders`。公开可见不代表开源；除 GitHub
-平台条款所需权利外，不额外授予复制、修改、分发、再许可或销售等权利。官方未修改的
-二进制可按 `LICENSE` 中的有限授权使用。
+当前开发源码公开仅供审阅，属于[保留所有权利的专有软件](LICENSE)。公开可见不代表
+开源；除 GitHub 平台条款所需权利外，不额外授予复制、修改、分发、再许可或销售等
+权利。官方未修改的二进制可按 `LICENSE` 中的有限授权使用。
 
 SlimLuma 0.2.0 曾按 MIT License 发布，已经授予的历史权利不会被撤销；后续项目
-材料以对应提交或版本附带的条款为准。外部引擎继续遵循各自许可。发布主体与发布门禁
-见 [PUBLISHER.md](PUBLISHER.md)，第三方许可见
+材料以对应提交或版本附带的条款为准。外部引擎继续遵循各自许可。发布验证与身份隐私
+边界见 [PUBLISHER.md](PUBLISHER.md)，第三方许可见
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

@@ -6,8 +6,7 @@ DIST_DIR="$PROJECT_DIR/dist"
 APP_DIR="$DIST_DIR/SlimLuma.app"
 CLI_PATH="$DIST_DIR/slimluma"
 CHECKSUMS_ONLY=false
-EXPECTED_DEVELOPER_ID_AUTHORITY="Developer ID Application: private release identity"
-EXPECTED_TEAM_ID="PRIVATE_TEAM_ID"
+source "$PROJECT_DIR/scripts/release-identity.sh"
 
 if [[ "${1:-}" == "--checksums-only" ]]; then
     CHECKSUMS_ONLY=true
@@ -36,25 +35,7 @@ CHECKSUMS_PATH="$DIST_DIR/SHA256SUMS"
 verify_release_identity() {
     local target="$1"
     local require_runtime="$2"
-    local details
-    details="$(codesign -dvvv "$target" 2>&1)"
-    if [[ "$details" != *"Authority=$EXPECTED_DEVELOPER_ID_AUTHORITY"* ]]; then
-        echo "Signing authority does not match the long-term publisher: $target" >&2
-        exit 1
-    fi
-    if [[ "$details" != *"TeamIdentifier=$EXPECTED_TEAM_ID"* ]]; then
-        echo "TeamIdentifier does not match $EXPECTED_TEAM_ID: $target" >&2
-        exit 1
-    fi
-    if [[ "$details" != *"Timestamp="* ]]; then
-        echo "Release signature has no secure timestamp: $target" >&2
-        exit 1
-    fi
-    if [[ "$require_runtime" == "true" \
-        && "$details" != *"flags=0x10000(runtime)"* ]]; then
-        echo "Release binary does not enable Hardened Runtime: $target" >&2
-        exit 1
-    fi
+    slimluma_verify_developer_id_signature "$target" "$require_runtime"
 }
 
 write_checksums() {
@@ -75,6 +56,8 @@ write_checksums() {
             > "$CHECKSUMS_PATH"
     )
 }
+
+slimluma_require_private_identity_config
 
 if $CHECKSUMS_ONLY; then
     codesign --verify --strict "$DMG_PATH"
