@@ -92,8 +92,13 @@ if [[ -z "${SLIMLUMA_CODE_SIGN_IDENTITY:-}" \
     echo "Release artifacts require the long-term Developer ID signing identity." >&2
     exit 2
 fi
+/usr/bin/xattr -cr "$APP_DIR"
+/usr/bin/xattr -c "$CLI_PATH"
 codesign --verify --deep --strict "$APP_DIR"
 codesign --verify --strict "$CLI_PATH"
+"$PROJECT_DIR/scripts/verify-release-privacy.sh" \
+    "$APP_DIR" \
+    "$CLI_PATH"
 
 verify_release_identity "$APP_DIR" true
 verify_release_identity "$CLI_PATH" true
@@ -142,9 +147,21 @@ cp -R "$APP_DIR/Contents/Resources/ThirdPartyLicenses" \
     "$DMG_STAGE/ThirdPartyLicenses"
 ln -s /Applications "$DMG_STAGE/Applications"
 
+/usr/bin/xattr -cr "$TEMP_DIR"
+"$PROJECT_DIR/scripts/verify-release-privacy.sh" \
+    "$CLI_STAGE" \
+    "$DMG_STAGE"
+
 rm -f "$APP_ZIP" "$CLI_ARCHIVE" "$DMG_PATH" "$CHECKSUMS_PATH"
 ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "$APP_ZIP"
-tar -C "$TEMP_DIR" -czf "$CLI_ARCHIVE" "slimluma-$VERSION"
+tar \
+    --uid 0 \
+    --gid 0 \
+    --uname root \
+    --gname wheel \
+    -C "$TEMP_DIR" \
+    -czf "$CLI_ARCHIVE" \
+    "slimluma-$VERSION"
 hdiutil create \
     -volname "SlimLuma $VERSION" \
     -srcfolder "$DMG_STAGE" \
@@ -156,6 +173,15 @@ ZIP_ENTRIES="$TEMP_DIR/app-zip-entries.txt"
 CLI_ENTRIES="$TEMP_DIR/cli-archive-entries.txt"
 unzip -Z1 "$APP_ZIP" > "$ZIP_ENTRIES"
 tar -tzf "$CLI_ARCHIVE" > "$CLI_ENTRIES"
+if grep -E '(^|/)__MACOSX(/|$)' "$ZIP_ENTRIES" >/dev/null; then
+    echo "App archive contains unexpected extended-metadata entries." >&2
+    exit 1
+fi
+if ! tar -tvzf "$CLI_ARCHIVE" \
+    | awk 'NF > 4 && ($3 != "root" || $4 != "wheel") { exit 1 }'; then
+    echo "CLI archive contains local owner or group metadata." >&2
+    exit 1
+fi
 grep -Fx 'SlimLuma.app/Contents/Resources/LICENSE' \
     "$ZIP_ENTRIES" >/dev/null
 grep -Fx 'SlimLuma.app/Contents/Resources/THIRD_PARTY_NOTICES.md' \

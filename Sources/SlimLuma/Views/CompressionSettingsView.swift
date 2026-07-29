@@ -603,7 +603,7 @@ private struct PDFSettingsPanel: View {
                         Spacer()
                         pdfPasswordField(selectedItem)
                     }
-                    Text("密码仅保存在当前队列的内存中，不会写入历史、预设或日志；输出会恢复原 PDF 的加密策略。")
+                    Text("密码仅写入权限受限的临时文件，处理后已清除；输出保留原 PDF 加密策略")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

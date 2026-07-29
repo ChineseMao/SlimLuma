@@ -40,7 +40,7 @@ final class PrinciplesContentTests: XCTestCase {
         XCTAssertEqual(steps.map(\.number), Array(1...5))
         XCTAssertEqual(steps.last?.title, "体积策略与落盘")
         XCTAssertTrue(
-            steps.contains { $0.detail.contains("隐藏临时文件") }
+            steps.contains { $0.detail.contains("隐藏临时") }
         )
         XCTAssertTrue(
             steps.contains { $0.detail.contains("完整性") }

@@ -28,7 +28,7 @@ Suporta imagens, vídeos e PDF comuns, e também é possível arrastar uma pasta
 - **PDF** — qpdf irá reorganizar os fluxos de objetos e recomprimir os dados comprimíveis; Ghostscript também pode reduzir a densidade de pixels, a qualidade ou a complexidade de cores das imagens incorporadas. Os PDF de texto geralmente têm benefícios menores, sendo mais evidentes nos documentos digitalizados.
 - **Tamanho alvo do ficheiro** — A qualidade de SlimLuma será ajustada progressivamente; se necessário, reduzir o tamanho para obter o resultado mais claro e seguro que não ultrapasse o objetivo. O tamanho objetivo precisa de ImageMagick H.264 e HEVC podem executar codificação de software duas vezes para o tamanho alvo, reservando espaço para áudio, legendas e contêiner; AV1 e compressão de áudio separada ainda não suportam volume alvo.
 - **Fila de ficheiros** — Imagens, vídeos e PDF podem ser misturados; a fila permite de 1 a 6 tarefas concorrentes, congelando todas as configurações no início.
-- **Seguro** — O motor profissional apenas grava arquivos temporários ocultos .slimluma no diretório de destino, sem tocar diretamente no original.
+- **Seguro** — Ocultar saída temporária, verificação de integridade de tipo, política de volume e gravação segura que nunca sobrescreve o original.
 - **Guardião de resultados** — Leia novamente de acordo com as regras de integridade da imagem, vídeo ou PDF; se for detectada degradação crítica, recuse a saída.
 - **Automatização** — Entrar directamente na fila de compressão a partir da área de transferência, pasta de monitorização e Finder
 

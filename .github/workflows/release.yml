@@ -1,26 +1,68 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Signed release tag, for example v0.2.1
+        required: true
+        type: string
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag }}
   cancel-in-progress: false
 
 jobs:
   release:
-    if: ${{ vars.SLIMLUMA_AUTOMATED_RELEASE == 'true' }}
+    if: >-
+      ${{
+        github.ref == 'refs/heads/main'
+        && vars.SLIMLUMA_AUTOMATED_RELEASE == 'true'
+      }}
+    permissions:
+      contents: read
+    environment: release
+    outputs:
+      release_commit: ${{ steps.verify_tag.outputs.commit }}
+      release_tag_object: ${{ steps.verify_tag.outputs.tag_object }}
+      release_version: ${{ steps.verify_version.outputs.version }}
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
     runs-on: macos-15
     timeout-minutes: 120
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Verify signed release tag from trusted main
+        id: verify_tag
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+([.][0-9]+){1,3}([+-][A-Za-z0-9.-]+)?$ ]]
+          git fetch --force --no-tags origin \
+            "refs/heads/main:refs/remotes/origin/main"
+          test "$(git rev-parse refs/remotes/origin/main)" = "$GITHUB_SHA"
+          git fetch --force --no-tags origin \
+            "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          git \
+            -c gpg.format=ssh \
+            -c gpg.ssh.allowedSignersFile=.github/release-signers \
+            verify-tag "$RELEASE_TAG"
+          git merge-base --is-ancestor \
+            "${RELEASE_TAG}^{commit}" \
+            "$GITHUB_SHA"
+          echo "tag_object=$(git rev-parse "${RELEASE_TAG}^{tag}")" \
+            >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse "${RELEASE_TAG}^{commit}")" \
+            >> "$GITHUB_OUTPUT"
+          git checkout --detach "$RELEASE_TAG"
 
       - name: Verify source and generated assets
         run: |
@@ -28,26 +70,47 @@ jobs:
           node scripts/generate-github-readmes.mjs --check
           node scripts/validate-github-localizations.mjs
           zsh -n scripts/*.sh
+          scripts/test-release-privacy.sh
           swift test
 
+      - name: Build and verify unsigned Universal products
+        run: |
+          swift build \
+            -c release \
+            --arch arm64 \
+            --arch x86_64 \
+            -debug-info-format none
+          lipo .build/apple/Products/Release/SlimLumaApp \
+            -verify_arch arm64 x86_64
+          lipo .build/apple/Products/Release/slimluma \
+            -verify_arch arm64 x86_64
+          strip -S -x \
+            .build/apple/Products/Release/SlimLumaApp \
+            .build/apple/Products/Release/slimluma
+          scripts/verify-release-privacy.sh \
+            .build/apple/Products/Release/SlimLumaApp \
+            .build/apple/Products/Release/slimluma
+
       - name: Verify tag matches app version
+        id: verify_version
         run: |
           version="$(/usr/libexec/PlistBuddy \
             -c 'Print :CFBundleShortVersionString' Support/Info.plist)"
-          test "$GITHUB_REF_NAME" = "v$version"
+          test "$RELEASE_TAG" = "v$version"
           test "$(
             jq -r '.generatedReleaseNotesVersion' \
               docs/releases/release-state.json
           )" = "$version"
-          test -f "docs/releases/$GITHUB_REF_NAME.md"
-          test -d "docs/releases/$GITHUB_REF_NAME"
+          test -f "docs/releases/$RELEASE_TAG.md"
+          test -d "docs/releases/$RELEASE_TAG"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Refuse to replace an existing release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            echo "Release $GITHUB_REF_NAME already exists; refusing to overwrite it." >&2
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists; refusing to overwrite it." >&2
             exit 1
           fi
 
@@ -84,8 +147,11 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
           KEYCHAIN_PASSWORD: ${{ secrets.RELEASE_KEYCHAIN_PASSWORD }}
         run: |
+          umask 077
           keychain_path="$RUNNER_TEMP/slimluma-release.keychain-db"
           certificate_path="$RUNNER_TEMP/developer-id.p12"
+          echo "RELEASE_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
+          echo "RELEASE_CERTIFICATE_PATH=$certificate_path" >> "$GITHUB_ENV"
           printf '%s' "$CERTIFICATE_BASE64" \
             | base64 --decode > "$certificate_path"
           security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
@@ -93,7 +159,6 @@ jobs:
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
           security import "$certificate_path" \
             -P "$CERTIFICATE_PASSWORD" \
-            -A \
             -t cert \
             -f pkcs12 \
             -k "$keychain_path"
@@ -108,42 +173,42 @@ jobs:
             | awk '/Developer ID Application/ {print $2; exit}')"
           test -n "$identity"
           echo "SLIMLUMA_CODE_SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
-          echo "RELEASE_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
-          echo "RELEASE_CERTIFICATE_PATH=$certificate_path" >> "$GITHUB_ENV"
+          rm -f "$certificate_path"
 
-      - name: Prepare App Store Connect API key
+      - name: Package and sign prebuilt Universal app and CLI
         env:
-          API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
-        run: |
-          api_key_path="$RUNNER_TEMP/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8"
-          printf '%s' "$API_PRIVATE_KEY" > "$api_key_path"
-          chmod 600 "$api_key_path"
-          echo "APPLE_API_PRIVATE_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
-
-      - name: Build and sign Universal app and CLI
+          SLIMLUMA_USE_PREBUILT_RELEASE_PRODUCTS: "1"
         run: scripts/package-app.sh
 
-      - name: Notarize and staple app
+      - name: Notarize app and CLI with an ephemeral API key
         env:
+          API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
-        run: scripts/notarize-release.sh dist/SlimLuma.app
-
-      - name: Notarize CLI
-        env:
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
-        run: scripts/notarize-release.sh dist/slimluma
+        run: |
+          umask 077
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
+          trap 'rm -f "$api_key_path"' EXIT
+          printf '%s' "$API_PRIVATE_KEY" > "$api_key_path"
+          export APPLE_API_PRIVATE_KEY_PATH="$api_key_path"
+          scripts/notarize-release.sh dist/SlimLuma.app
+          scripts/notarize-release.sh dist/slimluma
 
       - name: Create release archives
         run: scripts/create-release-artifacts.sh
 
-      - name: Notarize and staple DMG
+      - name: Notarize DMG with an ephemeral API key
         env:
+          API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          umask 077
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
+          trap 'rm -f "$api_key_path"' EXIT
+          printf '%s' "$API_PRIVATE_KEY" > "$api_key_path"
+          export APPLE_API_PRIVATE_KEY_PATH="$api_key_path"
+          version="${RELEASE_TAG#v}"
           scripts/notarize-release.sh \
             "dist/SlimLuma-$version-macOS-universal.dmg"
           scripts/create-release-artifacts.sh --checksums-only
@@ -153,40 +218,15 @@ jobs:
         run: shasum -a 256 -c SHA256SUMS
 
       - name: Upload workflow artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: SlimLuma-${{ github.ref_name }}
+          name: SlimLuma-${{ inputs.tag }}
           path: |
-            dist/SlimLuma-*-macOS-universal.zip
-            dist/SlimLuma-*-macOS-universal.dmg
-            dist/slimluma-*-macOS-universal.tar.gz
+            dist/SlimLuma-${{ steps.verify_version.outputs.version }}-macOS-universal.zip
+            dist/SlimLuma-${{ steps.verify_version.outputs.version }}-macOS-universal.dmg
+            dist/slimluma-${{ steps.verify_version.outputs.version }}-macOS-universal.tar.gz
             dist/SHA256SUMS
           if-no-files-found: error
-
-      - name: Publish GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          release_notes="docs/releases/$GITHUB_REF_NAME.md"
-          files=(
-            dist/SlimLuma-*-macOS-universal.zip
-            dist/SlimLuma-*-macOS-universal.dmg
-            dist/slimluma-*-macOS-universal.tar.gz
-            dist/SHA256SUMS
-          )
-          if [[ -f "$release_notes" ]]; then
-            gh release create "$GITHUB_REF_NAME" \
-              "${files[@]}" \
-              --verify-tag \
-              --notes-file "$release_notes" \
-              --title "SlimLuma ${GITHUB_REF_NAME#v}"
-          else
-            gh release create "$GITHUB_REF_NAME" \
-              "${files[@]}" \
-              --verify-tag \
-              --generate-notes \
-              --title "SlimLuma ${GITHUB_REF_NAME#v}"
-          fi
 
       - name: Remove temporary release keychain
         if: always()
@@ -194,9 +234,74 @@ jobs:
           if [[ -n "${RELEASE_KEYCHAIN_PATH:-}" ]]; then
             security delete-keychain "$RELEASE_KEYCHAIN_PATH" || true
           fi
-          if [[ -n "${APPLE_API_PRIVATE_KEY_PATH:-}" ]]; then
-            rm -f "$APPLE_API_PRIVATE_KEY_PATH"
-          fi
           if [[ -n "${RELEASE_CERTIFICATE_PATH:-}" ]]; then
             rm -f "$RELEASE_CERTIFICATE_PATH"
           fi
+
+  publish:
+    if: >-
+      ${{
+        github.ref == 'refs/heads/main'
+        && vars.SLIMLUMA_AUTOMATED_RELEASE == 'true'
+      }}
+    needs: release
+    permissions:
+      contents: write
+    environment: release
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      RELEASE_COMMIT: ${{ needs.release.outputs.release_commit }}
+      RELEASE_TAG_OBJECT: ${{ needs.release.outputs.release_tag_object }}
+      RELEASE_VERSION: ${{ needs.release.outputs.release_version }}
+    runs-on: macos-15
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out release notes
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ needs.release.outputs.release_commit }}
+
+      - name: Verify release tag is unchanged
+        run: |
+          git fetch --force --no-tags origin \
+            "refs/heads/main:refs/remotes/origin/main"
+          test "$(git rev-parse refs/remotes/origin/main)" = "$GITHUB_SHA"
+          git fetch --force --no-tags origin \
+            "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          test "$(git rev-parse "${RELEASE_TAG}^{tag}")" \
+            = "$RELEASE_TAG_OBJECT"
+          test "$(git rev-parse "${RELEASE_TAG}^{commit}")" \
+            = "$RELEASE_COMMIT"
+
+      - name: Download verified release artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: SlimLuma-${{ inputs.tag }}
+          path: dist
+
+      - name: Verify downloaded release checksums
+        working-directory: dist
+        run: shasum -a 256 -c SHA256SUMS
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_notes="docs/releases/$RELEASE_TAG.md"
+          files=(
+            "dist/SlimLuma-$RELEASE_VERSION-macOS-universal.zip"
+            "dist/SlimLuma-$RELEASE_VERSION-macOS-universal.dmg"
+            "dist/slimluma-$RELEASE_VERSION-macOS-universal.tar.gz"
+            dist/SHA256SUMS
+          )
+          for file in "${files[@]}"; do
+            test -f "$file"
+          done
+          gh release create "$RELEASE_TAG" \
+            "${files[@]}" \
+            --verify-tag \
+            --notes-file "$release_notes" \
+            --title "SlimLuma ${RELEASE_TAG#v}"

@@ -28,7 +28,7 @@ Compress common image, video, and PDF formats, or drop in entire folders.
 - **PDF** — qpdf reorganizes object streams and recompresses eligible data. Optional Ghostscript processing can reduce embedded-image resolution, quality, or color complexity. Scanned documents usually shrink more than text-first PDFs.
 - **Target File Size** — SlimLuma searches quality levels and, when necessary, dimensions to find the clearest safe image that stays within the target size. Image target size requires ImageMagick. H.264 and HEVC support two-pass target-size encoding with space reserved for audio, subtitles, and the container. AV1 and audio-only target sizing are not currently supported.
 - **File Queue** — Mix images, videos, and PDFs in one queue, run 1–6 jobs concurrently, and freeze the batch settings when processing starts.
-- **Safety** — External engines write to a hidden .slimluma temporary file on the destination volume and never modify the original directly.
+- **Safety** — Hidden temporary output, type integrity check, volume strategy, and secure saving that never overwrites the original.
 - **Result Gatekeeping** — SlimLuma reopens every result with image-, video-, or PDF-specific integrity checks and rejects output when a critical regression is detected.
 - **Automation** — Add work directly from the Clipboard, watched folders, Finder, and Shortcuts.
 

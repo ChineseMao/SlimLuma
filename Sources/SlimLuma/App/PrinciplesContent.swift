@@ -122,7 +122,7 @@ enum PrinciplesCatalog {
         PrincipleProcessStep(
             number: 3,
             title: "生成临时结果",
-            detail: "专业引擎只写入目标目录中的 .slimluma 隐藏临时文件，不直接碰原件。"
+            detail: "隐藏临时输出、类型完整性检查、体积策略和永不覆盖原件的安全落盘。"
         ),
         PrincipleProcessStep(
             number: 4,
@@ -132,7 +132,7 @@ enum PrinciplesCatalog {
         PrincipleProcessStep(
             number: 5,
             title: "体积策略与落盘",
-            detail: "默认丢弃没有变小的结果；通过后原子移动到唯一新文件名并写入本地历史。"
+            detail: "只有通过验收的临时文件才移动到最终路径；失败、取消或安全拦截时会尝试清理临时结果。"
         )
     ]
 
@@ -597,7 +597,7 @@ enum PrinciplesCatalog {
                 ),
                 PrincipleFact(
                     title: "加密文档",
-                    detail: "密码只驻留当前队列内存并通过权限受限的临时文件交给 qpdf；处理前解锁，完成后复制原加密策略并再次解锁验收，临时凭据随后清理。",
+                    detail: "密码仅写入权限受限的临时文件，处理后已清除；输出保留原 PDF 加密策略",
                     symbolName: "lock.doc"
                 )
             ]
@@ -612,7 +612,7 @@ enum PrinciplesCatalog {
             facts: [
                 PrincipleFact(
                     title: "隐藏临时文件",
-                    detail: "引擎先在最终目录写入 .slimluma-UUID 临时文件；不会把原件当作输出，也不直接写最终名称。",
+                    detail: "只有通过验收的临时文件才移动到最终路径；失败、取消或安全拦截时会尝试清理临时结果。",
                     symbolName: "eye.slash"
                 ),
                 PrincipleFact(

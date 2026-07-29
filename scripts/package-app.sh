@@ -88,16 +88,26 @@ ATOMIC_SWAP_TOOL="$STAGE_ROOT/atomic-swap"
 CLI_STAGE="$STAGE_ROOT/slimluma"
 
 cd "$PROJECT_DIR"
-node "scripts/sync-system-localizations.mjs"
-node "scripts/sync-system-localizations.mjs" --check
-swift test
-swift build -c release --arch arm64 --arch x86_64
+if [[ "${SLIMLUMA_USE_PREBUILT_RELEASE_PRODUCTS:-0}" != "1" ]]; then
+    node "scripts/sync-system-localizations.mjs"
+    node "scripts/sync-system-localizations.mjs" --check
+    swift test
+    swift build \
+        -c release \
+        --arch arm64 \
+        --arch x86_64 \
+        -debug-info-format none
+fi
 xcrun swiftc "scripts/atomic-swap.swift" -o "$ATOMIC_SWAP_TOOL"
 
 APP_RELEASE_BINARY="$PROJECT_DIR/.build/apple/Products/Release/SlimLumaApp"
 CLI_RELEASE_BINARY="$PROJECT_DIR/.build/apple/Products/Release/slimluma"
 [[ -x "$APP_RELEASE_BINARY" ]]
 [[ -x "$CLI_RELEASE_BINARY" ]]
+/usr/bin/strip -S -x "$APP_RELEASE_BINARY" "$CLI_RELEASE_BINARY"
+"$PROJECT_DIR/scripts/verify-release-privacy.sh" \
+    "$APP_RELEASE_BINARY" \
+    "$CLI_RELEASE_BINARY"
 if cmp -s "$APP_RELEASE_BINARY" "$CLI_RELEASE_BINARY"; then
     echo "App and CLI release products unexpectedly contain the same binary." >&2
     exit 1
@@ -177,6 +187,8 @@ cp -R \
 swift "scripts/generate-icon.swift" "$ICONSET_DIR"
 iconutil -c icns "$ICONSET_DIR" -o "$CONTENTS_DIR/Resources/AppIcon.icns"
 
+/usr/bin/xattr -cr "$APP_DIR" "$CLI_STAGE"
+
 if [[ "$CODE_SIGN_IDENTITY" == "-" ]]; then
     codesign --force --sign - "$CONTENTS_DIR/MacOS/SlimLuma"
     codesign --force --sign - "$APP_DIR"
@@ -241,6 +253,7 @@ else
     FIRST_PROMOTION_MOVED=true
 fi
 
+/usr/bin/xattr -cr "$FINAL_APP_DIR"
 if ! "$PROJECT_DIR/scripts/verify-packaged-app.sh" "$FINAL_APP_DIR"; then
     if $PROMOTION_SWAPPED; then
         "$ATOMIC_SWAP_TOOL" "$APP_DIR" "$FINAL_APP_DIR"
@@ -253,7 +266,9 @@ if ! "$PROJECT_DIR/scripts/verify-packaged-app.sh" "$FINAL_APP_DIR"; then
 fi
 
 mv -f "$CLI_STAGE" "$FINAL_CLI"
+/usr/bin/xattr -c "$FINAL_CLI"
 codesign --verify --strict "$FINAL_CLI"
+"$PROJECT_DIR/scripts/verify-release-privacy.sh" "$FINAL_CLI"
 
 PROMOTION_VERIFIED=true
 PROMOTION_SWAPPED=false

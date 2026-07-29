@@ -4,3 +4,20 @@ dist/
 xcuserdata/
 DerivedData/
 *.xcuserstate
+
+# Local credentials and signing material must never enter Git.
+.env
+.env.*
+!.env.example
+*.cer
+*.crt
+*.csr
+*.key
+*.mobileprovision
+*.p12
+*.p8
+*.pem
+*.pfx
+*.provisionprofile
+*.xcconfig.local
+Signing.local.xcconfig

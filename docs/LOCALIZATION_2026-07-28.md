@@ -107,7 +107,7 @@ SlimLuma 的功能性国际化已经完整接入产品与发布链路：
 
 ```text
 LocalizationTests: 21 passed, 0 failed
-Full suite:         104 tests, 1 expected skip, 0 failed
+Full suite:         120 tests, 1 expected skip, 0 failed
 Packaged locales:   20
 Source keys:        903 per locale
 Plural keys:        9 per locale

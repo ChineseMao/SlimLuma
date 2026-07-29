@@ -1,5 +1,13 @@
+import Darwin
 import Foundation
 import PDFKit
+
+@_silgen_name("fcntl")
+private func slimLumaFcntlGetPath(
+    _ descriptor: Int32,
+    _ command: Int32,
+    _ buffer: UnsafeMutableRawPointer
+) -> Int32
 
 public final class CompressionCoordinator: @unchecked Sendable {
     private let registry: ToolRegistry
@@ -15,6 +23,7 @@ public final class CompressionCoordinator: @unchecked Sendable {
         self.registry = registry
         self.runner = runner
         self.outputPlanner = outputPlanner
+        outputPlanner.removeStaleTemporaryWorkspaces()
     }
 
     public func compress(
@@ -90,23 +99,21 @@ public final class CompressionCoordinator: @unchecked Sendable {
 
         let originalBytes = try fileSize(at: inputURL)
         try Task.checkCancellation()
-        let destinationURL = try outputPlanner.destinationURL(
+        _ = try outputPlanner.destinationURL(
             for: inputURL,
             kind: kind,
             settings: settings
         )
         try Task.checkCancellation()
-        let temporaryURL = destinationURL
-            .deletingLastPathComponent()
-            .appendingPathComponent(".slimluma-\(UUID().uuidString)")
-            .appendingPathExtension(destinationURL.pathExtension)
+        let temporaryWorkspace = try outputPlanner.temporaryWorkspace(
+            for: inputURL,
+            kind: kind,
+            settings: settings
+        )
+        let temporaryURL = temporaryWorkspace.outputURL
 
-        var intermediateURLs: [URL] = []
         defer {
-            try? FileManager.default.removeItem(at: temporaryURL)
-            for url in intermediateURLs {
-                try? FileManager.default.removeItem(at: url)
-            }
+            try? temporaryWorkspace.remove()
         }
 
         try Task.checkCancellation()
@@ -119,7 +126,6 @@ public final class CompressionCoordinator: @unchecked Sendable {
             videoRuntime: videoRuntime,
             pdfPassword: pdfPassword
         )
-        intermediateURLs = invocation.intermediateURLs
         defer {
             for prefix in invocation.cleanupPrefixes {
                 removeFiles(withPrefix: prefix)
@@ -204,6 +210,12 @@ public final class CompressionCoordinator: @unchecked Sendable {
                 outputURL: temporaryURL
             )
             try Task.checkCancellation()
+        }
+
+        if kind == .pdf {
+            for intermediateURL in invocation.intermediateURLs {
+                try? FileManager.default.removeItem(at: intermediateURL)
+            }
         }
 
         var refinementWarning: String?
@@ -1435,6 +1447,15 @@ private final class FFmpegProgressAccumulator: @unchecked Sendable {
 }
 
 actor OutputFinalizer {
+    private static let stagingPrefix = ".slimluma-finalize-"
+    private static let stagingSuffix = ".stage"
+    private static let markerName = ".staging.lock"
+    private static let payloadName = "payload"
+    private static let markerMagic = Data(
+        "SlimLuma finalization staging v1\n".utf8
+    )
+    private static let staleStagingAge: TimeInterval = 24 * 60 * 60
+
     func finalize(
         temporaryURL: URL,
         inputURL: URL,
@@ -1449,7 +1470,665 @@ actor OutputFinalizer {
             settings: settings
         )
         try Task.checkCancellation()
-        try FileManager.default.moveItem(at: temporaryURL, to: finalURL)
-        return finalURL
+        let finalDirectory = finalURL.deletingLastPathComponent()
+        let directoryDescriptor = try openDirectory(finalDirectory)
+        defer { _ = Darwin.close(directoryDescriptor) }
+        removeStaleStagingFiles(
+            in: finalDirectory,
+            directoryDescriptor: directoryDescriptor
+        )
+
+        let stagingDirectoryName =
+            "\(Self.stagingPrefix)\(UUID().uuidString)\(Self.stagingSuffix)"
+        let stagingDirectoryDescriptor =
+            try createPrivateStagingDirectory(
+                named: stagingDirectoryName,
+                parentDescriptor: directoryDescriptor
+            )
+        var markerDescriptor: Int32 = -1
+        var stagingDescriptor: Int32 = -1
+        var stagingEntryExists = false
+        defer {
+            if stagingDescriptor >= 0 {
+                if stagingEntryExists {
+                    _ = removeEntryIfMatches(
+                        named: Self.payloadName,
+                        directoryDescriptor: stagingDirectoryDescriptor,
+                        descriptor: stagingDescriptor
+                    )
+                }
+                _ = Darwin.close(stagingDescriptor)
+            }
+            if markerDescriptor >= 0 {
+                _ = removeEntryIfMatches(
+                    named: Self.markerName,
+                    directoryDescriptor: stagingDirectoryDescriptor,
+                    descriptor: markerDescriptor
+                )
+                _ = slimLumaFlock(markerDescriptor, LOCK_UN)
+                _ = Darwin.close(markerDescriptor)
+            }
+            _ = synchronizeDirectoryIfSupported(
+                stagingDirectoryDescriptor
+            )
+            _ = removeDirectoryIfMatches(
+                named: stagingDirectoryName,
+                parentDescriptor: directoryDescriptor,
+                descriptor: stagingDirectoryDescriptor
+            )
+            _ = synchronizeDirectoryIfSupported(directoryDescriptor)
+            _ = Darwin.close(stagingDirectoryDescriptor)
+        }
+        try synchronizeDirectory(directoryDescriptor)
+        markerDescriptor = try createAndLockMarker(
+            named: Self.markerName,
+            directoryDescriptor: stagingDirectoryDescriptor
+        )
+        try synchronizeDirectory(stagingDirectoryDescriptor)
+        stagingDescriptor = try createStagingFile(
+            named: Self.payloadName,
+            directoryDescriptor: stagingDirectoryDescriptor
+        )
+        stagingEntryExists = true
+        try synchronizeDirectory(stagingDirectoryDescriptor)
+
+        // The private workspace can live on a different volume from the
+        // selected output directory. Copy into a locked hidden sibling first,
+        // then use a same-directory rename so a failed or cancelled copy never
+        // exposes a partial final file.
+        let finalPermissions = try copyAndSynchronize(
+            from: temporaryURL,
+            to: stagingDescriptor
+        )
+        try synchronizeDirectory(directoryDescriptor)
+        try Task.checkCancellation()
+
+        guard entryMatches(
+            named: Self.payloadName,
+            directoryDescriptor: stagingDirectoryDescriptor,
+            descriptor: stagingDescriptor
+        ) else {
+            throw CompressionError.outputInvalid(
+                "输出目录中的暂存结果已被替换"
+            )
+        }
+        let renameResult = Darwin.renameatx_np(
+            stagingDirectoryDescriptor,
+            Self.payloadName,
+            directoryDescriptor,
+            finalURL.lastPathComponent,
+            UInt32(RENAME_EXCL)
+        )
+        guard renameResult == 0 else {
+            throw CompressionError.outputInvalid(
+                "无法原子保存最终结果"
+            )
+        }
+        stagingEntryExists = false
+
+        guard entryMatches(
+            named: finalURL.lastPathComponent,
+            directoryDescriptor: directoryDescriptor,
+            descriptor: stagingDescriptor
+        ) else {
+            throw CompressionError.outputInvalid(
+                "最终结果在保存时被替换"
+            )
+        }
+        do {
+            guard Darwin.fchmod(
+                stagingDescriptor,
+                finalPermissions
+            ) == 0,
+            Darwin.fsync(stagingDescriptor) == 0 else {
+                throw CompressionError.outputInvalid(
+                    "无法同步最终结果的权限"
+                )
+            }
+            try synchronizeDirectory(directoryDescriptor)
+        } catch {
+            _ = removeEntryIfMatches(
+                named: finalURL.lastPathComponent,
+                directoryDescriptor: directoryDescriptor,
+                descriptor: stagingDescriptor
+            )
+            _ = synchronizeDirectoryIfSupported(directoryDescriptor)
+            throw error
+        }
+        try? FileManager.default.removeItem(at: temporaryURL)
+        let currentDirectory = try currentDirectoryURL(
+            directoryDescriptor,
+            expectedURL: finalDirectory
+        )
+        return currentDirectory.appendingPathComponent(
+            finalURL.lastPathComponent
+        )
+    }
+
+    private func openDirectory(_ directory: URL) throws -> Int32 {
+        let descriptor = Darwin.open(
+            directory.path,
+            O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW
+        )
+        guard descriptor >= 0 else {
+            throw CompressionError.outputInvalid(
+                "无法打开输出目录以完成安全保存"
+            )
+        }
+        return descriptor
+    }
+
+    private func createPrivateStagingDirectory(
+        named name: String,
+        parentDescriptor: Int32
+    ) throws -> Int32 {
+        guard Darwin.mkdirat(
+            parentDescriptor,
+            name,
+            mode_t(0o700)
+        ) == 0 else {
+            throw CompressionError.outputInvalid(
+                "无法在输出目录创建私有暂存目录"
+            )
+        }
+        let descriptor = Darwin.openat(
+            parentDescriptor,
+            name,
+            O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW
+        )
+        guard descriptor >= 0 else {
+            _ = Darwin.unlinkat(
+                parentDescriptor,
+                name,
+                AT_REMOVEDIR
+            )
+            throw CompressionError.outputInvalid(
+                "无法打开输出目录中的私有暂存目录"
+            )
+        }
+        guard Darwin.fchmod(descriptor, mode_t(0o700)) == 0 else {
+            _ = Darwin.close(descriptor)
+            _ = Darwin.unlinkat(
+                parentDescriptor,
+                name,
+                AT_REMOVEDIR
+            )
+            throw CompressionError.outputInvalid(
+                "无法限制输出暂存目录权限"
+            )
+        }
+        return descriptor
+    }
+
+    private func createAndLockMarker(
+        named name: String,
+        directoryDescriptor: Int32
+    ) throws -> Int32 {
+        let descriptor = Darwin.openat(
+            directoryDescriptor,
+            name,
+            O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC | O_NOFOLLOW,
+            mode_t(0o600)
+        )
+        guard descriptor >= 0 else {
+            throw CompressionError.outputInvalid(
+                "无法在输出目录创建安全暂存标记"
+            )
+        }
+        var shouldRemove = true
+        defer {
+            if shouldRemove {
+                _ = Darwin.unlinkat(directoryDescriptor, name, 0)
+            }
+        }
+        guard slimLumaFlock(descriptor, LOCK_EX | LOCK_NB) == 0 else {
+            _ = Darwin.close(descriptor)
+            throw CompressionError.outputInvalid(
+                "无法锁定输出目录的安全暂存标记"
+            )
+        }
+
+        let written = Self.markerMagic.withUnsafeBytes { bytes in
+            Darwin.write(descriptor, bytes.baseAddress, bytes.count)
+        }
+        guard written == Self.markerMagic.count,
+              Darwin.fsync(descriptor) == 0 else {
+            _ = slimLumaFlock(descriptor, LOCK_UN)
+            _ = Darwin.close(descriptor)
+            throw CompressionError.outputInvalid(
+                "无法初始化输出目录的安全暂存标记"
+            )
+        }
+        shouldRemove = false
+        return descriptor
+    }
+
+    private func createStagingFile(
+        named name: String,
+        directoryDescriptor: Int32
+    ) throws -> Int32 {
+        let descriptor = Darwin.openat(
+            directoryDescriptor,
+            name,
+            O_RDWR | O_CREAT | O_EXCL | O_CLOEXEC | O_NOFOLLOW,
+            mode_t(0o600)
+        )
+        guard descriptor >= 0 else {
+            throw CompressionError.outputInvalid(
+                "无法在输出目录创建安全暂存文件"
+            )
+        }
+        return descriptor
+    }
+
+    private func copyAndSynchronize(
+        from sourceURL: URL,
+        to destinationDescriptor: Int32
+    ) throws -> mode_t {
+        let sourceDescriptor = Darwin.open(
+            sourceURL.path,
+            O_RDONLY | O_CLOEXEC | O_NOFOLLOW
+        )
+        guard sourceDescriptor >= 0 else {
+            throw CompressionError.outputInvalid(
+                "无法读取已通过验收的临时结果"
+            )
+        }
+        defer { _ = Darwin.close(sourceDescriptor) }
+
+        var sourceStatus = stat()
+        guard Darwin.fstat(sourceDescriptor, &sourceStatus) == 0,
+              (sourceStatus.st_mode & mode_t(S_IFMT))
+                == mode_t(S_IFREG) else {
+            throw CompressionError.outputInvalid(
+                "已通过验收的临时结果不是普通文件"
+            )
+        }
+        guard Darwin.fcopyfile(
+            sourceDescriptor,
+            destinationDescriptor,
+            nil,
+            copyfile_flags_t(COPYFILE_DATA)
+        ) == 0 else {
+            throw CompressionError.outputInvalid(
+                "复制到输出磁盘失败"
+            )
+        }
+
+        guard Darwin.fsync(destinationDescriptor) == 0 else {
+            throw CompressionError.outputInvalid(
+                "无法同步输出磁盘上的暂存结果"
+            )
+        }
+
+        var destinationStatus = stat()
+        guard Darwin.fstat(destinationDescriptor, &destinationStatus) == 0,
+              destinationStatus.st_size == sourceStatus.st_size else {
+            throw CompressionError.outputInvalid(
+                "复制到输出磁盘时文件大小不一致"
+            )
+        }
+
+        let requestedPermissions =
+            sourceStatus.st_mode & mode_t(0o666)
+        return requestedPermissions == 0
+            ? mode_t(0o600)
+            : requestedPermissions
+    }
+
+    private func synchronizeDirectory(_ descriptor: Int32) throws {
+        guard Darwin.fsync(descriptor) == 0 else {
+            let syncError = errno
+            if syncError == EINVAL || syncError == ENOTSUP {
+                return
+            }
+            throw CompressionError.outputInvalid(
+                "无法同步输出目录"
+            )
+        }
+    }
+
+    private func synchronizeDirectoryIfSupported(
+        _ descriptor: Int32
+    ) -> Bool {
+        do {
+            try synchronizeDirectory(descriptor)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    private func removeStaleStagingFiles(
+        in directory: URL,
+        directoryDescriptor: Int32,
+        now: Date = Date()
+    ) {
+        guard let children = try? FileManager.default.contentsOfDirectory(
+            atPath: directory.path
+        ) else {
+            return
+        }
+        let cutoff = now.addingTimeInterval(-Self.staleStagingAge)
+        for stagingDirectoryName in children {
+            guard isStagingDirectoryName(stagingDirectoryName) else {
+                continue
+            }
+
+            let stagingDirectoryDescriptor = Darwin.openat(
+                directoryDescriptor,
+                stagingDirectoryName,
+                O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW
+            )
+            guard stagingDirectoryDescriptor >= 0 else {
+                continue
+            }
+            defer { _ = Darwin.close(stagingDirectoryDescriptor) }
+
+            var stagingDirectoryStatus = stat()
+            guard Darwin.fstat(
+                stagingDirectoryDescriptor,
+                &stagingDirectoryStatus
+            ) == 0,
+            (stagingDirectoryStatus.st_mode & mode_t(S_IFMT))
+                == mode_t(S_IFDIR),
+            stagingDirectoryStatus.st_uid == Darwin.getuid(),
+            modificationDate(stagingDirectoryStatus) < cutoff,
+            entryMatches(
+                named: stagingDirectoryName,
+                directoryDescriptor: directoryDescriptor,
+                descriptor: stagingDirectoryDescriptor
+            ) else {
+                continue
+            }
+
+            let markerDescriptor = Darwin.openat(
+                stagingDirectoryDescriptor,
+                Self.markerName,
+                O_RDONLY | O_CLOEXEC | O_NOFOLLOW
+            )
+            guard markerDescriptor >= 0 else {
+                continue
+            }
+            defer { _ = Darwin.close(markerDescriptor) }
+
+            var markerStatus = stat()
+            guard Darwin.fstat(
+                markerDescriptor,
+                &markerStatus
+            ) == 0,
+            (markerStatus.st_mode & mode_t(S_IFMT))
+                == mode_t(S_IFREG),
+            markerStatus.st_uid == Darwin.getuid(),
+            markerMatches(markerDescriptor),
+            slimLumaFlock(
+                markerDescriptor,
+                LOCK_EX | LOCK_NB
+            ) == 0 else {
+                continue
+            }
+            defer {
+                _ = slimLumaFlock(markerDescriptor, LOCK_UN)
+            }
+
+            guard entryMatches(
+                named: Self.markerName,
+                directoryDescriptor: stagingDirectoryDescriptor,
+                descriptor: markerDescriptor
+            ),
+            directoryHasOnlyOwnedStagingEntries(
+                directory,
+                stagingDirectoryName: stagingDirectoryName,
+                stagingDirectoryDescriptor: stagingDirectoryDescriptor,
+                parentDescriptor: directoryDescriptor
+            ) else {
+                continue
+            }
+
+            let payloadDescriptor = Darwin.openat(
+                stagingDirectoryDescriptor,
+                Self.payloadName,
+                O_RDONLY | O_CLOEXEC | O_NOFOLLOW
+            )
+            if payloadDescriptor >= 0 {
+                defer { _ = Darwin.close(payloadDescriptor) }
+                var payloadStatus = stat()
+                guard Darwin.fstat(
+                    payloadDescriptor,
+                    &payloadStatus
+                ) == 0,
+                (payloadStatus.st_mode & mode_t(S_IFMT))
+                    == mode_t(S_IFREG),
+                payloadStatus.st_uid == Darwin.getuid(),
+                removeEntryIfMatches(
+                    named: Self.payloadName,
+                    directoryDescriptor: stagingDirectoryDescriptor,
+                    descriptor: payloadDescriptor
+                ) else {
+                    continue
+                }
+            } else if errno != ENOENT {
+                continue
+            }
+
+            guard removeEntryIfMatches(
+                named: Self.markerName,
+                directoryDescriptor: stagingDirectoryDescriptor,
+                descriptor: markerDescriptor
+            ) else {
+                continue
+            }
+            _ = synchronizeDirectoryIfSupported(
+                stagingDirectoryDescriptor
+            )
+            guard removeDirectoryIfMatches(
+                named: stagingDirectoryName,
+                parentDescriptor: directoryDescriptor,
+                descriptor: stagingDirectoryDescriptor
+            ) else {
+                continue
+            }
+            _ = synchronizeDirectoryIfSupported(directoryDescriptor)
+        }
+    }
+
+    private func isStagingDirectoryName(_ name: String) -> Bool {
+        guard name.hasPrefix(Self.stagingPrefix),
+              name.hasSuffix(Self.stagingSuffix) else {
+            return false
+        }
+        let identifierStart = name.index(
+            name.startIndex,
+            offsetBy: Self.stagingPrefix.count
+        )
+        let identifierEnd = name.index(
+            name.endIndex,
+            offsetBy: -Self.stagingSuffix.count
+        )
+        let identifier = String(
+            name[identifierStart..<identifierEnd]
+        )
+        return UUID(uuidString: identifier) != nil
+    }
+
+    private func directoryHasOnlyOwnedStagingEntries(
+        _ parentDirectory: URL,
+        stagingDirectoryName: String,
+        stagingDirectoryDescriptor: Int32,
+        parentDescriptor: Int32
+    ) -> Bool {
+        let stagingDirectoryURL = parentDirectory.appendingPathComponent(
+            stagingDirectoryName,
+            isDirectory: true
+        )
+        guard let names = try? FileManager.default.contentsOfDirectory(
+            atPath: stagingDirectoryURL.path
+        ),
+        Set(names).isSubset(
+            of: [Self.markerName, Self.payloadName]
+        ),
+        entryMatches(
+            named: stagingDirectoryName,
+            directoryDescriptor: parentDescriptor,
+            descriptor: stagingDirectoryDescriptor
+        ) else {
+            return false
+        }
+        return true
+    }
+
+    private func markerMatches(_ descriptor: Int32) -> Bool {
+        var markerStatus = stat()
+        guard Darwin.fstat(descriptor, &markerStatus) == 0,
+              markerStatus.st_size == off_t(Self.markerMagic.count) else {
+            return false
+        }
+        var buffer = [UInt8](
+            repeating: 0,
+            count: Self.markerMagic.count
+        )
+        let bytesRead = buffer.withUnsafeMutableBytes { bytes in
+            Darwin.pread(
+                descriptor,
+                bytes.baseAddress,
+                bytes.count,
+                0
+            )
+        }
+        return bytesRead == Self.markerMagic.count
+            && Data(buffer) == Self.markerMagic
+    }
+
+    private func modificationDate(_ status: stat) -> Date {
+        Date(
+            timeIntervalSince1970:
+                TimeInterval(status.st_mtimespec.tv_sec)
+                + TimeInterval(status.st_mtimespec.tv_nsec)
+                    / 1_000_000_000
+        )
+    }
+
+    private func currentDirectoryURL(
+        _ descriptor: Int32,
+        expectedURL: URL
+    ) throws -> URL {
+        var buffer = [CChar](
+            repeating: 0,
+            count: Int(MAXPATHLEN)
+        )
+        let result = buffer.withUnsafeMutableBufferPointer { pointer in
+            guard let baseAddress = pointer.baseAddress else {
+                return Int32(-1)
+            }
+            return slimLumaFcntlGetPath(
+                descriptor,
+                F_GETPATH,
+                UnsafeMutableRawPointer(baseAddress)
+            )
+        }
+        if result == 0 {
+            return URL(
+                fileURLWithPath: String(cString: buffer),
+                isDirectory: true
+            )
+        }
+
+        let expectedDescriptor = Darwin.open(
+            expectedURL.path,
+            O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW
+        )
+        if expectedDescriptor >= 0 {
+            defer { _ = Darwin.close(expectedDescriptor) }
+            if descriptorsMatch(
+                descriptor,
+                expectedDescriptor
+            ) {
+                return expectedURL
+            }
+        }
+        throw CompressionError.outputInvalid(
+            "输出目录在保存期间被移动，无法确认最终路径"
+        )
+    }
+
+    private func descriptorsMatch(
+        _ first: Int32,
+        _ second: Int32
+    ) -> Bool {
+        var firstStatus = stat()
+        var secondStatus = stat()
+        guard Darwin.fstat(first, &firstStatus) == 0,
+              Darwin.fstat(second, &secondStatus) == 0 else {
+            return false
+        }
+        return firstStatus.st_dev == secondStatus.st_dev
+            && firstStatus.st_ino == secondStatus.st_ino
+            && (firstStatus.st_mode & mode_t(S_IFMT))
+                == (secondStatus.st_mode & mode_t(S_IFMT))
+    }
+
+    private func entryMatches(
+        named name: String,
+        directoryDescriptor: Int32,
+        descriptor: Int32
+    ) -> Bool {
+        var descriptorStatus = stat()
+        var entryStatus = stat()
+        guard Darwin.fstat(
+            descriptor,
+            &descriptorStatus
+        ) == 0,
+        Darwin.fstatat(
+            directoryDescriptor,
+            name,
+            &entryStatus,
+            AT_SYMLINK_NOFOLLOW
+        ) == 0 else {
+            return false
+        }
+        return descriptorStatus.st_dev == entryStatus.st_dev
+            && descriptorStatus.st_ino == entryStatus.st_ino
+            && (descriptorStatus.st_mode & mode_t(S_IFMT))
+                == (entryStatus.st_mode & mode_t(S_IFMT))
+    }
+
+    @discardableResult
+    private func removeDirectoryIfMatches(
+        named name: String,
+        parentDescriptor: Int32,
+        descriptor: Int32
+    ) -> Bool {
+        guard entryMatches(
+            named: name,
+            directoryDescriptor: parentDescriptor,
+            descriptor: descriptor
+        ) else {
+            return false
+        }
+        return Darwin.unlinkat(
+            parentDescriptor,
+            name,
+            AT_REMOVEDIR
+        ) == 0
+    }
+
+    @discardableResult
+    private func removeEntryIfMatches(
+        named name: String,
+        directoryDescriptor: Int32,
+        descriptor: Int32
+    ) -> Bool {
+        guard entryMatches(
+            named: name,
+            directoryDescriptor: directoryDescriptor,
+            descriptor: descriptor
+        ) else {
+            return false
+        }
+        return Darwin.unlinkat(
+            directoryDescriptor,
+            name,
+            0
+        ) == 0
     }
 }
