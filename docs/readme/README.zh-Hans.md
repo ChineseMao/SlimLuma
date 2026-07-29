@@ -8,8 +8,10 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <strong><a href="../../README.zh-CN.md">简体中文</a></strong> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!CAUTION]
-> **[公开安装包暂时下架，隐私安全的替代版本正在公证。请在 Releases 查看下一个通过验证的版本。](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[⬇ 从 GitHub Releases 下载适用于 macOS 的 Universal 版本。](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 > [源代码仅公开供审阅。保留所有权利。请参阅 LICENSE。](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
@@ -30,7 +32,9 @@
 
 ## 安装
 
-[公开安装包暂时下架，隐私安全的替代版本正在公证。请在 Releases 查看下一个通过验证的版本。](https://github.com/ChineseMao/SlimLuma/releases)
+1. [从 GitHub Releases 下载适用于 macOS 的 Universal 版本。](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)
+2. 将 SlimLuma.app 移到“应用程序”文件夹。
+3. 打开“引擎与设置”并选择“一键补齐推荐引擎”。
 
 SlimLuma 使用 Homebrew 安装 ImageMagick、FFmpeg、qpdf 与 Ghostscript；媒体文件始终留在这台 Mac。
 

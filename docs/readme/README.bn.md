@@ -8,8 +8,10 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <strong><a href="README.bn.md">বাংলা</a></strong> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!CAUTION]
-> **[গোপনীয়তা-নিরাপদ বিকল্পটি নোটারাইজ হওয়ার সময় পাবলিক ইনস্টলার সাময়িকভাবে অনুপলব্ধ। পরবর্তী যাচাইকৃত বিল্ডের জন্য Releases দেখুন।](https://github.com/ChineseMao/SlimLuma/releases)**
+> [!IMPORTANT]
+> **[⬇ GitHub Releases থেকে macOS এর জন্য Universal সংস্করণ ডাউনলোড করুন।](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)**
+>
+> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
 > [সোর্স কোড শুধুমাত্র পর্যালোচনার জন্য দৃশ্যমান। সর্বস্বত্ব সংরক্ষিত। LICENSE দেখুন।](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
@@ -30,7 +32,9 @@
 
 ## ইনস্টলেশন
 
-[গোপনীয়তা-নিরাপদ বিকল্পটি নোটারাইজ হওয়ার সময় পাবলিক ইনস্টলার সাময়িকভাবে অনুপলব্ধ। পরবর্তী যাচাইকৃত বিল্ডের জন্য Releases দেখুন।](https://github.com/ChineseMao/SlimLuma/releases)
+1. [GitHub Releases থেকে macOS এর জন্য Universal সংস্করণ ডাউনলোড করুন।](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.dmg)
+2. SlimLuma.app "অ্যাপ্লিকেশন" ফোল্ডারে স্থানান্তর করুন।
+3. "ইঞ্জিন এবং সেটিংস" খুলুন এবং "এক-ক্লিক সুপারিশ ইঞ্জিন" নির্বাচন করুন।
 
 SlimLuma Homebrew ব্যবহার করে ImageMagick, FFmpeg, qpdf এবং Ghostscript ইনস্টল করে; মিডিয়া ফাইল সবসময় এই ম্যাকে থাকে।
 
