@@ -8,13 +8,9 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <strong><a href="README.zh-Hant.md">繁體中文</a></strong> · <a href="README.hi.md">हिन्दी</a> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!IMPORTANT]
-> **[⬇ 從 GitHub Releases 下載適用於 macOS 的 Universal 版本。](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[公開安裝程式暫時下架，隱私安全的替代版本正在公證。請在 Releases 查看下一個通過驗證的版本。](https://github.com/ChineseMao/SlimLuma/releases)**
 
-> **SlimLuma copyright holders (PRIVATE_TEAM_ID)**
->
 > [原始碼僅公開供審閱。保留所有權利。請參閱 LICENSE。](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
 > 本地媒體瘦身工具
@@ -34,9 +30,7 @@
 
 ## 安裝
 
-1. [從 GitHub Releases 下載適用於 macOS 的 Universal 版本。](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)
-2. 將 SlimLuma.app 移到“應用程序”文件夾。
-3. 打開“引擎與設置”並選擇“一鍵補齊推薦引擎”。
+[公開安裝程式暫時下架，隱私安全的替代版本正在公證。請在 Releases 查看下一個通過驗證的版本。](https://github.com/ChineseMao/SlimLuma/releases)
 
 SlimLuma 使用 Homebrew 安裝 ImageMagick、FFmpeg、qpdf 與 Ghostscript；媒體檔案始終保留在這台 Mac。
 

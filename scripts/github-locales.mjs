@@ -146,6 +146,29 @@ export const githubReleaseLicenseNotices = Object.freeze({
   pcm: "SlimLuma 0.2.0 source code bin release under MIT License. Di LICENSE wey dem pin to this release tag na im govern am.",
 });
 
+export const githubDownloadNotices = Object.freeze({
+  en: "Public installers are temporarily unavailable while a privacy-safe replacement is being notarized. Check Releases for the next verified build.",
+  "zh-Hans": "公开安装包暂时下架，隐私安全的替代版本正在公证。请在 Releases 查看下一个通过验证的版本。",
+  "zh-Hant": "公開安裝程式暫時下架，隱私安全的替代版本正在公證。請在 Releases 查看下一個通過驗證的版本。",
+  hi: "गोपनीयता-सुरक्षित प्रतिस्थापन के नोटरीकरण के दौरान सार्वजनिक इंस्टॉलर अस्थायी रूप से उपलब्ध नहीं हैं। अगला सत्यापित बिल्ड Releases में देखें।",
+  "es-419": "Los instaladores públicos no están disponibles temporalmente mientras se certifica un reemplazo seguro para la privacidad. Consulta Releases para ver la próxima compilación verificada.",
+  "es-ES": "Los instaladores públicos no están disponibles temporalmente mientras se notariza un reemplazo seguro para la privacidad. Consulta Releases para ver la próxima compilación verificada.",
+  ar: "المثبتات العامة غير متاحة مؤقتًا أثناء توثيق بديل يحمي الخصوصية. راجع Releases للحصول على الإصدار التالي الذي تم التحقق منه.",
+  fr: "Les installateurs publics sont temporairement indisponibles pendant la notarisation d’une version de remplacement respectueuse de la vie privée. Consultez Releases pour la prochaine version vérifiée.",
+  bn: "গোপনীয়তা-নিরাপদ বিকল্পটি নোটারাইজ হওয়ার সময় পাবলিক ইনস্টলার সাময়িকভাবে অনুপলব্ধ। পরবর্তী যাচাইকৃত বিল্ডের জন্য Releases দেখুন।",
+  "pt-BR": "Os instaladores públicos estão temporariamente indisponíveis enquanto uma versão substituta com privacidade protegida é notarizada. Consulte Releases para a próxima compilação verificada.",
+  "pt-PT": "Os instaladores públicos estão temporariamente indisponíveis enquanto uma versão substituta com privacidade protegida é notarizada. Consulte Releases para a próxima compilação verificada.",
+  id: "Penginstal publik sementara tidak tersedia selama pengganti yang aman bagi privasi dinotarisasi. Periksa Releases untuk build terverifikasi berikutnya.",
+  ur: "رازداری کے لیے محفوظ متبادل کی نوٹرائزیشن کے دوران عوامی انسٹالر عارضی طور پر دستیاب نہیں ہیں۔ اگلی تصدیق شدہ بلڈ کے لیے Releases دیکھیں۔",
+  ru: "Публичные установщики временно недоступны, пока проходит нотариальная проверка версии без утечки приватных данных. Следующая проверенная сборка появится в Releases.",
+  de: "Öffentliche Installationspakete sind vorübergehend nicht verfügbar, während ein datenschutzsicherer Ersatz notarisiert wird. Die nächste geprüfte Version finden Sie unter Releases.",
+  ja: "プライバシーに配慮した代替版の公証中のため、公開インストーラは一時的に利用できません。次の検証済みビルドは Releases で確認してください。",
+  sw: "Visakinishi vya umma havipatikani kwa muda wakati toleo mbadala linalolinda faragha linathibitishwa na Apple. Angalia Releases kwa build inayofuata iliyothibitishwa.",
+  "pa-Arab": "پرائیویسی محفوظ متبادل دی notarization دوران عوامی installer عارضی طور تے دستیاب نئیں۔ اگلی تصدیق شدہ build لئی Releases ویکھو۔",
+  te: "గోప్యతకు సురక్షితమైన ప్రత్యామ్నాయాన్ని నోటరైజ్ చేస్తున్నప్పుడు పబ్లిక్ ఇన్‌స్టాలర్లు తాత్కాలికంగా అందుబాటులో ఉండవు. తదుపరి ధృవీకరించిన build కోసం Releases చూడండి.",
+  pcm: "Public installer no dey available for now while dem dey notarize replacement wey protect privacy. Check Releases for di next verified build.",
+});
+
 export const githubLocaleCodes = Object.freeze(
   githubLocales.map(({ locale }) => locale),
 );

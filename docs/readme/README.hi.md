@@ -8,13 +8,9 @@
 
 <p dir="auto"><a href="../../README.md">English</a> · <a href="../../README.zh-CN.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a> · <strong><a href="README.hi.md">हिन्दी</a></strong> · <a href="README.es-419.md">Español (Latinoamérica)</a> · <a href="README.es-ES.md">Español (España)</a> · <a href="README.ar.md">العربية</a> · <a href="README.fr.md">Français</a> · <a href="README.bn.md">বাংলা</a> · <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="README.pt-PT.md">Português (Portugal)</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ur.md">اردو</a> · <a href="README.ru.md">Русский</a> · <a href="README.de.md">Deutsch</a> · <a href="README.ja.md">日本語</a> · <a href="README.sw.md">Kiswahili</a> · <a href="README.pa-Arab.md">پنجابی</a> · <a href="README.te.md">తెలుగు</a> · <a href="README.pcm.md">Naijá</a></p>
 
-> [!IMPORTANT]
-> **[⬇ GitHub Releases से macOS के लिए Universal संस्करण डाउनलोड करें।](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)**
->
-> Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/slimluma-0.2.0-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SHA256SUMS)
+> [!CAUTION]
+> **[गोपनीयता-सुरक्षित प्रतिस्थापन के नोटरीकरण के दौरान सार्वजनिक इंस्टॉलर अस्थायी रूप से उपलब्ध नहीं हैं। अगला सत्यापित बिल्ड Releases में देखें।](https://github.com/ChineseMao/SlimLuma/releases)**
 
-> **SlimLuma copyright holders (PRIVATE_TEAM_ID)**
->
 > [स्रोत कोड केवल समीक्षा के लिए दृश्यमान है। सर्वाधिकार सुरक्षित। LICENSE देखें।](https://github.com/ChineseMao/SlimLuma/blob/main/LICENSE)
 
 > स्थानीय मीडिया साइज कम करने का टूल
@@ -34,9 +30,7 @@
 
 ## स्थापना
 
-1. [GitHub Releases से macOS के लिए Universal संस्करण डाउनलोड करें।](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.0/SlimLuma-0.2.0-macOS-universal.dmg)
-2. SlimLuma.app को “Applications” फ़ोल्डर में ले जाएँ।
-3. “इंजन और सेटिंग्स” खोलें और “वन-क्लिक रिकमेंडेड इंजन” चुनें।
+[गोपनीयता-सुरक्षित प्रतिस्थापन के नोटरीकरण के दौरान सार्वजनिक इंस्टॉलर अस्थायी रूप से उपलब्ध नहीं हैं। अगला सत्यापित बिल्ड Releases में देखें।](https://github.com/ChineseMao/SlimLuma/releases)
 
 SlimLuma Homebrew का उपयोग करके ImageMagick、FFmpeg、qpdf और Ghostscript को इंस्टॉल करता है; मीडिया फाइलें हमेशा इसी Mac में रहती हैं।
 

@@ -6,8 +6,7 @@ DIST_DIR="$PROJECT_DIR/dist"
 FINAL_APP_DIR="$DIST_DIR/SlimLuma.app"
 FINAL_CLI="$DIST_DIR/slimluma"
 CODE_SIGN_IDENTITY="${SLIMLUMA_CODE_SIGN_IDENTITY:--}"
-EXPECTED_DEVELOPER_ID_AUTHORITY="Developer ID Application: private release identity"
-EXPECTED_TEAM_ID="PRIVATE_TEAM_ID"
+source "$PROJECT_DIR/scripts/release-identity.sh"
 APP_VERSION="$(
     /usr/libexec/PlistBuddy \
         -c 'Print :CFBundleShortVersionString' \
@@ -199,6 +198,7 @@ if [[ "$CODE_SIGN_IDENTITY" == "-" ]]; then
     codesign --force --sign - "$APP_DIR"
     codesign --force --sign - "$CLI_STAGE"
 else
+    slimluma_require_private_identity_config
     codesign \
         --force \
         --options runtime \
@@ -221,15 +221,7 @@ else
 fi
 codesign --verify --strict "$CLI_STAGE"
 if [[ "$CODE_SIGN_IDENTITY" != "-" ]]; then
-    CLI_SIGNATURE_DETAILS="$(codesign -dvvv "$CLI_STAGE" 2>&1)"
-    if [[ "$CLI_SIGNATURE_DETAILS" != *"Authority=$EXPECTED_DEVELOPER_ID_AUTHORITY"* ]]; then
-        echo "Release CLI signing authority does not match the long-term publisher." >&2
-        exit 1
-    fi
-    if [[ "$CLI_SIGNATURE_DETAILS" != *"TeamIdentifier=$EXPECTED_TEAM_ID"* ]]; then
-        echo "Release CLI TeamIdentifier does not match $EXPECTED_TEAM_ID." >&2
-        exit 1
-    fi
+    slimluma_verify_developer_id_signature "$CLI_STAGE" true
 fi
 for required_architecture in arm64 x86_64; do
     if [[ " $(lipo -archs "$CLI_STAGE") " != *" $required_architecture "* ]]; then

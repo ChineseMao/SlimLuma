@@ -42,7 +42,7 @@
     <key>CFBundleName</key>
     <string>SlimLuma</string>
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by SlimLuma copyright holders</string>
+    <string>Copyright © 2026 SlimLuma copyright holders. All rights reserved.</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

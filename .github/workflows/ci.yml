@@ -56,6 +56,8 @@ jobs:
         run: |
           zsh -n scripts/*.sh
           scripts/test-release-privacy.sh
+          scripts/test-release-identity.sh
+          scripts/verify-repository-privacy.sh
 
       - name: Reject stale localization key manifests
         run: |

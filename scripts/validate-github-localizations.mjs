@@ -10,6 +10,7 @@ import {
 import { dirname, join, relative, resolve, sep } from "node:path";
 import {
   generatedReadmePath,
+  githubDownloadNotices,
   githubLicenseNotices,
   githubLocaleCodes,
   githubLocales,
@@ -19,10 +20,8 @@ import {
 const projectRoot = resolve(import.meta.dirname, "..");
 const failures = [];
 const repositoryURL = "https://github.com/ChineseMao/SlimLuma";
-const publisherName = "SlimLuma copyright holders";
-const publisherTeamID = "PRIVATE_TEAM_ID";
 const expectedCopyright =
-  `Copyright © 2026 SlimLuma copyright holders. All rights reserved. Published by ${publisherName}`;
+  "Copyright © 2026 SlimLuma copyright holders. All rights reserved.";
 
 function fail(message) {
   failures.push(message);
@@ -57,6 +56,8 @@ const releaseState = JSON.parse(
 );
 const latestPublishedVersion = releaseState.latestPublishedVersion;
 const releaseNotesVersion = releaseState.generatedReleaseNotesVersion;
+const latestPublishedDownloadsAvailable =
+  releaseState.latestPublishedDownloadsAvailable;
 for (const [name, value] of Object.entries({
   latestPublishedVersion,
   generatedReleaseNotesVersion: releaseNotesVersion,
@@ -68,8 +69,11 @@ for (const [name, value] of Object.entries({
 if (version === latestPublishedVersion) {
   fail("Development version must not reuse the latest published version");
 }
+if (typeof latestPublishedDownloadsAvailable !== "boolean") {
+  fail("release-state.json has an invalid latestPublishedDownloadsAvailable");
+}
 if (info.NSHumanReadableCopyright !== expectedCopyright) {
-  fail("Info.plist does not contain the exact publisher copyright notice");
+  fail("Info.plist does not contain the expected copyright notice");
 }
 const appLocales = [...info.CFBundleLocalizations].sort();
 const documentedLocales = [...githubLocaleCodes].sort();
@@ -82,6 +86,7 @@ if (JSON.stringify(appLocales) !== JSON.stringify(documentedLocales)) {
 for (const [name, notices] of [
   ["product", githubLicenseNotices],
   ["release", githubReleaseLicenseNotices],
+  ["download", githubDownloadNotices],
 ]) {
   const noticeLocales = Object.keys(notices).sort();
   if (JSON.stringify(noticeLocales) !== JSON.stringify(documentedLocales)) {
@@ -101,11 +106,17 @@ const expectedReleaseDMG =
   `SlimLuma-${releaseNotesVersion}-macOS-universal.dmg`;
 for (const rootReadme of rootReadmes) {
   const body = read(rootReadme);
-  if (!body.includes(expectedDMG)) {
-    fail(`${relative(projectRoot, rootReadme)} lacks the current direct DMG link`);
+  if (
+    latestPublishedDownloadsAvailable
+      ? !body.includes(expectedDMG)
+      : body.includes(expectedDMG)
+  ) {
+    fail(
+      `${relative(projectRoot, rootReadme)} has the wrong public-download state`,
+    );
   }
-  if (!body.includes(publisherName) || !body.includes("](LICENSE)")) {
-    fail(`${relative(projectRoot, rootReadme)} lacks the current publisher/license notice`);
+  if (!body.includes("](LICENSE)")) {
+    fail(`${relative(projectRoot, rootReadme)} lacks the current license notice`);
   }
   for (const { canonicalReadme } of githubLocales) {
     if (!body.includes(`](${canonicalReadme})`)) {
@@ -160,12 +171,18 @@ for (const { locale } of githubLocales) {
   const generatedReadme = read(
     join(projectRoot, generatedReadmePath(locale)),
   );
-  if (!generatedReadme.includes(expectedDMG)) {
-    fail(`Generated ${locale} README lacks the current direct DMG link`);
+  if (
+    latestPublishedDownloadsAvailable
+      ? !generatedReadme.includes(expectedDMG)
+      : (
+        generatedReadme.includes(expectedDMG)
+        || !generatedReadme.includes(githubDownloadNotices[locale])
+      )
+  ) {
+    fail(`Generated ${locale} README has the wrong public-download state`);
   }
   if (
     !generatedReadme.includes(githubLicenseNotices[locale])
-    || !generatedReadme.includes(`${publisherName} (${publisherTeamID})`)
   ) {
     fail(`Generated ${locale} README lacks its localized rights notice`);
   }
@@ -183,7 +200,6 @@ for (const { locale } of githubLocales) {
   }
   if (
     !localizedRelease.includes(githubReleaseLicenseNotices[locale])
-    || !localizedRelease.includes(`${publisherName} (${publisherTeamID})`)
   ) {
     fail(`Release note ${locale} lacks its localized license-history notice`);
   }
@@ -225,7 +241,6 @@ const expectedReleaseLicenseRef =
     ? "blob/main/LICENSE"
     : `blob/v${releaseNotesVersion}/LICENSE`;
 for (const required of [
-  `${publisherName} (${publisherTeamID})`,
   "blob/v0.2.0/LICENSE",
   expectedReleaseLicenseRef,
   "historical grant is not revoked",
@@ -245,7 +260,6 @@ const license = read(join(projectRoot, "LICENSE"));
 for (const required of [
   "SlimLuma Proprietary Source and Binary License",
   "Copyright © 2026 SlimLuma copyright holders.",
-  publisherName,
   "All rights reserved.",
   "SlimLuma 0.2.0",
   "released under the MIT License",
@@ -378,5 +392,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Verified GitHub internationalization: ${githubLocales.length} product READMEs for public v${latestPublishedVersion}, ${githubLocales.length} localized v${releaseNotesVersion} release notes, development v${version}, direct downloads, community files, and local links.`,
+  `Verified GitHub internationalization: ${githubLocales.length} product READMEs for public v${latestPublishedVersion}, ${githubLocales.length} localized v${releaseNotesVersion} release notes, development v${version}, download-state gates, community files, and local links.`,
 );

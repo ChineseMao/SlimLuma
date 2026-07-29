@@ -10,16 +10,13 @@
 >
 > Apple Silicon + Intel · [App ZIP](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SlimLuma-0.2.1-macOS-universal.zip) · [CLI](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/slimluma-0.2.1-macOS-universal.tar.gz) · [SHA-256](https://github.com/ChineseMao/SlimLuma/releases/download/v0.2.1/SHA256SUMS)
 
-> **Publisher:** SlimLuma copyright holders (PRIVATE_TEAM_ID)
->
 > Msimbo chanzo wa SlimLuma 0.2.0 ulitolewa chini ya Leseni ya MIT. Toleo hili linasimamiwa na LICENSE iliyofungamanishwa na tagi yake.
 >
 > [v0.2.0 MIT LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.0/LICENSE) · [v0.2.1 LICENSE](https://github.com/ChineseMao/SlimLuma/blob/v0.2.1/LICENSE)
 
-Zana ya ndani ya kubana picha, video na PDF iliyotolewa rasmi kwa Developer ID ya muda mrefu ya kampuni.
+Zana ya ndani ya kubana picha, video na PDF kwa macOS.
 
 - Kuanzia toleo la 0.2.1, matoleo ya sasa yanatumia leseni inayoruhusu msimbo chanzo kuonekana kwa ukaguzi pekee huku haki zote zikihifadhiwa; haki za MIT zilizotolewa tayari kwa toleo la 0.2.0 haziathiriwi.
-- Mchapishaji rasmi ni SlimLuma copyright holders (PRIVATE_TEAM_ID).
 - App na CLI zote ni Universal na zinatumia Hardened Runtime pamoja na muhuri salama wa muda; uchapishaji unaruhusiwa tu baada ya uthibitishaji wa Apple, stapling ya App na DMG, Gatekeeper na ukaguzi wa SHA-256 kufaulu.
 - Kurasa za bidhaa na maelezo ya toleo katika lugha 20 zina kiungo kinachoonekana wazi cha kupakua Universal DMG na zinajumuisha taarifa za leseni za mradi na wahusika wengine.
 

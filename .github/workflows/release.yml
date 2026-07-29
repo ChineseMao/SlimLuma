@@ -71,6 +71,8 @@ jobs:
           node scripts/validate-github-localizations.mjs
           zsh -n scripts/*.sh
           scripts/test-release-privacy.sh
+          scripts/test-release-identity.sh
+          scripts/verify-repository-privacy.sh
           swift test
 
       - name: Build and verify unsigned Universal products
@@ -125,6 +127,8 @@ jobs:
           APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          EXPECTED_AUTHORITY: ${{ secrets.SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY }}
+          EXPECTED_TEAM: ${{ secrets.SLIMLUMA_EXPECTED_TEAM_ID }}
         run: |
           missing=()
           [[ -n "$DEVELOPER_ID_CERTIFICATE_P12_BASE64" ]] \
@@ -139,6 +143,10 @@ jobs:
             || missing+=("APPLE_API_KEY_ID")
           [[ -n "$APPLE_API_ISSUER_ID" ]] \
             || missing+=("APPLE_API_ISSUER_ID")
+          [[ -n "$EXPECTED_AUTHORITY" ]] \
+            || missing+=("SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY")
+          [[ -n "$EXPECTED_TEAM" ]] \
+            || missing+=("SLIMLUMA_EXPECTED_TEAM_ID")
           if (( ${#missing[@]} > 0 )); then
             printf 'Missing required release secret: %s\n' "${missing[@]}" >&2
             exit 1
@@ -181,6 +189,8 @@ jobs:
       - name: Package and sign prebuilt Universal app and CLI
         env:
           SLIMLUMA_USE_PREBUILT_RELEASE_PRODUCTS: "1"
+          SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY: ${{ secrets.SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY }}
+          SLIMLUMA_EXPECTED_TEAM_ID: ${{ secrets.SLIMLUMA_EXPECTED_TEAM_ID }}
         run: scripts/package-app.sh
 
       - name: Notarize app and CLI with an ephemeral API key
@@ -198,6 +208,9 @@ jobs:
           scripts/notarize-release.sh dist/slimluma
 
       - name: Create release archives
+        env:
+          SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY: ${{ secrets.SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY }}
+          SLIMLUMA_EXPECTED_TEAM_ID: ${{ secrets.SLIMLUMA_EXPECTED_TEAM_ID }}
         run: scripts/create-release-artifacts.sh
 
       - name: Notarize DMG with an ephemeral API key
@@ -205,6 +218,8 @@ jobs:
           API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY: ${{ secrets.SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY }}
+          SLIMLUMA_EXPECTED_TEAM_ID: ${{ secrets.SLIMLUMA_EXPECTED_TEAM_ID }}
         run: |
           umask 077
           api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"

@@ -8,10 +8,9 @@ Runtime、安全时间戳、Apple 公证、staple、Gatekeeper 验收和发布�
 [发布信任链（中文）](RELEASE_TRUST_CHAIN.zh-Hans.md) /
 [Release trust chain (English)](RELEASE_TRUST_CHAIN.md)。
 
-长期发布主体固定为
-`Developer ID Application: private release identity`，
-Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这两个值；证书轮换
-可以改变指纹与有效期，但不能静默改变法律主体或 Team ID。完整声明见
+长期 Developer ID 发布身份由本机环境变量或受保护的 GitHub Secrets 私下固定。
+公开仓库不重复保存法定主体与 Apple Team ID，但发布门禁仍会精确核对；证书轮换
+可以改变指纹与有效期，不能静默改变发布身份。隐私边界见
 [PUBLISHER.md](../PUBLISHER.md)。
 
 ## GitHub Secrets
@@ -24,6 +23,8 @@ Apple Developer Team ID 为 `PRIVATE_TEAM_ID`。发布门禁会精确核对这�
 - `APPLE_API_PRIVATE_KEY`
 - `APPLE_API_KEY_ID`
 - `APPLE_API_ISSUER_ID`
+- `SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY`
+- `SLIMLUMA_EXPECTED_TEAM_ID`
 
 只有仓库变量 `SLIMLUMA_AUTOMATED_RELEASE` 明确设置为 `true`，并从受保护的
 `main` 手工触发 Release workflow、输入已签名 tag 时，才会运行自动签名、公证和
@@ -43,11 +44,14 @@ swift test
 node scripts/sync-system-localizations.mjs --check
 node scripts/generate-github-readmes.mjs --check
 node scripts/validate-github-localizations.mjs
+scripts/verify-repository-privacy.sh
+export SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY="<private exact authority>"
+export SLIMLUMA_EXPECTED_TEAM_ID="<private exact team identifier>"
 SLIMLUMA_CODE_SIGN_IDENTITY="<Developer ID SHA-1>" scripts/package-app.sh
 ```
 
-签名构建会启用 Hardened Runtime 和安全时间戳，精确核对公司 Developer ID 与
-Team ID，并拒绝 `com.apple.security.get-task-allow`。若 Keychain 中已保存
+签名构建会启用 Hardened Runtime 和安全时间戳，精确核对私下配置的 Developer ID
+与 Team ID，并拒绝 `com.apple.security.get-task-allow`。若 Keychain 中已保存
 公证凭据：
 
 ```bash
@@ -79,8 +83,7 @@ staple、stapler validate 和 Gatekeeper 通过。
 - 匿名访问：仓库和 Release 均返回 HTTP 200
 - 附件抽查：四个附件均可匿名下载；三项发行物哈希一致
 - 下载后 DMG：stapler validate 通过，Gatekeeper 为 `Notarized Developer ID`
-- Developer ID：
-  `SlimLuma copyright holders (PRIVATE_TEAM_ID)`
+- Developer ID：与私下固定的长期发布身份一致
 
 `v0.2.0` 已于 2026-07-28 完成公开发布与下载后抽查。本节同时保留本地签名、公证
 证据，避免把源码测试、Apple 验收和 GitHub 公开发行混为同一个状态。
@@ -125,6 +128,8 @@ staple、stapler validate 和 Gatekeeper 通过。
 ```bash
 version="0.2.1"
 export SLIMLUMA_CODE_SIGN_IDENTITY="<Developer ID SHA-1>"
+export SLIMLUMA_EXPECTED_DEVELOPER_ID_AUTHORITY="<private exact authority>"
+export SLIMLUMA_EXPECTED_TEAM_ID="<private exact team identifier>"
 export SLIMLUMA_NOTARY_KEYCHAIN_PROFILE="<notarytool profile>"
 
 scripts/package-app.sh
